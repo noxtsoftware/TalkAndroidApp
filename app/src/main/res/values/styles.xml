@@ -1,0 +1,197 @@
+<!--
+  ~ Nextcloud Talk application
+  ~
+  ~ @author Mario Danic
+  ~ @author Andy Scherzinger
+  ~ Copyright (C) 2021 Andy Scherzinger <info@andy-scherzinger.de>
+  ~ Copyright (C) 2017-2020 Mario Danic <mario@lovelyhq.com>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:panelFullBackground">@color/colorPrimary</item>
+        <item name="android:itemBackground">@color/nc_outcoming_text_default</item>
+        <item name="android:textColor">@color/conversation_item_header</item>
+        <item name="android:textColorPrimary">@color/high_emphasis_text</item>
+        <item name="android:textColorSecondary">@color/medium_emphasis_text</item>
+        <item name="android:textColorTertiary">@color/low_emphasis_text</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppTheme.PopupMenu</item>
+        <item name="android:actionMenuTextAppearance">@style/menuTextAppearance</item>
+        <item name="searchViewStyle">@style/SearchView</item>
+        <item name="android:navigationBarColor">@color/bg_default</item>
+        <item name="android:seekBarStyle">@style/Nextcloud.Material.Incoming.SeekBar</item>
+        <item name="seekBarStyle">@style/Nextcloud.Material.Incoming.SeekBar</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.PopupMenu" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:colorBackground">@color/bg_default</item>
+        <item name="android:textColorPrimary">@color/high_emphasis_text</item>
+        <item name="android:textColor">@color/high_emphasis_text</item>
+        <item name="android:textColorSecondary">@color/fontAppbar</item>
+        <item name="android:textColorHint">@color/fontSecondaryAppbar</item>
+        <item name="iconTint">@color/fontAppbar</item>
+    </style>
+
+    <style name="CallTheme" parent="AppTheme">
+        <item name="android:navigationBarColor">@color/grey950</item>
+    </style>
+
+    <style name="ErrorAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/nc_darkRed</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ListItem" parent="BottomSheet.ListItem.TextAppearance">
+        <item name="android:textColor">@color/high_emphasis_text</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ChipIncomingTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textColor">#de000000</item>
+    </style>
+
+    <style name="ChipOutgoingTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textColor">@color/textColorOnPrimaryBackground</item>
+    </style>
+
+    <style name="ChipUnreadMessagesTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="appActionBarPopupMenu" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:colorPrimary">@color/fg_inverse</item>
+        <item name="android:textColorSecondary">@color/fontAppbar</item>
+        <item name="android:itemBackground">@color/appbar</item>
+        <item name="android:background">@color/appbar</item>
+        <item name="android:textColor">@color/high_emphasis_text</item>
+        <item name="iconTint">@color/fontAppbar</item>
+    </style>
+
+    <style name="menuTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="SearchView" parent="Widget.AppCompat.SearchView">
+        <!-- Close button icon -->
+        <item name="closeIcon">@drawable/ic_close_search</item>
+        <!-- Search button icon -->
+        <item name="searchIcon">@drawable/ic_search_grey</item>
+        <!-- Layout for query suggestion rows // unused for now, staying with the standard layout -->
+        <!--<item name="suggestionRowLayout">...</item>-->
+        <item name="submitBackground">@color/appbar</item>
+        <item name="queryBackground">@color/appbar</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+
+    <style name="Widget.AppTheme.Button.IconButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+    </style>
+
+    <style name="Widget.App.Login.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Login.TextInputLayout</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="helperTextTextColor">@color/white</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Login.TextInputLayout" parent="">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorError">@color/nc_darkRed</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox</item>
+    </style>
+
+    <style name="TextInputLayoutLogin" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="boxStrokeErrorColor">@color/white</item>
+        <item name="hintTextAppearance">@style/HintTextLogin</item>
+        <item name="errorTextAppearance">@style/HintTextLogin</item>
+        <item name="android:colorPrimary">@color/white</item>
+        <!-- Theme attributes -->
+        <item name="android:textColorHint">#80FFFFFF</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
+
+    <style name="HintTextLogin" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="FullScreenImageTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="FullScreenMediaTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="FullScreenTextTheme" parent="AppTheme">
+        <item name="android:navigationBarColor">@color/bg_default</item>
+    </style>
+
+    <!-- Launch screen -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Nextcloud.Material.TextButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Nextcloud.Material.Incoming.SeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">@color/medium_emphasis_text</item>
+        <item name="android:progressTint">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="Nextcloud.Material.Outgoing.SeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">#deffffff</item>
+        <item name="android:progressTint">#ffffff</item>
+        <item name="android:colorControlActivated">#ffffff</item>
+        <item name="android:colorControlNormal">#ffffff</item>
+    </style>
+
+</resources>
