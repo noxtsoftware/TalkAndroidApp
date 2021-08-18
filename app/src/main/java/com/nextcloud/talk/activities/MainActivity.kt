@@ -29,6 +29,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.RequiresApi
 import autodagger.AutoInjector
 import com.bluelinelabs.conductor.Conductor
@@ -36,7 +37,9 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import com.nextcloud.talk.R
 import com.nextcloud.talk.api.NcApi
 import com.nextcloud.talk.application.NextcloudTalkApplication
@@ -101,6 +104,18 @@ class MainActivity : BaseActivity(), ActionBarProvider {
         router = Conductor.attachRouter(this, binding.controllerContainer, savedInstanceState)
 
         var hasDb = true
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener {task ->
+            if(!task.isSuccessful){
+                Log.w(TAG,"Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            val token = task.result
+
+            val stringToken = token.toString()
+            Log.w(TAG," FCM Token ----------> " + stringToken)
+        })
 
         try {
             sqlCipherDatabaseSource.writableDatabase

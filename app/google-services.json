@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "176075822948",
+    "project_id": "moyntalk-44b77",
+    "storage_bucket": "moyntalk-44b77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176075822948:android:ccbc7baa2f3ace1ce14c71",
+        "android_client_info": {
+          "package_name": "com.nextcloud.talk2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176075822948-3847870b4o1f2j8sljjc2ielge84kuc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChBRZQr_ZVahU4u4FT4RFVb-Gks-N3JXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176075822948-3847870b4o1f2j8sljjc2ielge84kuc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
