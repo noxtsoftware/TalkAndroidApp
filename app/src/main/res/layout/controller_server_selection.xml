@@ -129,7 +129,8 @@
                     android:paddingEnd="8dp"
                     android:text="@string/nc_server_testing_connection"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/lexendregular"/>
 
             </LinearLayout>
 
