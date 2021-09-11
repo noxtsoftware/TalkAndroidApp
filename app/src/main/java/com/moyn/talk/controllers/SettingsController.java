@@ -140,8 +140,6 @@ public class SettingsController extends BaseController {
     MaterialStandardPreference licenceButton;
     @BindView(R.id.settings_privacy)
     MaterialStandardPreference privacyButton;
-    @BindView(R.id.settings_source_code)
-    MaterialStandardPreference sourceCodeButton;
     @BindView(R.id.settings_version)
     MaterialStandardPreference versionInfo;
     @BindView(R.id.avatarContainer)
@@ -289,16 +287,6 @@ public class SettingsController extends BaseController {
             });
         } else {
             privacyButton.setVisibility(View.GONE);
-        }
-
-        if (!TextUtils.isEmpty(getResources().getString(R.string.nc_source_code_url))) {
-            sourceCodeButton.addPreferenceClickListener(view13 -> {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().
-                        getString(R.string.nc_source_code_url)));
-                startActivity(browserIntent);
-            });
-        } else {
-            sourceCodeButton.setVisibility(View.GONE);
         }
 
         versionInfo.setSummary("v" + BuildConfig.VERSION_NAME);
