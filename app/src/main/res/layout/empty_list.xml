@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:ellipsize="end"
+        android:fontFamily="@font/lexendregular"
         android:gravity="center"
         android:maxLines="2"
         android:paddingTop="@dimen/standard_padding"

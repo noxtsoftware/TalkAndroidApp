@@ -58,6 +58,7 @@
             android:id="@+id/text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lexendregular"
             android:padding="@dimen/standard_padding"
             tools:text="Lorem Ipsum" />
 

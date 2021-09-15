@@ -35,10 +35,12 @@
             android:layout_marginStart="16dp"
             tools:ignore="ContentDescription"
             />
+
         <com.afollestad.materialdialogs.internal.rtl.RtlTextView
             android:id="@+id/title"
-            tools:text="Item"
+            style="@style/MD_ListItemText"
             android:layout_toEndOf="@id/icon"
-            style="@style/MD_ListItemText" />
+            android:fontFamily="@font/lexendregular"
+            tools:text="Item" />
     </RelativeLayout>
 </FrameLayout>

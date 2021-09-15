@@ -72,6 +72,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/dialogUnreadBubble"
             android:ellipsize="end"
+            android:fontFamily="@font/lexendregular"
             android:gravity="start|top"
             android:lines="1"
             android:singleLine="true"
@@ -88,6 +89,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="8dp"
             android:clickable="false"
+            android:fontFamily="@font/lexendregular"
             android:gravity="top"
             android:lines="1"
             android:textAppearance="@style/ChipUnreadMessagesTextAppearance"
@@ -108,10 +110,12 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="2dp"
         android:ellipsize="end"
+        android:fontFamily="@font/lexendregular"
         android:maxLines="1"
         android:textAlignment="viewEnd"
         android:textColor="@color/textColorMaxContrast"
         android:textSize="14sp"
+        tools:fontFamily="@font/lexendregular"
         tools:text="yesterday" />
 
     <androidx.emoji.widget.EmojiTextView
@@ -123,6 +127,7 @@
         android:layout_toStartOf="@id/dialogDate"
         android:layout_toEndOf="@id/dialogAvatarFrameLayout"
         android:ellipsize="end"
+        android:fontFamily="@font/lexendregular"
         android:includeFontPadding="false"
         android:maxLines="1"
         android:textAlignment="viewStart"

@@ -56,6 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/lexendregular"
         android:paddingTop="16dp"
         android:paddingBottom="56dp"
         android:text="@string/nc_locked_tap_to_unlock"

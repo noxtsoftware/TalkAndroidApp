@@ -129,6 +129,7 @@
                     android:layout_height="match_parent"
                     android:autoLink="none"
                     android:ellipsize="middle"
+                    android:fontFamily="@font/lexendregular"
                     android:gravity="start|center_vertical"
                     android:maxLines="3"
                     android:paddingStart="@dimen/standard_padding"
@@ -153,6 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:autoLink="none"
+            android:fontFamily="@font/lexendregular"
             android:textAlignment="viewStart"
             android:textColor="@color/warm_grey_four"
             android:textColorLink="@color/warm_grey_four"
@@ -170,6 +172,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="2dp"
+            android:fontFamily="@font/lexendregular"
             android:textColor="@color/warm_grey_four"
             app:layout_alignSelf="center"
             tools:text="12:38" />

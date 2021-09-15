@@ -40,6 +40,7 @@
         android:alpha="0.7"
         android:background="@color/bg_default"
         android:enabled="false"
+        android:fontFamily="@font/lexendregular"
         android:text="@string/nc_proceed"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary" />
@@ -58,6 +59,7 @@
             android:id="@+id/text_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/lexendregular"
             android:imeOptions="actionDone"
             android:inputType="textUri"
             android:singleLine="true"

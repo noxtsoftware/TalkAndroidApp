@@ -69,6 +69,7 @@
                         android:layout_below="@id/avatar_image"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_between_elements"
+                        android:fontFamily="@font/lexendregular"
                         tools:text="Jane Doe" />
 
                     <com.facebook.drawee.view.SimpleDraweeView
@@ -100,6 +101,7 @@
                     android:layout_margin="@dimen/standard_margin"
                     android:layout_marginTop="@dimen/margin_between_elements"
                     android:autoLink="web"
+                    android:fontFamily="@font/lexendregular"
                     tools:text="Hello world!" />
             </com.yarolegovich.mp.MaterialPreferenceCategory>
 
