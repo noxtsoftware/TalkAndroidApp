@@ -56,6 +56,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/sffedora"
                 android:text="@string/scope_private_title"
                 android:textAlignment="viewStart"
                 android:textColor="@color/conversation_item_header"
@@ -65,6 +66,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lexendregular"
                 android:text="@string/scope_private_description"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColorMaxContrast"
@@ -99,6 +101,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/sffedora"
                 android:text="@string/scope_local_title"
                 android:textAlignment="viewStart"
                 android:textColor="@color/conversation_item_header"
@@ -108,6 +111,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lexendregular"
                 android:text="@string/scope_local_description"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColorMaxContrast"
@@ -142,6 +146,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/sffedora"
                 android:text="@string/scope_federated_title"
                 android:textAlignment="viewStart"
                 android:textColor="@color/conversation_item_header"
@@ -151,6 +156,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lexendregular"
                 android:text="@string/scope_federated_description"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColorMaxContrast"
@@ -185,6 +191,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/sffedora"
                 android:text="@string/scope_published_title"
                 android:textAlignment="viewStart"
                 android:textColor="@color/conversation_item_header"
@@ -194,6 +201,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/lexendregular"
                 android:text="@string/scope_published_description"
                 android:textAlignment="viewStart"
                 android:textColor="@color/textColorMaxContrast"

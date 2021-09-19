@@ -65,6 +65,7 @@
                 android:layout_below="@id/avatar_image"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin_between_elements"
+                android:fontFamily="@font/lexendregular"
                 tools:text="Jane Doe" />
 
             <TextView
@@ -73,7 +74,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/display_name_text"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/lexendregular"
                 android:textColor="@color/medium_emphasis_text"
                 tools:text="nextcloud.com" />
 
@@ -105,10 +110,11 @@
                         android:id="@+id/server_age_warning_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
                         android:layout_toEndOf="@id/server_age_warning_icon"
+                        android:fontFamily="@font/lexendregular"
                         android:paddingStart="@dimen/standard_padding"
                         android:paddingEnd="0dp"
-                        android:layout_centerHorizontal="true"
                         android:textAlignment="viewStart"
                         android:textColor="@color/nc_darkRed"
                         tools:text="@string/nc_settings_server_almost_eol" />
@@ -130,10 +136,19 @@
 
             <com.yarolegovich.mp.MaterialStandardPreference
                 android:id="@+id/settings_remove_account"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/server_age_warning_text_card"
-                apc:mp_title="@string/nc_settings_remove_account" />
+                android:layout_below="@id/server_age_warning_text_card">
+
+                <TextView
+                    android:id="@+id/settings_remove_account_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/lexendregular"
+                    android:text="@string/nc_settings_remove_account"
+                    android:textSize="15sp"/>
+            </com.yarolegovich.mp.MaterialStandardPreference>
 
         </RelativeLayout>
 
@@ -143,9 +158,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        apc:cardBackgroundColor="@color/bg_default"
-        apc:cardElevation="0dp"
-        apc:mpc_title="@string/nc_settings_appearance">
+        apc:cardBackgroundColor="@color/bg_default">
+
+        <TextView
+            android:id="@+id/appearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nc_settings_appearance"
+            android:textColor="@color/nc_darkRed"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/lexendregular"/>
 
         <com.yarolegovich.mp.MaterialChoicePreference
             android:id="@+id/settings_theme"
@@ -165,8 +188,17 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         apc:cardBackgroundColor="@color/bg_default"
-        apc:cardElevation="0dp"
-        apc:mpc_title="@string/nc_settings_notification_sounds">
+        apc:cardElevation="2dp">
+
+        <TextView
+            android:id="@+id/sounds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nc_settings_notification_sounds"
+            android:textColor="@color/nc_darkRed"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/lexendregular"/>
 
         <com.yarolegovich.mp.MaterialStandardPreference
             android:id="@+id/settings_call_sound"
@@ -197,9 +229,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        apc:cardBackgroundColor="@color/bg_default"
-        apc:cardElevation="0dp"
-        apc:mpc_title="@string/nc_settings_privacy">
+        apc:cardBackgroundColor="@color/bg_default">
+
+        <TextView
+            android:id="@+id/priacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nc_settings_privacy"
+            android:textColor="@color/nc_darkRed"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/lexendregular"/>
 
         <com.yarolegovich.mp.MaterialChoicePreference
             android:id="@+id/settings_screen_lock_timeout"
@@ -261,8 +301,17 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         apc:cardBackgroundColor="@color/bg_default"
-        apc:cardElevation="0dp"
-        apc:mpc_title="@string/nc_settings_advanced_title">
+        apc:cardElevation="2dp">
+
+        <TextView
+            android:id="@+id/advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nc_settings_advanced_title"
+            android:textColor="@color/nc_darkRed"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/lexendregular"/>
 
         <com.yarolegovich.mp.MaterialStandardPreference
             android:id="@+id/settings_reauthorize"
@@ -334,9 +383,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        apc:cardBackgroundColor="@color/bg_default"
-        apc:cardElevation="0dp"
-        apc:mpc_title="@string/nc_about">
+        apc:cardBackgroundColor="@color/bg_default">
+
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nc_about"
+            android:textColor="@color/nc_darkRed"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="@font/lexendregular"/>
 
         <com.yarolegovich.mp.MaterialStandardPreference
             android:id="@+id/settings_privacy"

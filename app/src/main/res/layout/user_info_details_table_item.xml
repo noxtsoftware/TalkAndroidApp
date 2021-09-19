@@ -44,6 +44,7 @@
         android:layout_marginEnd="@dimen/standard_margin"
         android:autofillHints="none"
         android:ellipsize="end"
+        android:fontFamily="@font/lexendregular"
         android:inputType="text"
         android:maxLines="1"
         android:textSize="@dimen/two_line_primary_text_size"

@@ -84,6 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/lexendregular"
             android:text="@string/nc_call_unknown"
             android:textAlignment="center"
             android:textColor="@color/controller_call_incomingCallTextView"
@@ -99,21 +100,12 @@
             android:layout_below="@+id/incomingCallVoiceOrVideoTextView"
             android:layout_marginBottom="16dp"
             android:ellipsize="marquee"
+            android:fontFamily="@font/lexendregular"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
             tools:text="Victor Gregorius Magnus" />
-
-        <TextView
-            android:id="@+id/incomingCallDescriptionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/conversationNameTextView"
-            android:text="@string/nc_call_incoming"
-            android:textAlignment="center"
-            android:textColor="@color/controller_call_incomingCallTextView"
-            android:textSize="16sp" />
 
     </RelativeLayout>
 
@@ -124,5 +116,15 @@
         android:layout_centerInParent="true"
         app:roundAsCircle="true"
         tools:srcCompat="@tools:sample/avatars[0]" />
+
+    <TextView
+        android:id="@+id/incomingCallDescriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lexendregular"
+        android:text="@string/nc_call_incoming"
+        android:textAlignment="center"
+        android:textColor="@color/controller_call_incomingCallTextView"
+        android:textSize="16sp" />
 
 </RelativeLayout>

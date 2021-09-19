@@ -92,6 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/messageText"
             android:layout_marginStart="8dp"
+            android:fontFamily="@font/lexendregular"
             app:layout_alignSelf="center"
             tools:text="10:35" />
 

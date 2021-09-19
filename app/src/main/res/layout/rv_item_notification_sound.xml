@@ -38,6 +38,7 @@
         android:layout_centerVertical="true"
         android:clickable="false"
         android:ellipsize="end"
+        android:fontFamily="@font/lexendregular"
         android:lines="1"
         android:paddingStart="24dp"
         android:paddingEnd="0dp"

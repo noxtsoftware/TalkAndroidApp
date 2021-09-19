@@ -45,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|top"
+        android:fontFamily="@font/lexendregular"
         android:paddingStart="@dimen/standard_half_padding"
         android:paddingTop="12dp"
         android:paddingEnd="@dimen/standard_padding"

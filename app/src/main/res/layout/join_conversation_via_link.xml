@@ -49,6 +49,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/joinConversationViaLinkImageView"
         android:ellipsize="middle"
+        android:fontFamily="@font/lexendregular"
         android:singleLine="true"
         android:text="@string/nc_join_via_link"
         android:textAlignment="viewStart"

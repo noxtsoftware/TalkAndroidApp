@@ -75,10 +75,10 @@
             android:layout_toEndOf="@id/smileyButton"
             android:imeOptions="actionDone"
             android:inputType="textAutoCorrect|textMultiLine|textCapSentences"
+            android:layoutDirection="locale"
             android:lineSpacingMultiplier="1.2"
             android:minHeight="48dp"
             android:textAlignment="viewStart"
-            android:layoutDirection="locale"
             tools:hint="@string/nc_hint_enter_a_message" />
 
         <TextView
@@ -89,6 +89,7 @@
             android:layout_centerInParent="true"
             android:layout_toStartOf="@id/recordAudioButton"
             android:layout_toEndOf="@id/audioRecordDuration"
+            android:fontFamily="@font/lexendregular"
             android:text="@string/nc_voice_message_slide_to_cancel"
             android:textAlignment="viewStart"
             android:textColor="@color/low_emphasis_text"

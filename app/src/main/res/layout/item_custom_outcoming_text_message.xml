@@ -51,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignWithParentIfMissing="true"
+            android:fontFamily="@font/lexendregular"
             android:lineSpacingMultiplier="1.2"
             android:textAlignment="viewStart"
             android:textColorHighlight="@color/nc_grey"
@@ -63,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/messageText"
             android:layout_marginStart="8dp"
+            android:fontFamily="@font/lexendregular"
             android:textIsSelectable="false"
             app:layout_alignSelf="center"
             tools:text="10:35" />
