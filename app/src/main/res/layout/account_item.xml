@@ -53,9 +53,9 @@
                 android:layout_marginEnd="1dp"
                 android:layout_marginBottom="1dp"
                 android:contentDescription="@string/avatar"
-                android:src="@drawable/account_circle_48dp"
-                fresco:placeholderImage="@drawable/account_circle_48dp"
-                fresco:failureImage="@drawable/account_circle_48dp"
+                android:src="@drawable/user_default"
+                fresco:placeholderImage="@drawable/user_default"
+                fresco:failureImage="@drawable/user_default"
                 app:roundAsCircle="true"/>
 
             <ImageView

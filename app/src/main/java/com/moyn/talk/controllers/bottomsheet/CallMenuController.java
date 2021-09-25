@@ -211,7 +211,8 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
             }
         } else {
             menuItems.add(new MenuItem(getResources().getString(R.string.nc_start_conversation), 0, null));
-            menuItems.add(new MenuItem(getResources().getString(R.string.nc_new_conversation), 1, getResources().getDrawable(R.drawable.ic_add_grey600_24px)));
+            menuItems.add(new MenuItem(getResources().getString(R.string.nc_new_conversation), 1,
+                                       getResources().getDrawable(R.drawable.plus_default)));
             menuItems.add(new MenuItem(getResources().getString(R.string.nc_join_via_link), 2, getResources().getDrawable(R.drawable.ic_link_grey600_24px)));
         }
     }

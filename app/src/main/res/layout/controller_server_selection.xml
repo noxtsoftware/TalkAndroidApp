@@ -64,7 +64,7 @@
                 android:hint="@string/nc_server_url"
                 android:theme="@style/TextInputLayoutLogin"
                 app:endIconContentDescription="@string/nc_server_connect"
-                app:endIconDrawable="@drawable/ic_arrow_forward_white_24px"
+                app:endIconDrawable="@drawable/arrow_right_dark"
                 app:endIconMode="custom"
                 app:endIconTint="@color/white">
 

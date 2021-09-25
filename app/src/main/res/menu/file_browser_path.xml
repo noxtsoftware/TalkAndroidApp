@@ -22,7 +22,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_back"
-        android:icon="@drawable/ic_arrow_back_black_24dp"
+        android:icon="@drawable/arrow_left_default"
         android:enabled="false"
         android:title="@string/nc_file_browser_back"/>
 </menu>

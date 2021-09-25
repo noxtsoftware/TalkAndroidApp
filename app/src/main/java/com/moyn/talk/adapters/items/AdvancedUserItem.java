@@ -128,8 +128,8 @@ public class AdvancedUserItem extends AbstractFlexibleItem<AdvancedUserItem.User
             holder.serverUrl.setText((Uri.parse(userEntity.getBaseUrl()).getHost()));
         }
 
-        holder.avatarImageView.getHierarchy().setPlaceholderImage(R.drawable.account_circle_48dp);
-        holder.avatarImageView.getHierarchy().setFailureImage(R.drawable.account_circle_48dp);
+        holder.avatarImageView.getHierarchy().setPlaceholderImage(R.drawable.user_default);
+        holder.avatarImageView.getHierarchy().setFailureImage(R.drawable.user_default);
 
         if (userEntity != null && userEntity.getBaseUrl() != null &&
                 userEntity.getBaseUrl().startsWith("http://") ||

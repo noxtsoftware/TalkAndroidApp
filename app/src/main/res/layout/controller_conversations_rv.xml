@@ -121,7 +121,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:contentDescription="@string/nc_new_conversation"
         app:borderWidth="0dp"
-        app:srcCompat="@drawable/ic_add_white_24px"
+        app:srcCompat="@drawable/plus_dark"
         app:tint="@color/white" />
 
     <include layout="@layout/fast_scroller" />

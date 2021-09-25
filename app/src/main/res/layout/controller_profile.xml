@@ -37,11 +37,11 @@
             android:layout_height="@dimen/avatar_size_big"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/standard_margin"
-            android:src="@drawable/account_circle_96dp"
+            android:src="@drawable/user_default"
             android:transitionName="userAvatar.transitionTag"
             app:roundAsCircle="true"
-            fresco:failureImage="@drawable/account_circle_96dp"
-            fresco:placeholderImage="@drawable/account_circle_96dp" />
+            fresco:failureImage="@drawable/user_default"
+            fresco:placeholderImage="@drawable/user_default" />
 
         <androidx.emoji.widget.EmojiTextView
             android:id="@+id/userinfo_fullName"

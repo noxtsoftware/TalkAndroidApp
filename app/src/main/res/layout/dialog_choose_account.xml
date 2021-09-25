@@ -66,7 +66,7 @@
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/fontAppbar"
-        app:icon="@drawable/ic_account_plus"
+        app:icon="@drawable/add_user_default"
         app:iconGravity="start"
         app:iconPadding="22dp"
         app:iconTint="@color/fontAppbar"
