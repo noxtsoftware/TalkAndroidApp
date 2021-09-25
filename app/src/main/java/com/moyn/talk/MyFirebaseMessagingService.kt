@@ -135,7 +135,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage : RemoteMessage) {
 
-        Log.d(TAG, "From: ${remoteMessage.from}")
+        Log.d(TAG, "From moyn: ${remoteMessage.from}")
+        Log.w(TAG,"moyn YUPI")
 
         if(remoteMessage.data.isNotEmpty()){
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
@@ -143,6 +144,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         remoteMessage.notification?.let {
             Log.d(TAG,"Message Notificationn Body: ${it.body}")
+        }
+
+        if (!remoteMessage.data["subject"].isNullOrEmpty() && !remoteMessage.data["signature"].isNullOrEmpty()) {
+            decryptMessage(remoteMessage.data["subject"]!!, remoteMessage.data["signature"]!!)
         }
     }
 
