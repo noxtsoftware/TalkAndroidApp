@@ -2203,7 +2203,7 @@ public class CallController extends BaseController {
                             gridView.setVisibility(View.INVISIBLE);
                         }
 
-                        errorImageView.setImageResource(R.drawable.ic_av_timer_timer_24dp);
+                        errorImageView.setImageResource(R.drawable.timer_dark);
 
                         if (errorImageView.getVisibility() != View.VISIBLE) {
                             errorImageView.setVisibility(View.VISIBLE);

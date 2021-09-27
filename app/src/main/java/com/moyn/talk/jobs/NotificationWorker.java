@@ -293,7 +293,7 @@ public class NotificationWorker extends Worker {
             default:
                 // assuming one2one
                 if (CHAT.equals(decryptedPushMessage.getType()) || ROOM.equals(decryptedPushMessage.getType())) {
-                    largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_comment);
+                    largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.comment_default);
                 } else {
                     largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_call_black_24dp);
                 }

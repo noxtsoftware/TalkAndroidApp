@@ -999,7 +999,7 @@ public class ConversationsListController extends BaseController implements Searc
                 new LovelyStandardDialog(getActivity(), LovelyStandardDialog.ButtonLayout.HORIZONTAL)
                         .setTopColorRes(R.color.nc_darkRed)
                         .setIcon(DisplayUtils.getTintedDrawable(context.getResources(),
-                                                                R.drawable.ic_delete_black_24dp, R.color.bg_default))
+                                                                R.drawable.trash_default, R.color.bg_default))
                         .setPositiveButtonColor(context.getResources().getColor(R.color.nc_darkRed))
                         .setTitle(R.string.nc_delete_call)
                         .setMessage(R.string.nc_delete_conversation_more)
@@ -1033,7 +1033,7 @@ public class ConversationsListController extends BaseController implements Searc
             new LovelyStandardDialog(getActivity(), LovelyStandardDialog.ButtonLayout.HORIZONTAL)
                     .setTopColorRes(R.color.nc_darkRed)
                     .setIcon(DisplayUtils.getTintedDrawable(context.getResources(),
-                                                            R.drawable.ic_delete_black_24dp, R.color.bg_default))
+                                                            R.drawable.trash_default, R.color.bg_default))
                     .setPositiveButtonColor(context.getResources().getColor(R.color.nc_darkRed))
                     .setCancelable(false)
                     .setTitle(R.string.nc_dialog_invalid_password)

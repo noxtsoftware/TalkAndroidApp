@@ -409,7 +409,8 @@ public class ProfileController extends BaseController {
                 R.string.user_info_phone,
                 Field.PHONE,
                 userInfo.getPhoneScope());
-        addToList(result, R.drawable.ic_email, userInfo.getEmail(), R.string.user_info_email, Field.EMAIL, userInfo.getEmailScope());
+        addToList(result, R.drawable.mail_default, userInfo.getEmail(), R.string.user_info_email, Field.EMAIL,
+                  userInfo.getEmailScope());
         addToList(result,
                 R.drawable.ic_map_marker,
                 userInfo.getAddress(),
@@ -762,7 +763,7 @@ public class ProfileController extends BaseController {
                         holder.scope.setImageResource(R.drawable.ic_password);
                         break;
                     case FEDERATED:
-                        holder.scope.setImageResource(R.drawable.ic_contacts);
+                        holder.scope.setImageResource(R.drawable.contacts_default);
                         break;
                     case PUBLISHED:
                         holder.scope.setImageResource(R.drawable.ic_link);

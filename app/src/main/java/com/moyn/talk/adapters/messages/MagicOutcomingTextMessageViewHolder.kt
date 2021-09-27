@@ -164,7 +164,7 @@ class MagicOutcomingTextMessageViewHolder(itemView: View) : OutcomingTextMessage
 
         val readStatusDrawableInt = when (message.readStatus) {
             ReadStatus.READ -> R.drawable.ic_check_all
-            ReadStatus.SENT -> R.drawable.ic_check
+            ReadStatus.SENT -> R.drawable.check_default
             else -> null
         }
 

@@ -324,7 +324,7 @@ class ConversationInfoController(args: Bundle) :
                 .setIcon(
                     DisplayUtils.getTintedDrawable(
                         context!!.resources,
-                        R.drawable.ic_delete_black_24dp, R.color.bg_default
+                        R.drawable.trash_default, R.color.bg_default
                     )
                 )
                 .setPositiveButtonColor(context!!.resources.getColor(R.color.nc_darkRed))
@@ -498,7 +498,7 @@ class ConversationInfoController(args: Bundle) :
                 .setIcon(
                     DisplayUtils.getTintedDrawable(
                         context!!.resources,
-                        R.drawable.ic_delete_black_24dp, R.color.bg_default
+                        R.drawable.trash_default, R.color.bg_default
                     )
                 )
                 .setPositiveButtonColor(context!!.resources.getColor(R.color.nc_darkRed))
@@ -956,7 +956,7 @@ class ConversationInfoController(args: Bundle) :
         if (participant.getActorType() == GROUPS) {
             val items = mutableListOf(
                 BasicListItemWithImage(
-                    R.drawable.ic_delete_grey600_24dp,
+                    R.drawable.trash_default,
                     context!!.getString(R.string.nc_remove_group_and_members)
                 )
             )
@@ -976,7 +976,7 @@ class ConversationInfoController(args: Bundle) :
         if (participant.getActorType() == CIRCLES) {
             val items = mutableListOf(
                 BasicListItemWithImage(
-                    R.drawable.ic_delete_grey600_24dp,
+                    R.drawable.trash_default,
                     context!!.getString(R.string.nc_remove_circle_and_members)
                 )
             )
@@ -1001,7 +1001,7 @@ class ConversationInfoController(args: Bundle) :
             BasicListItemWithImage(R.drawable.ic_pencil_grey600_24dp, context!!.getString(R.string.nc_promote)),
             BasicListItemWithImage(R.drawable.ic_pencil_grey600_24dp, context!!.getString(R.string.nc_demote)),
             BasicListItemWithImage(
-                R.drawable.ic_delete_grey600_24dp,
+                R.drawable.trash_default,
                 context!!.getString(R.string.nc_remove_participant)
             )
         )

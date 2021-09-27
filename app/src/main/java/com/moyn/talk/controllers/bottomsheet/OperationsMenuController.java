@@ -524,11 +524,11 @@ public class OperationsMenuController extends BaseController {
         if (getResources() != null) {
             if (everythingOK) {
                 resultImageView.setImageDrawable(DisplayUtils.getTintedDrawable(getResources(),
-                                                                                R.drawable.ic_check_circle_black_24dp,
+                                                                                R.drawable.check_circle_default,
                                                                                 R.color.nc_darkGreen));
             } else {
                 resultImageView.setImageDrawable(DisplayUtils.getTintedDrawable(getResources(),
-                                                                                R.drawable.ic_cancel_black_24dp,
+                                                                                R.drawable.cancel_circle_default,
                                                                                 R.color.nc_darkRed));
             }
         }
@@ -558,7 +558,7 @@ public class OperationsMenuController extends BaseController {
             eventBus.post(new BottomSheetLockEvent(true, 2500, true, true));
         } else {
             resultImageView.setImageDrawable(DisplayUtils.getTintedDrawable(getResources(), R.drawable
-                    .ic_cancel_black_24dp, R.color.nc_darkRed));
+                    .cancel_circle_default, R.color.nc_darkRed));
             okButton.setOnClickListener(v -> eventBus.post(new BottomSheetLockEvent(true, 0, operationCode != 99
                     && operationCode != 10, true)));
             okButton.setVisibility(View.VISIBLE);

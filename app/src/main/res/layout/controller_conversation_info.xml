@@ -177,7 +177,7 @@
                     android:id="@+id/clearConversationHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    apc:mp_icon="@drawable/ic_delete_black_24dp"
+                    apc:mp_icon="@drawable/trash_default"
                     apc:mp_icon_tint="@color/grey_600"
                     apc:mp_title="@string/nc_clear_history" />
 
@@ -185,7 +185,7 @@
                     android:id="@+id/deleteConversationAction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    apc:mp_icon="@drawable/ic_delete_black_24dp"
+                    apc:mp_icon="@drawable/trash_default"
                     apc:mp_icon_tint="@color/grey_600"
                     apc:mp_title="@string/nc_delete_call" />
 
