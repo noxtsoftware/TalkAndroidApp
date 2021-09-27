@@ -768,9 +768,9 @@ public class CallController extends BaseController {
         if (audioManager != null) {
             audioManager.toggleUseSpeakerphone();
             if (audioManager.isSpeakerphoneAutoOn()) {
-                callControlEnableSpeaker.getHierarchy().setPlaceholderImage(R.drawable.ic_volume_up_white_24dp);
+                callControlEnableSpeaker.getHierarchy().setPlaceholderImage(R.drawable.unmute_dark);
             } else {
-                callControlEnableSpeaker.getHierarchy().setPlaceholderImage(R.drawable.ic_volume_mute_white_24dp);
+                callControlEnableSpeaker.getHierarchy().setPlaceholderImage(R.drawable.mute_dark);
             }
         }
     }
@@ -856,7 +856,7 @@ public class CallController extends BaseController {
             videoOn = !videoOn;
 
             if (videoOn) {
-                cameraControlButton.getHierarchy().setPlaceholderImage(R.drawable.ic_videocam_white_24px);
+                cameraControlButton.getHierarchy().setPlaceholderImage(R.drawable.video_cam_dark);
                 if (cameraEnumerator.getDeviceNames().length > 1) {
                     cameraSwitchButton.setVisibility(View.VISIBLE);
                 }

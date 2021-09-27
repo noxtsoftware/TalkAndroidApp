@@ -930,7 +930,7 @@ class ConversationInfoController(args: Bundle) :
             if (participant.attendeePin?.isNotEmpty() == true) {
                 val items = mutableListOf(
                     BasicListItemWithImage(
-                        R.drawable.ic_lock_grey600_24px,
+                        R.drawable.lock_default,
                         context!!.getString(R.string.nc_attendee_pin, participant.attendeePin)
                     )
                 )
@@ -995,11 +995,11 @@ class ConversationInfoController(args: Bundle) :
 
         val items = mutableListOf(
             BasicListItemWithImage(
-                R.drawable.ic_lock_grey600_24px,
+                R.drawable.lock_default,
                 context!!.getString(R.string.nc_attendee_pin, participant.attendeePin)
             ),
-            BasicListItemWithImage(R.drawable.ic_pencil_grey600_24dp, context!!.getString(R.string.nc_promote)),
-            BasicListItemWithImage(R.drawable.ic_pencil_grey600_24dp, context!!.getString(R.string.nc_demote)),
+            BasicListItemWithImage(R.drawable.pencil_default, context!!.getString(R.string.nc_promote)),
+            BasicListItemWithImage(R.drawable.pencil_default, context!!.getString(R.string.nc_demote)),
             BasicListItemWithImage(
                 R.drawable.trash_default,
                 context!!.getString(R.string.nc_remove_participant)

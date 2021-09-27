@@ -88,7 +88,7 @@
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/fontAppbar"
-        app:icon="@drawable/ic_settings"
+        app:icon="@drawable/settings_default"
         app:iconGravity="start"
         app:iconPadding="20dp"
         app:iconTint="@color/fontAppbar"

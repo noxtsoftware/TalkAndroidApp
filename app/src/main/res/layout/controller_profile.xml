@@ -88,7 +88,7 @@
                 android:layout_marginRight="@dimen/standard_half_margin"
                 android:background="@drawable/round_corner"
                 android:contentDescription="@string/upload_new_avatar_from_device"
-                android:src="@drawable/upload"
+                android:src="@drawable/upload_default"
                 app:tint="@color/black" />
 
             <ImageButton
@@ -99,7 +99,7 @@
                 android:layout_marginRight="@dimen/standard_half_margin"
                 android:background="@drawable/round_corner"
                 android:contentDescription="@string/choose_avatar_from_cloud"
-                android:src="@drawable/ic_mimetype_folder"
+                android:src="@drawable/folder_default"
                 app:tint="@color/colorPrimary" />
 
             <ImageButton
@@ -110,7 +110,7 @@
                 android:layout_marginRight="@dimen/standard_half_margin"
                 android:background="@drawable/round_corner"
                 android:contentDescription="@string/delete_avatar"
-                android:src="@drawable/trashbin"
+                android:src="@drawable/trash_default"
                 app:tint="@color/black" />
         </LinearLayout>
 

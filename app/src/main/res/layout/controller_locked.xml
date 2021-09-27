@@ -47,7 +47,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:contentDescription="@string/nc_locked"
-            android:src="@drawable/ic_lock_white_24px" />
+            android:src="@drawable/lock_dark" />
 
     </FrameLayout>
 

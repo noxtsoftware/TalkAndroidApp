@@ -77,7 +77,7 @@
         android:layout_marginStart="-4dp"
         android:background="@color/transparent"
         android:contentDescription="@string/nc_add_emojis"
-        android:src="@drawable/ic_insert_emoticon_black_24dp"
+        android:src="@drawable/emoji_default"
         android:visibility="gone"
         app:tint="@color/emoji_icons"
         tools:visibility="visible" />

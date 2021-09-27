@@ -119,7 +119,7 @@
                     android:id="@+id/favoriteConversationAction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    apc:mp_icon="@drawable/ic_star_black_24dp"
+                    apc:mp_icon="@drawable/star_fill_default"
                     apc:mp_icon_tint="@color/grey_600"
                     apc:mp_title="@string/nc_add_to_favorites">
 
@@ -169,7 +169,7 @@
                     android:id="@+id/leaveConversationAction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    apc:mp_icon="@drawable/ic_exit_to_app_black_24dp"
+                    apc:mp_icon="@drawable/sign_out_default"
                     apc:mp_icon_tint="@color/grey_600"
                     apc:mp_title="@string/nc_leave" />
 

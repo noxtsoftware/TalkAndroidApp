@@ -42,7 +42,7 @@
         android:layout_centerVertical="true"
         android:layout_centerInParent="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_videocam_grey_600_24dp"
+        android:src="@drawable/video_cam_default"
         android:contentDescription="@null"
         android:visibility="gone"
         tools:visibility="visible" />

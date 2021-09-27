@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/upload"
+            android:src="@drawable/upload_default"
             app:tint="@color/colorPrimary" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -125,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/ic_share_variant"
+            android:src="@drawable/share_default"
             app:tint="@color/colorPrimary" />
 
         <androidx.appcompat.widget.AppCompatTextView

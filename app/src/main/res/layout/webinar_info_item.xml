@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            apc:mp_icon="@drawable/ic_timer_black_24dp"
+            apc:mp_icon="@drawable/stopwatch_default"
             apc:mp_icon_tint="@color/grey_600"
             apc:mp_summary="@string/nc_manual"
             apc:mp_title="@string/nc_start_time"

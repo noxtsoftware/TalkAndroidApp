@@ -285,10 +285,10 @@ public class NotificationWorker extends Worker {
 
         switch (conversationType) {
             case "group":
-                largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_people_group_black_24px);
+                largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.contacts_default);
                 break;
             case "public":
-                largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_link_black_24px);
+                largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.link_default);
                 break;
             default:
                 // assuming one2one

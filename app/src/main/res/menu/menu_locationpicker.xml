@@ -25,7 +25,7 @@
 	<!-- Search, should appear as action button -->
 	<item android:id="@+id/location_action_search"
 	      android:title="@string/nc_search"
-	      android:icon="@drawable/ic_search_white_24dp"
+	      android:icon="@drawable/search_dark"
 	      app:showAsAction="collapseActionView|always"
 	      android:animateLayoutChanges="true"
 	      app:actionViewClass="androidx.appcompat.widget.SearchView" />

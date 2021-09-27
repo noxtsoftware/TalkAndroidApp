@@ -52,7 +52,7 @@
             android:layout_height="16dp"
             android:layout_gravity="top|end"
             android:contentDescription="@string/starred"
-            android:src="@drawable/ic_star_black_24dp"
+            android:src="@drawable/star_fill_default"
             app:tint="@color/favorite_icon_tint"
             app:tintMode="src_in" />
 

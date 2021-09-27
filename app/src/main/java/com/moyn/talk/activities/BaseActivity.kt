@@ -114,7 +114,7 @@ open class BaseActivity : AppCompatActivity() {
                 .setTopColorRes(R.color.nc_darkRed)
                 .setNegativeButtonColorRes(R.color.nc_darkRed)
                 .setPositiveButtonColorRes(R.color.colorPrimary)
-                .setIcon(R.drawable.ic_security_white_24dp)
+                .setIcon(R.drawable.shield_check_dark)
                 .setTitle(R.string.nc_certificate_dialog_title)
                 .setMessage(dialogText)
                 .setPositiveButton(R.string.nc_yes) { v ->

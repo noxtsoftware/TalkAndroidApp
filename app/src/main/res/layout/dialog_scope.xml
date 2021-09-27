@@ -89,7 +89,7 @@
             android:layout_height="24dp"
             android:layout_gravity="top"
             android:contentDescription="@string/lock_symbol"
-            app:srcCompat="@drawable/ic_password" />
+            app:srcCompat="@drawable/lock_default" />
 
         <LinearLayout
             android:layout_width="match_parent"

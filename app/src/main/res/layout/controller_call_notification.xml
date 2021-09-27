@@ -69,7 +69,7 @@
             android:layout_margin="24dp"
             android:visibility="gone"
             app:backgroundImage="@color/nc_darkGreen"
-            app:placeholderImage="@drawable/ic_videocam_white_24px"
+            app:placeholderImage="@drawable/video_cam_dark"
             app:roundAsCircle="true"
             tools:visibility="visible" />
     </LinearLayout>

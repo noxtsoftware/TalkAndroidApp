@@ -270,7 +270,7 @@ public class ConversationsListController extends BaseController implements Searc
                 @Override
                 protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
                     if (getResources() != null) {
-                        button.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_user, null));
+                        button.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.user_default, null));
                     }
                 }
             }, UiThreadImmediateExecutorService.getInstance());

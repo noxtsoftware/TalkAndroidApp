@@ -197,7 +197,7 @@ public class UserItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder> 
                 holder.videoCallIconView.setContentDescription(
                         resources.getString(R.string.nc_call_state_with_phone, participant.displayName));
             } else if ((inCallFlag & InCallFlags.WITH_VIDEO) > 0) {
-                holder.videoCallIconView.setImageResource(R.drawable.ic_videocam_grey_600_24dp);
+                holder.videoCallIconView.setImageResource(R.drawable.video_cam_default);
                 holder.videoCallIconView.setVisibility(View.VISIBLE);
                 holder.videoCallIconView.setContentDescription(
                         resources.getString(R.string.nc_call_state_with_video, participant.displayName));

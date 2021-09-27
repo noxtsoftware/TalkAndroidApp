@@ -288,7 +288,7 @@ public class ProfileController extends BaseController {
                         setErrorMessageForMultiList(
                                 getActivity().getString(R.string.userinfo_no_info_headline),
                                 getActivity().getString(R.string.userinfo_error_text),
-                                R.drawable.ic_list_empty_error);
+                                R.drawable.stop_default);
                     }
 
                     @Override
@@ -337,7 +337,7 @@ public class ProfileController extends BaseController {
 
             setErrorMessageForMultiList(
                     getActivity().getString(R.string.userinfo_no_info_headline),
-                    getActivity().getString(R.string.userinfo_no_info_text), R.drawable.ic_user);
+                    getActivity().getString(R.string.userinfo_no_info_text), R.drawable.user_default);
         } else {
             getActivity().findViewById(R.id.emptyList).setVisibility(View.GONE);
 
@@ -398,7 +398,7 @@ public class ProfileController extends BaseController {
         List<UserInfoDetailsItem> result = new LinkedList<>();
 
         addToList(result,
-                R.drawable.ic_user,
+                R.drawable.user_default,
                 userInfo.getDisplayName(),
                 R.string.user_info_displayname,
                 Field.DISPLAYNAME,
@@ -412,13 +412,13 @@ public class ProfileController extends BaseController {
         addToList(result, R.drawable.mail_default, userInfo.getEmail(), R.string.user_info_email, Field.EMAIL,
                   userInfo.getEmailScope());
         addToList(result,
-                R.drawable.ic_map_marker,
+                R.drawable.location_default,
                 userInfo.getAddress(),
                 R.string.user_info_address,
                 Field.ADDRESS,
                 userInfo.getAddressScope());
         addToList(result,
-                R.drawable.ic_web,
+                R.drawable.globe_default,
                 DisplayUtils.beautifyURL(userInfo.getWebsite()),
                 R.string.user_info_website,
                 Field.WEBSITE,
@@ -760,7 +760,7 @@ public class ProfileController extends BaseController {
                 switch (item.scope) {
                     case PRIVATE:
                     case LOCAL:
-                        holder.scope.setImageResource(R.drawable.ic_password);
+                        holder.scope.setImageResource(R.drawable.lock_default);
                         break;
                     case FEDERATED:
                         holder.scope.setImageResource(R.drawable.contacts_default);

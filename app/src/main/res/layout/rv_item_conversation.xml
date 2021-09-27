@@ -40,7 +40,7 @@
             android:layout_height="16dp"
             android:layout_gravity="bottom|end"
             android:contentDescription="@string/password_protected"
-            android:src="@drawable/ic_lock_white_24px"
+            android:src="@drawable/lock_dark"
             android:visibility="visible" />
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -61,7 +61,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@null"
         android:scaleType="center"
-        android:src="@drawable/ic_more_horiz_black_24dp" />
+        android:src="@drawable/kebab_horizontal_default" />
 
     <LinearLayout
         android:id="@+id/linear_layout"

@@ -95,7 +95,7 @@
         <!-- Close button icon -->
         <item name="closeIcon">@drawable/cancel_default</item>
         <!-- Search button icon -->
-        <item name="searchIcon">@drawable/ic_search_grey</item>
+        <item name="searchIcon">@drawable/search_default</item>
         <!-- Layout for query suggestion rows // unused for now, staying with the standard layout -->
         <!--<item name="suggestionRowLayout">...</item>-->
         <item name="submitBackground">@color/appbar</item>

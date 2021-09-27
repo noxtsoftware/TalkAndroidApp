@@ -1376,7 +1376,7 @@ class ChatController(args: Bundle) :
                 }
             }.setOnEmojiPopupDismissListener {
                 smileyButton?.setImageDrawable(
-                    ContextCompat.getDrawable(context!!, R.drawable.ic_insert_emoticon_black_24dp)
+                    ContextCompat.getDrawable(context!!, R.drawable.emoji_default)
                 )
             }.setOnEmojiClickListener { emoji,
                 imageView ->
