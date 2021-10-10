@@ -141,7 +141,7 @@
             android:maxLength="1000"
             app:attachmentButtonBackground="@color/transparent"
             app:attachmentButtonHeight="48dp"
-            app:attachmentButtonIcon="@drawable/ic_baseline_attach_file_24"
+            app:attachmentButtonIcon="@drawable/clip_add_default"
             app:attachmentButtonMargin="0dp"
             app:attachmentButtonWidth="48dp"
             app:delayTypingStatus="200"
