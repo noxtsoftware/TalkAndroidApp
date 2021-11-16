@@ -136,7 +136,7 @@
 
             <com.yarolegovich.mp.MaterialStandardPreference
                 android:id="@+id/settings_remove_account"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/server_age_warning_text_card">
 
@@ -147,7 +147,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/lexendregular"
                     android:text="@string/nc_settings_remove_account"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
             </com.yarolegovich.mp.MaterialStandardPreference>
 
         </RelativeLayout>
