@@ -55,8 +55,8 @@ android {
 
         // mayor.minor.hotfix.increment (for increment: 01-50=Alpha / 51-89=RC / 90-99=stable)
         // xx   .xxx  .xx    .xx
-        versionCode 120030001
-        versionName "1.0 Beta"
+        versionCode 120030002
+        versionName "1.0.1 Beta"
 
         flavorDimensions "default"
         renderscriptTargetApi 19
@@ -65,11 +65,11 @@ android {
         productFlavors {
             // used for f-droid
             generic {
-                applicationId 'com.nextcloud.talk2'
+                applicationId 'com.moyn.talk'
                 dimension "default"
             }
             gplay {
-                applicationId 'com.nextcloud.talk2'
+                applicationId 'com.moyn.talk'
                 dimension "default"
             }
             qa {
