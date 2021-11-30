@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Nextcloud Talk application
+  ~
+  ~ @author Mario Danic
+  ~ @author Marcel Hibbe
+  ~ @author Andy Scherzinger
+  ~ Copyright (C) 2021 Andy Scherzinger <info@andy-scherzinger.de>
+  ~ Copyright (C) 2017-2018 Mario Danic <mario@lovelyhq.com>
+  ~ Copyright (C) 2021 Marcel Hibbe <dev@mhibbe.de>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="14dp"
+    android:layout_marginBottom="2dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@id/messageUserAvatar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="6dp"
+        app:roundAsCircle="true" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@id/messageUserAvatar"
+        android:orientation="vertical"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_end">
+
+        <FrameLayout
+            android:id="@+id/preview_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:adjustViewBounds="true"
+            app:layout_alignSelf="flex_start"
+            app:layout_flexGrow="1"
+            app:layout_wrapBefore="true"
+            tools:visibility="gone">
+
+            <!-- SimpleDraweeView does not support wrap_content for layout_width or layout_height attributes! -->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@id/image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="fitStart"
+                app:roundedCornerRadius="6dp"
+                tools:src="@drawable/ic_call_black_24dp" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/contact_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginBottom="1dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            app:layout_alignSelf="flex_start"
+            app:layout_flexGrow="1"
+            app:layout_wrapBefore="true"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/standard_padding">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true">
+
+                    <!-- SimpleDraweeView does not support wrap_content for layout_width or layout_height attributes! -->
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/contact_photo"
+                        android:layout_width="@dimen/small_item_height"
+                        android:layout_height="@dimen/small_item_height"
+                        android:scaleType="fitStart"
+                        app:roundAsCircle="true"
+                        tools:src="@drawable/ic_call_black_24dp" />
+
+                    <ProgressBar
+                        android:id="@+id/contact_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </FrameLayout>
+
+                <androidx.emoji.widget.EmojiTextView
+                    android:id="@+id/contact_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:autoLink="none"
+                    android:ellipsize="middle"
+                    android:gravity="start|center_vertical"
+                    android:maxLines="3"
+                    android:paddingStart="@dimen/standard_padding"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/high_emphasis_text"
+                    android:textColorLink="@color/high_emphasis_text"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    app:layout_alignSelf="flex_start"
+                    app:layout_flexGrow="1"
+                    app:layout_wrapBefore="true"
+                    tools:text="Charlotte D. Meyerheimers" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.emoji.widget.EmojiTextView
+            android:id="@id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:autoLink="none"
+            android:textAlignment="viewStart"
+            android:textColor="@color/warm_grey_four"
+            android:textColorLink="@color/warm_grey_four"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            app:layout_alignSelf="flex_start"
+            app:layout_flexGrow="1"
+            app:layout_wrapBefore="true"
+            tools:text="A simple message" />
+
+        <TextView
+            android:id="@id/messageTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="2dp"
+            android:textColor="@color/warm_grey_four"
+            app:layout_alignSelf="center"
+            tools:text="12:38" />
+    </com.google.android.flexbox.FlexboxLayout>
+
+</RelativeLayout>

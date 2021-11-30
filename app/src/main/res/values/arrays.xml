@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Nextcloud Talk application
+  ~
+  ~ @author Mario Danic
+  ~ Copyright (C) 2017 Mario Danic <mario@lovelyhq.com>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <array name="proxy_type_descriptions">
+        <item>@string/nc_no_proxy</item>
+        <item>HTTP</item>
+        <item>DIRECT</item>
+        <item>SOCKS</item>
+    </array>
+
+    <array name="message_notification_levels">
+        <item>@string/nc_notify_me_never</item>
+        <item>@string/nc_notify_me_mention</item>
+        <item>@string/nc_notify_me_always</item>
+    </array>
+
+    <array name="message_notification_levels_entry_values">
+        <item>never</item>
+        <item>mention</item>
+        <item>always</item>
+    </array>
+
+    <array name="screen_lock_timeout_descriptions">
+        <item>@string/nc_screen_lock_timeout_30</item>
+        <item>@string/nc_screen_lock_timeout_60</item>
+        <item>@string/nc_screen_lock_timeout_300</item>
+        <item>@string/nc_screen_lock_timeout_600</item>
+    </array>
+
+    <array name="screen_lock_timeout_entry_values">
+        <item>@string/nc_screen_lock_timeout_thirty</item>
+        <item>@string/nc_screen_lock_timeout_sixty</item>
+        <item>@string/nc_screen_lock_timeout_three_hundred</item>
+        <item>@string/nc_screen_lock_timeout_six_hundred</item>
+    </array>
+
+    <array name="screen_lock_timeout_entry_int_values">
+        <item>30</item>
+        <item>60</item>
+        <item>300</item>
+        <item>600</item>
+    </array>
+
+    <array name="theme_descriptions">
+        <item>@string/nc_settings_theme_battery_saver</item>
+        <item>@string/nc_settings_theme_light</item>
+        <item>@string/nc_settings_theme_dark</item>
+    </array>
+
+    <array name="theme_entry_values">
+        <item>@string/nc_settings_theme_battery_saver_key</item>
+        <item>@string/nc_settings_theme_light_key</item>
+        <item>night_yes</item>
+    </array>
+
+</resources>
