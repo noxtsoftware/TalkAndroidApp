@@ -18,7 +18,6 @@
     <string name="menu_item_sort_by_name_z_a">Z - A</string>
     <string name="menu_item_sort_by_size_biggest_first">Největší jako první</string>
     <string name="menu_item_sort_by_size_smallest_first">Nejmenší jako první</string>
-    <string name="nc_99_plus">99+</string>
     <string name="nc_Server_account_imported">Zvolený účet byl importován a je k dispozici</string>
     <string name="nc_about">O aplikaci</string>
     <string name="nc_account_chooser_active_user">Aktivní uživatel</string>
@@ -39,10 +38,10 @@
     <string name="nc_call_incoming">PŘÍCHOZÍ</string>
     <string name="nc_call_name">Název konverzace</string>
     <string name="nc_call_name_is_same">Zadaný název je stejný jako ten stávající</string>
+    <string name="nc_call_notifications">Upozornění na hovor</string>
     <string name="nc_call_reconnecting">Znovunavazování spojení…</string>
     <string name="nc_call_ringing">ZVONĚNÍ</string>
     <string name="nc_call_state_in_call">%1$s má hovor</string>
-    <string name="nc_call_state_in_call_with_audio">%1$s má zvukový hovor</string>
     <string name="nc_call_state_with_phone">%1$s přes telefon</string>
     <string name="nc_call_state_with_video">%1$s s přenosem obrazu</string>
     <string name="nc_call_timeout">Žádná odezva po 45 sekundách, ťukněte, pokud chcete zkusit znovu</string>
@@ -85,9 +84,7 @@
     <string name="nc_delete">Smazat</string>
     <string name="nc_delete_all">Smazat vše</string>
     <string name="nc_delete_call">Smazat konverzaci</string>
-    <string name="nc_delete_conversation_default">Potvrďte, že chcete odebrat tuto konverzaci.</string>
     <string name="nc_delete_conversation_more">Pokud konverzaci smažete, bude smazána také pro všechny její ostatní účastníky.</string>
-    <string name="nc_delete_conversation_one2one">Pokud konverzaci smažete, bude také smazána pro %1$s.</string>
     <string name="nc_delete_message">Smazat</string>
     <string name="nc_delete_message_leaked_to_matterbridge">Zpráva úspěšně smazána, ale možná unikla do jiných služeb</string>
     <string name="nc_demote">Odebrat oprávnění moderátora</string>
@@ -108,7 +105,6 @@
     <string name="nc_external_server_failed">Nepodařilo se získat nastavení signalizace</string>
     <string name="nc_failed_signaling_settings">Cílový server nepodporuje připojování se k veřejným konverzacím prostřednictvím mobilních telefonů. Můžete se pokusit připojit ke konverzaci prostřednictvím webového prohlížeče.</string>
     <string name="nc_failed_to_perform_operation">Omlouváme se, něco se pokazilo!</string>
-    <string name="nc_file_browser">Procházení souborů\"</string>
     <string name="nc_file_browser_back">Zpět</string>
     <string name="nc_file_browser_refresh">Načíst znovu</string>
     <string name="nc_file_browser_reshare_forbidden">Nemáte oprávnění sdílet tento soubor dál dalším</string>
@@ -116,7 +112,6 @@
     <string name="nc_formatted_message_you">Vy: %1$s</string>
     <string name="nc_forward_message">Přeposlat</string>
     <string name="nc_forward_to_three_dots">Přeposlat na…</string>
-    <string name="nc_general_settings">Obecné</string>
     <string name="nc_get_from_provider">Nemáte ještě server?\nKlepnutím sem ho získejte od poskytovatele</string>
     <string name="nc_get_source_code">Získat zdrojové kódy</string>
     <string name="nc_group">Group</string>
@@ -188,6 +183,8 @@
     <string name="nc_permissions_settings">Otevřít nastavení</string>
     <string name="nc_phone_book_integration_account_not_found">Účet nenalezen</string>
     <string name="nc_phone_book_integration_chat_via">Rozhovor prostřednictvím %s</string>
+    <string name="nc_pip_microphone_mute">Ztlumit mikrofon</string>
+    <string name="nc_pip_microphone_unmute">Zapnout mikrofon</string>
     <string name="nc_plain_old_messages">Zprávy</string>
     <string name="nc_privacy">Soukromí</string>
     <string name="nc_proceed">Pokračovat</string>
@@ -216,8 +213,6 @@
     <string name="nc_screen_lock_timeout_three_hundred">300</string>
     <string name="nc_search">Hledat</string>
     <string name="nc_select_an_account">Vyberte účet</string>
-    <string name="nc_select_contacts">Vybrat kontakty</string>
-    <string name="nc_select_files">Vyberte soubory</string>
     <string name="nc_select_participants">Vybrat účastníky</string>
     <string name="nc_sent_a_gif" formatted="true">%1$s poslal(a) GIF animaci.</string>
     <string name="nc_sent_a_gif_you">Odeslali jste GIF animaci.</string>
@@ -252,14 +247,11 @@
     <string name="nc_set_password">Nastavit heslo</string>
     <string name="nc_settings">Nastavení</string>
     <string name="nc_settings_account_updated">Namísto přidání nového byl zaktualizován váš stávající účet</string>
-    <string name="nc_settings_add_account">Přidat nový účet</string>
     <string name="nc_settings_advanced_title">Pokročilé</string>
     <string name="nc_settings_appearance">Vzhled</string>
     <string name="nc_settings_call_ringtone">Volání</string>
     <string name="nc_settings_incognito_keyboard_desc">Dát klávesnici pokyn, že má vypnout přizpůsobené učení se (bez záruky)</string>
     <string name="nc_settings_incognito_keyboard_title">Inkognito klávesnice</string>
-    <string name="nc_settings_link_previews_desc">U podporovaných služeb umožňuje náhledy obsahu z obdržených odkazů</string>
-    <string name="nc_settings_link_previews_title">Zobrazovat náhledy odkazů</string>
     <string name="nc_settings_no_ringtone">Žádný zvuk</string>
     <string name="nc_settings_no_talk_installed">Aplikace Talk není na serveru, vůči kterému jste se pokusili ověřit, vůbec nainstalována</string>
     <string name="nc_settings_notification_sounds">Zvuk</string>
@@ -274,7 +266,6 @@
     <string name="nc_settings_proxy_host_title">Hostitel proxy</string>
     <string name="nc_settings_proxy_password_title">Heslo do proxy</string>
     <string name="nc_settings_proxy_port_title">Port proxy</string>
-    <string name="nc_settings_proxy_title">Proxy</string>
     <string name="nc_settings_proxy_type_title">Typ proxy</string>
     <string name="nc_settings_proxy_username_title">Uživatelské jméno pro proxy</string>
     <string name="nc_settings_read_privacy_desc">Sdílet mé oznámení o přečtení a zobrazit oznámení o přečtení ostatních</string>
@@ -291,7 +282,6 @@
     <string name="nc_settings_server_almost_eol">Verze serveru je příliš stará a v příštím vydání této aplikace už nebude podporována!</string>
     <string name="nc_settings_server_eol">Verze serveru je příliš stará a nepodporovaná touto verzí aplikace pro Android</string>
     <string name="nc_settings_server_eol_title">Nepodporovaný server</string>
-    <string name="nc_settings_switch_account">Přepnout mezi účty</string>
     <string name="nc_settings_theme_battery_saver">Nastaveno úsporou akumulátoru</string>
     <string name="nc_settings_theme_dark">Tmavý</string>
     <string name="nc_settings_theme_follow_system">Použít systémový výchozí</string>
@@ -303,6 +293,8 @@
     <string name="nc_settings_vibrate_desc">Pokud není ztišený, telefon bude vibrovat</string>
     <string name="nc_settings_warning">Varování</string>
     <string name="nc_settings_wrong_account">Pověření může být znovuzískáno pouze pro stávající účet</string>
+    <string name="nc_share_contact">Sdílet kontakt</string>
+    <string name="nc_share_contact_permission">Je třeba oprávnění ke čtení kontaktů</string>
     <string name="nc_share_current_location">Sdílet stávající umístění</string>
     <string name="nc_share_link">Sdílet odkaz</string>
     <string name="nc_share_link_via">Sdílet odkaz prostřednictvím</string>
@@ -324,8 +316,8 @@
     <string name="nc_upload_from_cloud">Nasdílet z %1$s</string>
     <string name="nc_upload_in_progess">Nahrávání</string>
     <string name="nc_upload_local_file">Nahrát soubor ze zařízení</string>
+    <string name="nc_upload_picture_from_cam">Vyfotit</string>
     <string name="nc_user">Uživatel</string>
-    <string name="nc_username">Uživatelské jméno</string>
     <string name="nc_voice_message_filename">Nahrávka z Talk z %1$s (%2$s)</string>
     <string name="nc_voice_message_hold_to_record_info">Podržením nahrajte, uvolněním odešlete.</string>
     <string name="nc_voice_message_missing_audio_permission">Je zapotřebí oprávnění pro zaznamenávání zvuku</string>
@@ -355,6 +347,15 @@
     <string name="send_to_three_dots">Odeslat k…</string>
     <string name="share">Sdílet</string>
     <string name="starred">Oblíbené</string>
+    <string name="take_photo">Vyfotit</string>
+    <string name="take_photo_error_deleting_picture">Chyba při pořizování obrázku</string>
+    <string name="take_photo_permission">Focení není možné bez udělení oprávnění</string>
+    <string name="take_photo_retake_photo">Znovu pořídit fotku</string>
+    <string name="take_photo_send">Odeslat</string>
+    <string name="take_photo_switch_camera">Přepnout kameru</string>
+    <string name="take_photo_toggle_crop">Oříznout fotku</string>
+    <string name="take_photo_toggle_lowres">Zmenšit velikost obrázku</string>
+    <string name="take_photo_toggle_torch">Vyp/zap. přisvícení</string>
     <string name="upload_new_avatar_from_device">Nahrát nový profilový obrázek ze zařízení</string>
     <string name="user_info_address">Adresa</string>
     <string name="user_info_displayname">Celé jméno</string>

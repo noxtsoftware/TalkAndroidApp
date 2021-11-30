@@ -51,8 +51,20 @@
         <item name="iconTint">@color/fontAppbar</item>
     </style>
 
-    <style name="CallTheme" parent="AppTheme">
-        <item name="android:navigationBarColor">@color/grey950</item>
+    <style name="BottomNavigationView" parent="@style/Widget.MaterialComponents.BottomNavigationView">
+        <item name="elevation">1dp</item>
+    </style>
+
+    <style name="TransparentTheme" parent="Theme.MaterialComponents.NoActionBar.Bridge">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/background_dark</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="TakePhotoTheme" parent="TransparentTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="ErrorAppearance" parent="@android:style/TextAppearance">
@@ -103,6 +115,21 @@
         <item name="searchHintIcon">@null</item>
     </style>
 
+    <style name="Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Button.Primary" parent="Button">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Widget.AppTheme.Button.IconButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:minWidth">0dp</item>
         <item name="android:insetLeft">0dp</item>
@@ -111,6 +138,13 @@
         <item name="android:insetBottom">0dp</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
+    </style>
+
+    <style name="Button.Borderless" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@drawable/borderless_btn</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Widget.App.Login.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -174,6 +208,13 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- Call Launch screen -->
+    <style name="AppTheme.CallLauncher">
+        <item name="android:windowBackground">@color/grey950</item>
+        <item name="android:statusBarColor">@color/grey950</item>
+        <item name="android:navigationBarColor">@color/grey950</item>
     </style>
 
     <style name="Nextcloud.Material.TextButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">

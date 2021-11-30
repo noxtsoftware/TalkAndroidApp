@@ -92,6 +92,7 @@ import com.nextcloud.talk.utils.UriUtils;
 import com.nextcloud.talk.utils.bundle.BundleKeys;
 import com.nextcloud.talk.utils.database.user.UserUtils;
 import com.nextcloud.talk.utils.preferences.AppPreferences;
+import com.webianks.library.PopupBubble;
 import com.yarolegovich.lovelydialog.LovelySaveStateHandler;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
@@ -99,11 +100,13 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -136,6 +139,7 @@ public class ConversationsListController extends BaseController implements Searc
 
     public static final String TAG = "ConvListController";
     public static final int ID_DELETE_CONVERSATION_DIALOG = 0;
+    public static final int UNREAD_BUBBLE_DELAY = 2500;
     private static final String KEY_SEARCH_QUERY = "ContactsController.searchQuery";
     private final Bundle bundle;
     @Inject
@@ -168,6 +172,9 @@ public class ConversationsListController extends BaseController implements Searc
     @BindView(R.id.floatingActionButton)
     FloatingActionButton floatingActionButton;
 
+    @BindView(R.id.newMentionPopupBubble)
+    PopupBubble newMentionPopupBubble;
+
     private UserEntity currentUser;
     private Disposable roomsQueryDisposable;
     private FlexibleAdapter<AbstractFlexibleItem> adapter;
@@ -199,6 +206,10 @@ public class ConversationsListController extends BaseController implements Searc
     private String textToPaste = "";
 
     private boolean forwardMessage;
+
+    private int nextUnreadConversationScrollPosition = 0;
+
+    private SmoothScrollLinearLayoutManager layoutManager;
 
     public ConversationsListController(Bundle bundle) {
         super();
@@ -516,6 +527,7 @@ public class ConversationsListController extends BaseController implements Searc
                     }
 
                     adapter.updateDataSet(callItems, false);
+                    new Handler().postDelayed(this::checkToShowUnreadBubble, UNREAD_BUBBLE_DELAY);
 
                     if (swipeRefreshLayout != null) {
                         swipeRefreshLayout.setRefreshing(false);
@@ -565,12 +577,19 @@ public class ConversationsListController extends BaseController implements Searc
     }
 
     private void prepareViews() {
-        SmoothScrollLinearLayoutManager layoutManager =
-                new SmoothScrollLinearLayoutManager(getActivity());
+        layoutManager = new SmoothScrollLinearLayoutManager(Objects.requireNonNull(getActivity()));
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NotNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    checkToShowUnreadBubble();
+                }
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(() -> fetchData(false));
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -596,6 +615,39 @@ public class ConversationsListController extends BaseController implements Searc
                             .popChangeHandler(new HorizontalChangeHandler())));
                 }
             });
+        }
+
+        newMentionPopupBubble.hide();
+        newMentionPopupBubble.setPopupBubbleListener(new PopupBubble.PopupBubbleClickListener() {
+            @Override
+            public void bubbleClicked(Context context) {
+                recyclerView.smoothScrollToPosition(nextUnreadConversationScrollPosition);
+            }
+        });
+    }
+
+    private void checkToShowUnreadBubble() {
+        try {
+            int lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition();
+            for (AbstractFlexibleItem flexItem : callItems) {
+                Conversation conversationItem = ((ConversationItem) flexItem).getModel();
+                int position = adapter.getGlobalPositionOf(flexItem);
+                if ((conversationItem.unreadMention ||
+                    (conversationItem.unreadMessages > 0 &&
+                        conversationItem.type == Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL)) &&
+                    position > lastVisibleItem) {
+                    nextUnreadConversationScrollPosition = position;
+                    if (!newMentionPopupBubble.isShown()) {
+                        newMentionPopupBubble.show();
+                    }
+                    return;
+                }
+            }
+            nextUnreadConversationScrollPosition = 0;
+            newMentionPopupBubble.hide();
+        } catch (NullPointerException e) {
+            Log.d(TAG, "A NPE was caught when trying to show the unread popup bubble. This might happen when the " +
+                "user already left the conversations-list screen so the popup bubble is not available anymore.", e);
         }
     }
 

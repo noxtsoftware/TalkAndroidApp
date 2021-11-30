@@ -123,9 +123,24 @@
         </activity>
 
         <activity
-            android:name=".activities.MagicCallActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask" />
+            android:name=".activities.CallActivity"
+            android:theme="@style/AppTheme.CallLauncher"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTask"
+            android:taskAffinity=".call"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true"/>
+
+        <activity
+            android:name=".activities.CallNotificationActivity"
+            android:theme="@style/AppTheme.CallLauncher"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTask"
+            android:taskAffinity=".call"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true" />
 
         <activity
             android:name=".activities.FullScreenImageActivity"
@@ -144,6 +159,11 @@
             android:theme="@style/FullScreenTextTheme"
             android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
+
+        <activity
+            android:name=".activities.TakePhotoActivity"
+            android:theme="@style/TakePhotoTheme"
+            android:windowSoftInputMode="stateHidden" />
 
         <receiver android:name=".receivers.PackageReplacedReceiver">
             <intent-filter>
@@ -192,4 +212,16 @@
         </provider>
 
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
+
 </manifest>

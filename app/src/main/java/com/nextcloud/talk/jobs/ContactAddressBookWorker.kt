@@ -1,19 +1,19 @@
 /*
  * Nextcloud Talk application
- *  
+ *
  * @author Tobias Kaminsky
  * Copyright (C) 2020 Tobias Kaminsky <tobias.kaminsky@nextcloud.com>
- *  
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *  
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -48,6 +48,7 @@ import com.nextcloud.talk.application.NextcloudTalkApplication
 import com.nextcloud.talk.application.NextcloudTalkApplication.Companion.sharedApplication
 import com.nextcloud.talk.models.json.search.ContactsByNumberOverall
 import com.nextcloud.talk.utils.ApiUtils
+import com.nextcloud.talk.utils.ContactUtils
 import com.nextcloud.talk.utils.database.user.UserUtils
 import com.nextcloud.talk.utils.preferences.AppPreferences
 import io.reactivex.Observer
@@ -145,7 +146,7 @@ class ContactAddressBookWorker(val context: Context, workerParameters: WorkerPar
                 })
         }
 
-        // store timestamp 
+        // store timestamp
         appPreferences.setPhoneBookIntegrationLastRun(System.currentTimeMillis())
 
         return Result.success()
@@ -299,7 +300,7 @@ class ContactAddressBookWorker(val context: Context, workerParameters: WorkerPar
                     }
 
                     val numbers = getPhoneNumbersFromDeviceContact(id)
-                    val displayName = getDisplayNameFromDeviceContact(id)
+                    val displayName = ContactUtils.getDisplayNameFromDeviceContact(context, id)
 
                     if (displayName == null) {
                         return
@@ -391,33 +392,6 @@ class ContactAddressBookWorker(val context: Context, workerParameters: WorkerPar
         } else {
             Log.d(TAG, "no contacts with linked Talk Accounts found. No linked accounts created.")
         }
-    }
-
-    private fun getDisplayNameFromDeviceContact(id: String?): String? {
-        var displayName: String? = null
-        val whereName =
-            ContactsContract.Data.MIMETYPE +
-                " = ? AND " +
-                ContactsContract.CommonDataKinds.StructuredName.CONTACT_ID +
-                " = ?"
-        val whereNameParams = arrayOf(ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE, id)
-        val nameCursor = context.contentResolver.query(
-            ContactsContract.Data.CONTENT_URI,
-            null,
-            whereName,
-            whereNameParams,
-            ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
-        )
-        if (nameCursor != null) {
-            while (nameCursor.moveToNext()) {
-                displayName =
-                    nameCursor.getString(
-                        nameCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME)
-                    )
-            }
-            nameCursor.close()
-        }
-        return displayName
     }
 
     private fun getPhoneNumbersFromDeviceContact(id: String?): MutableList<String> {

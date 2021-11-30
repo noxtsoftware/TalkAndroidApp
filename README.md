@@ -11,6 +11,10 @@
 
 Please note that Notifications won't work with the F-Droid version due to missing Google Play Services.
 
+|||||||
+|---|---|---|---|---|---|
+|<img src="https://raw.githubusercontent.com/nextcloud/screenshots/master/android/Talk/playstore/conversationList_light.png">|<img src="https://raw.githubusercontent.com/nextcloud/screenshots/master/android/Talk/playstore/searchParticipant_light.png">|<img src="https://raw.githubusercontent.com/nextcloud/screenshots/master/android/Talk/playstore/voiceCall.png">|<img src="https://raw.githubusercontent.com/nextcloud/screenshots/master/android/Talk/playstore/voiceRecord_light.png">|<img src="https://raw.githubusercontent.com/nextcloud/screenshots/master/android/Talk/playstore/markdown_light.png">|<img src="https://raw.githubusercontent.com/nextcloud/screenshots/master/android/Talk/playstore/settings_light.png">|
+
 **Video & audio calls through Nextcloud on Android**
 
 Nextcloud Talk is a fully on-premises audio/video and chat communication service. It features web and mobile apps and is designed to offer the highest degree of security while being easy to use.
@@ -85,6 +89,10 @@ Please make sure to remember that these versions might contain bugs and you don'
 ## Support :rescue_worker_helmet:
 
 If you need assistance or want to ask a question about the Talk Android app, you are welcome to [ask for community help](https://help.nextcloud.com/c/support/talk/52) in our forums. If you have found a bug, feel free to [open a new issue on GitHub](https://github.com/nextcloud/talk-android/issues). Keep in mind, that this repository only manages the Nextcloud Talk for Android app. If you find bugs or have problems with the server/backend, you should ask the [Nextcloud server team](https://github.com/nextcloud/server) for help!
+
+### Notifications
+
+If you have problems to receive talk notifications on your android phone, please have a look at [this checklist](https://github.com/nextcloud/talk-android/blob/master/docs/notifications.md).
 
 ## Credits :scroll:
 

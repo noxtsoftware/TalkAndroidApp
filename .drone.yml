@@ -5,11 +5,11 @@ steps:
 - name: generic
   image: nextcloudci/android:android-44
   commands:
-    - ./gradlew assembleGeneric
+    - ./gradlew --console=plain assembleGeneric
 
 trigger:
   branch:
-    - stable-12.2
+    - master
   event:
     - pull_request
     - push
@@ -22,10 +22,11 @@ steps:
 - name: gplay
   image: nextcloudci/android:android-44
   commands:
+    - ./gradlew --console=plain assembleGplay
 
 trigger:
   branch:
-    - stable-12.2
+    - master
   event:
    - push
    - pull_request
@@ -74,11 +75,11 @@ steps:
     status:
       - failure
     branch:
-      - stable-12.2
+      - master
 
 trigger:
   branch:
-    - stable-12.2
+    - master
   event:
     - push
     - pull_request
