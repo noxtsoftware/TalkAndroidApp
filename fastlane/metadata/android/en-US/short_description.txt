@@ -1,1 +1,0 @@
-Have private video calls and chat using your own server.
