@@ -81,51 +81,10 @@ open class BaseActivity : AppCompatActivity() {
         magicTrustManager: MagicTrustManager,
         sslErrorHandler: SslErrorHandler?
     ) {
-        val formatter = DateFormat.getDateInstance(DateFormat.LONG)
-        val validFrom = formatter.format(cert.notBefore)
-        val validUntil = formatter.format(cert.notAfter)
-
-        val issuedBy = cert.issuerDN.toString()
-        val issuedFor: String
-
-        try {
-            if (cert.subjectAlternativeNames != null) {
-                val stringBuilder = StringBuilder()
-                for (o in cert.subjectAlternativeNames) {
-                    val list = o as List<*>
-                    val type = list[0] as Int
-                    if (type == 2) {
-                        val name = list[1] as String
-                        stringBuilder.append("[").append(type).append("]").append(name).append(" ")
-                    }
-                }
-                issuedFor = stringBuilder.toString()
-            } else {
-                issuedFor = cert.subjectDN.name
-            }
-
-            @SuppressLint("StringFormatMatches") val dialogText = String.format(
-                resources
-                    .getString(R.string.nc_certificate_dialog_text),
-                issuedBy, issuedFor, validFrom, validUntil
-            )
-
-            LovelyStandardDialog(this)
-                .setTopColorRes(R.color.nc_darkRed)
-                .setNegativeButtonColorRes(R.color.nc_darkRed)
-                .setPositiveButtonColorRes(R.color.colorPrimary)
-                .setIcon(R.drawable.ic_security_white_24dp)
-                .setTitle(R.string.nc_certificate_dialog_title)
-                .setMessage(dialogText)
-                .setPositiveButton(R.string.nc_yes) { v ->
-                    magicTrustManager.addCertInTrustStore(cert)
-                    sslErrorHandler?.proceed()
-                }
-                .setNegativeButton(R.string.nc_no) { view1 ->
-                    sslErrorHandler?.cancel()
-                }
-                .show()
-        } catch (e: CertificateParsingException) {
+        try{
+            magicTrustManager.addCertInTrustStore(cert)
+            sslErrorHandler?.proceed()
+        }catch (e: CertificateParsingException) {
             Log.d(TAG, "Failed to parse the certificate")
         }
     }

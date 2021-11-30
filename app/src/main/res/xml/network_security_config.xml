@@ -26,5 +26,8 @@
             <certificates src="user"/>
         </trust-anchors>
     </base-config>
-</network-security-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">secure.example.com</domain>
+    </domain-config>
 
+</network-security-config>
