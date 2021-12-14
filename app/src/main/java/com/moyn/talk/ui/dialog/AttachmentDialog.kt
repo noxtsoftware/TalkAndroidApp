@@ -2,6 +2,8 @@
  * Nextcloud Talk application
  *
  * @author Marcel Hibbe
+ * @author Andy Scherzinger
+ * Copyright (C) 2021 Andy Scherzinger <info@andy-scherzinger.de>
  * Copyright (C) 2021 Marcel Hibbe <dev@mhibbe.de>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,47 +26,26 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatTextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.moyn.talk.R
 import com.moyn.talk.components.filebrowser.controllers.BrowserController
 import com.moyn.talk.controllers.ChatController
+import com.moyn.talk.databinding.DialogAttachmentBinding
 import com.moyn.talk.models.database.CapabilitiesUtil
 
 class AttachmentDialog(val activity: Activity, var chatController: ChatController) : BottomSheetDialog(activity) {
 
-    @BindView(R.id.menu_share_location)
-    @JvmField
-    var shareLocationItem: LinearLayout? = null
-
-    @BindView(R.id.txt_share_location)
-    @JvmField
-    var shareLocation: AppCompatTextView? = null
-
-    @BindView(R.id.txt_attach_file_from_local)
-    @JvmField
-    var attachFromLocal: AppCompatTextView? = null
-
-    @BindView(R.id.txt_attach_file_from_cloud)
-    @JvmField
-    var attachFromCloud: AppCompatTextView? = null
-
-    private var unbinder: Unbinder? = null
+    private lateinit var dialogAttachmentBinding: DialogAttachmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val view = layoutInflater.inflate(R.layout.dialog_attachment, null)
-        setContentView(view)
+        dialogAttachmentBinding = DialogAttachmentBinding.inflate(layoutInflater)
+        setContentView(dialogAttachmentBinding.root)
         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        unbinder = ButterKnife.bind(this, view)
 
         var serverName = CapabilitiesUtil.getServerName(chatController.conversationUser)
-        attachFromCloud?.text = chatController.resources?.let {
+        dialogAttachmentBinding.txtAttachFileFromCloud.text = chatController.resources?.let {
             if (serverName.isNullOrEmpty()) {
                 serverName = it.getString(R.string.nc_server_product_name)
             }
@@ -76,20 +57,30 @@ class AttachmentDialog(val activity: Activity, var chatController: ChatControlle
                 "geo-location-sharing"
             )
         ) {
-            shareLocationItem?.visibility = View.GONE
+            dialogAttachmentBinding.menuShareLocation.visibility = View.GONE
         }
 
-        shareLocation?.setOnClickListener {
+        dialogAttachmentBinding.menuShareLocation.setOnClickListener {
             chatController.showShareLocationScreen()
             dismiss()
         }
 
-        attachFromLocal?.setOnClickListener {
+        dialogAttachmentBinding.menuAttachFileFromLocal.setOnClickListener {
             chatController.sendSelectLocalFileIntent()
             dismiss()
         }
-        attachFromCloud?.setOnClickListener {
+       dialogAttachmentBinding.menuAttachPictureFromCam.setOnClickListener {
+            chatController.sendPictureFromCamIntent()
+            dismiss()
+        }
+
+        dialogAttachmentBinding.menuAttachFileFromCloud.setOnClickListener {
             chatController.showBrowserScreen(BrowserController.BrowserType.DAV_BROWSER)
+            dismiss()
+        }
+        
+        dialogAttachmentBinding.menuAttachContact.setOnClickListener {
+            chatController.sendChooseContactIntent()
             dismiss()
         }
     }

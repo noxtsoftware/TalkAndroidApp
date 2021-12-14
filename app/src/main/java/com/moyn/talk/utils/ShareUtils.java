@@ -43,13 +43,13 @@ import java.util.Set;
 public class ShareUtils {
 
     public static String getStringForIntent(Context context, @Nullable String password, UserUtils userUtils, Conversation
-            conversation) {
+        conversation) {
         UserEntity userEntity = userUtils.getCurrentUser();
 
         String shareString = "";
         if (userEntity != null && context != null) {
             shareString = String.format(context.getResources().getString(R.string.nc_share_text),
-                    userEntity.getBaseUrl(), conversation.getToken());
+                userEntity.getBaseUrl(), conversation.getToken());
 
             if (!TextUtils.isEmpty(password)) {
                 shareString += String.format(context.getResources().getString(R.string.nc_share_text_pass), password);

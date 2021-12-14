@@ -45,7 +45,7 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.kennyc.bottomsheet.BottomSheet;
 import com.moyn.talk.R;
-import com.moyn.talk.activities.MagicCallActivity;
+import com.moyn.talk.activities.CallActivity;
 import com.moyn.talk.adapters.items.GenericTextHeaderItem;
 import com.moyn.talk.adapters.items.UserItem;
 import com.moyn.talk.api.NcApi;
@@ -918,7 +918,7 @@ public class ContactsController extends BaseController implements SearchView.OnQ
                             @Override
                             public void onNext(RoomOverall roomOverall) {
                                 if (getActivity() != null) {
-                                    Intent conversationIntent = new Intent(getActivity(), MagicCallActivity.class);
+                                    Intent conversationIntent = new Intent(getActivity(), CallActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable(BundleKeys.INSTANCE.getKEY_USER_ENTITY(), currentUser);
                                     bundle.putString(BundleKeys.INSTANCE.getKEY_ROOM_TOKEN(), roomOverall.getOcs().getData().getToken());

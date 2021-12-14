@@ -29,7 +29,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.RequiresApi
 import autodagger.AutoInjector
 import com.bluelinelabs.conductor.Conductor
@@ -37,13 +36,10 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.FirebaseMessaging
 import com.moyn.talk.R
 import com.moyn.talk.api.NcApi
 import com.moyn.talk.application.NextcloudTalkApplication
-import com.moyn.talk.controllers.CallNotificationController
 import com.moyn.talk.controllers.ConversationsListController
 import com.moyn.talk.controllers.LockedController
 import com.moyn.talk.controllers.ServerSelectionController
@@ -104,18 +100,6 @@ class MainActivity : BaseActivity(), ActionBarProvider {
         router = Conductor.attachRouter(this, binding.controllerContainer, savedInstanceState)
 
         var hasDb = true
-
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener {task ->
-            if(!task.isSuccessful){
-                Log.w(TAG,"Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            val token = task.result
-
-            val stringToken = token.toString()
-            Log.w(TAG," FCM Token ----------> " + stringToken)
-        })
 
         try {
             sqlCipherDatabaseSource.writableDatabase
@@ -325,11 +309,9 @@ class MainActivity : BaseActivity(), ActionBarProvider {
         handleActionFromContact(intent)
         if (intent.hasExtra(BundleKeys.KEY_FROM_NOTIFICATION_START_CALL)) {
             if (intent.getBooleanExtra(BundleKeys.KEY_FROM_NOTIFICATION_START_CALL, false)) {
-                router!!.pushController(
-                    RouterTransaction.with(CallNotificationController(intent.extras))
-                        .pushChangeHandler(HorizontalChangeHandler())
-                        .popChangeHandler(HorizontalChangeHandler())
-                )
+                val callNotificationIntent = Intent(this, CallNotificationActivity::class.java)
+                intent.extras?.let { callNotificationIntent.putExtras(it) }
+                startActivity(callNotificationIntent)
             } else {
                 ConductorRemapping.remapChatController(
                     router!!, intent.getLongExtra(BundleKeys.KEY_INTERNAL_USER_ID, -1),

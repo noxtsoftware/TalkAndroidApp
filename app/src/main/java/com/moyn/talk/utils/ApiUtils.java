@@ -2,6 +2,8 @@
  * Nextcloud Talk application
  *
  * @author Mario Danic
+ * @author Tim Krüger
+ * Copyright (C) 2021 Tim Krüger <t@timkrueger.me>
  * Copyright (C) 2017-2018 Mario Danic <mario@lovelyhq.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -195,6 +197,9 @@ public class ApiUtils {
     }
 
     public static String getUrlForParticipants(int version, String baseUrl, String token) {
+        if (token == null || token.isEmpty()){
+            Log.e(TAG, "token was null or empty");
+        }
         return getUrlForRoom(version, baseUrl, token) + "/participants";
     }
 
@@ -232,6 +237,10 @@ public class ApiUtils {
 
     public static String getUrlForRoomWebinaryLobby(int version, String baseUrl, String token) {
         return getUrlForRoom(version, baseUrl, token) + "/webinary/lobby";
+    }
+
+    public static String getUrlForRoomNotificationCalls(int version, String baseUrl, String token) {
+        return getUrlForRoom(version, baseUrl, token) + "/notify-calls";
     }
 
     public static String getUrlForCall(int version, String baseUrl, String token) {
@@ -394,4 +403,7 @@ public class ApiUtils {
     public static String getUrlToSendLocation(int version, String baseUrl, String roomToken) {
         return getUrlForChat(version, baseUrl, roomToken) + "/share";
     }
+
+    public static String getUrlForHoverCard(String baseUrl, String userId) { return baseUrl + ocsApiVersion +
+        "/hovercard/v1/" + userId; }
 }

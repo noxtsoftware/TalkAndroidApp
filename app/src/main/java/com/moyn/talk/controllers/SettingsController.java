@@ -77,7 +77,6 @@ import com.moyn.talk.models.json.generic.GenericOverall;
 import com.moyn.talk.models.json.userprofile.UserProfileOverall;
 import com.moyn.talk.utils.ApiUtils;
 import com.moyn.talk.utils.DisplayUtils;
-import com.moyn.talk.utils.DoNotDisturbUtils;
 import com.moyn.talk.utils.LoggingUtils;
 import com.moyn.talk.utils.SecurityUtils;
 import com.moyn.talk.utils.bundle.BundleKeys;
@@ -132,8 +131,6 @@ public class SettingsController extends BaseController {
     private static final int ID_REMOVE_ACCOUNT_WARNING_DIALOG = 0;
     @BindView(R.id.settings_screen)
     MaterialPreferenceScreen settingsScreen;
-    @BindView(R.id.settings_proxy_choice)
-    MaterialChoicePreference proxyChoice;
     @BindView(R.id.settings_proxy_port_edit)
     MaterialEditTextPreference proxyPortEditText;
     @BindView(R.id.settings_licence)
@@ -168,8 +165,6 @@ public class SettingsController extends BaseController {
     MaterialPreferenceCategory messageView;
     @BindView(R.id.settings_client_cert)
     MaterialStandardPreference certificateSetup;
-    @BindView(R.id.settings_always_vibrate)
-    MaterialSwitchPreference shouldVibrateSwitchPreference;
     @BindView(R.id.settings_incognito_keyboard)
     MaterialSwitchPreference incognitoKeyboardSwitchPreference;
     @BindView(R.id.settings_screen_security)
@@ -259,10 +254,6 @@ public class SettingsController extends BaseController {
             });
         } else {
             licenceButton.setVisibility(View.GONE);
-        }
-
-        if (!DoNotDisturbUtils.INSTANCE.hasVibrator()) {
-            shouldVibrateSwitchPreference.setVisibility(View.GONE);
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -431,10 +422,6 @@ public class SettingsController extends BaseController {
             certificateSetup.setTitle(R.string.nc_client_cert_change);
         } else {
             certificateSetup.setTitle(R.string.nc_client_cert_setup);
-        }
-
-        if (shouldVibrateSwitchPreference.getVisibility() == View.VISIBLE) {
-            ((Checkable) shouldVibrateSwitchPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.getShouldVibrateSetting());
         }
 
         ((Checkable) screenSecuritySwitchPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.getIsScreenSecured());
