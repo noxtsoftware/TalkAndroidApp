@@ -24,6 +24,7 @@
 <resources>
     <color name="colorPrimary">#E0445C</color>
     <color name="colorPrimaryDark">#E0445C</color>
+    <color name="colorStatusBar">#000000</color> <!--Farbe der Statusbar beim einlogen-->
     <color name="colorAccent">@color/colorPrimary</color>
     <color name="textColorOnPrimaryBackground">#ffffff</color> <!-- white/black depending on primary color -->
     <color name="nc_login_text_color">#B3FFFFFF</color>
