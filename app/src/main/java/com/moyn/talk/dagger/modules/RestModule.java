@@ -33,7 +33,6 @@ import com.moyn.talk.utils.ApiUtils;
 import com.moyn.talk.utils.LoggingUtils;
 import com.moyn.talk.utils.database.user.UserUtils;
 import com.moyn.talk.utils.preferences.AppPreferences;
-import com.moyn.talk.utils.singletons.AvatarStatusCodeHolder;
 import com.moyn.talk.utils.ssl.MagicKeyManager;
 import com.moyn.talk.utils.ssl.MagicTrustManager;
 import com.moyn.talk.utils.ssl.SSLSocketFactoryCompat;
@@ -252,10 +251,6 @@ public class RestModule {
                     .build();
 
             Response response = chain.proceed(request);
-
-            if (request.url().encodedPath().contains("/avatar/")) {
-                AvatarStatusCodeHolder.getInstance().setStatusCode(response.code());
-            }
 
             return response;
         }
