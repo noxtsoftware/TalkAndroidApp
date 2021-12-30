@@ -82,8 +82,6 @@ public class ServerSelectionController extends BaseController {
     TextView hostUrlInputHelperText;
     @BindView(R.id.helper_text_view)
     TextView providersTextView;
-    @BindView(R.id.cert_text_view)
-    TextView certTextView;
 
     @Inject
     NcApi ncApi;
@@ -103,20 +101,6 @@ public class ServerSelectionController extends BaseController {
     }
 
     @SuppressLint("LongLogTag")
-    @OnClick(R.id.cert_text_view)
-    public void onCertClick() {
-        if (getActivity() != null) {
-            KeyChain.choosePrivateKeyAlias(getActivity(), alias -> {
-                if (alias != null) {
-                    appPreferences.setTemporaryClientCertAlias(alias);
-                } else {
-                    appPreferences.removeTemporaryClientCertAlias();
-                }
-
-                setCertTextView();
-            }, new String[] { "RSA", "EC" }, null, null, -1, null);
-        }
-    }
 
     @Override
     protected void onViewBound(@NonNull View view) {
@@ -137,9 +121,6 @@ public class ServerSelectionController extends BaseController {
 
         serverEntryTextInputLayout.setEndIconOnClickListener(view1 -> checkServerAndProceed());
 
-        if (getResources().getBoolean(R.bool.hide_auth_cert)) {
-            certTextView.setVisibility(View.GONE);
-        }
 
         if (getResources().getBoolean(R.bool.hide_provider) ||
                 TextUtils.isEmpty(getResources().getString(R.string.nc_providers_url)) &&
@@ -217,7 +198,6 @@ public class ServerSelectionController extends BaseController {
         showProgressBar();
         if (providersTextView.getVisibility() != View.INVISIBLE) {
             providersTextView.setVisibility(View.INVISIBLE);
-            certTextView.setVisibility(View.INVISIBLE);
         }
 
         if (url.endsWith("/")) {
@@ -284,7 +264,6 @@ public class ServerSelectionController extends BaseController {
 
                         if (providersTextView.getVisibility() != View.INVISIBLE) {
                             providersTextView.setVisibility(View.VISIBLE);
-                            certTextView.setVisibility(View.VISIBLE);
                         }
 
                         dispose();
@@ -293,7 +272,6 @@ public class ServerSelectionController extends BaseController {
                     hideProgressBar();
                     if (providersTextView.getVisibility() != View.INVISIBLE) {
                         providersTextView.setVisibility(View.VISIBLE);
-                        certTextView.setVisibility(View.VISIBLE);
                     }
                     dispose();
                 });
@@ -340,22 +318,8 @@ public class ServerSelectionController extends BaseController {
                     ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
         }
 
-        setCertTextView();
     }
 
-    private void setCertTextView() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> {
-                if (!TextUtils.isEmpty(appPreferences.getTemporaryClientCertAlias())) {
-                    certTextView.setText(R.string.nc_change_cert_auth);
-                } else {
-                    certTextView.setText(R.string.nc_configure_cert_auth);
-                }
-
-                hideProgressBar();
-            });
-        }
-    }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
