@@ -132,8 +132,7 @@ public abstract class MagicPreviewMessageViewHolder extends MessageHolders.Incom
                 if (ACTOR_TYPE_BOTS.equals(message.actorType) && ACTOR_ID_CHANGELOG.equals(message.actorId)) {
                     if (context != null) {
                         Drawable[] layers = new Drawable[2];
-                        layers[0] = ContextCompat.getDrawable(context, R.drawable.ic_launcher_background);
-                        layers[1] = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground);
+                        layers[0] = ContextCompat.getDrawable(context, R.drawable.moyn_peace);
                         LayerDrawable layerDrawable = new LayerDrawable(layers);
 
                         userAvatar.getHierarchy().setPlaceholderImage(DisplayUtils.getRoundedDrawable(layerDrawable));
