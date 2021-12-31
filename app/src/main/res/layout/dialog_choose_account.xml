@@ -68,7 +68,7 @@
         android:textColor="@color/fontAppbar"
         app:icon="@drawable/add_user_default"
         app:iconGravity="start"
-        app:iconPadding="22dp"
+        app:iconPadding="40dp"
         app:iconTint="@color/fontAppbar"
         app:layout_constraintBottom_toTopOf="@+id/manage_settings"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,10 +90,11 @@
         android:textColor="@color/fontAppbar"
         app:icon="@drawable/settings_default"
         app:iconGravity="start"
-        app:iconPadding="20dp"
+        app:iconPadding="40dp"
         app:iconTint="@color/fontAppbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

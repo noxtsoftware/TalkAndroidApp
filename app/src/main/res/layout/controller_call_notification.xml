@@ -49,7 +49,7 @@
             android:layout_margin="24dp"
             android:visibility="gone"
             app:backgroundImage="@color/nc_darkGreen"
-            app:placeholderImage="@drawable/ic_call_white_24dp"
+            app:placeholderImage="@drawable/phone"
             app:roundAsCircle="true"
             tools:visibility="visible" />
 

@@ -404,7 +404,7 @@ public class ProfileController extends BaseController {
                 Field.DISPLAYNAME,
                 userInfo.getDisplayNameScope());
         addToList(result,
-                R.drawable.ic_phone,
+                R.drawable.phone,
                 userInfo.getPhone(),
                 R.string.user_info_phone,
                 Field.PHONE,

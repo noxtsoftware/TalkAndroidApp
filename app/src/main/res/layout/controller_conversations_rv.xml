@@ -29,6 +29,7 @@
         android:id="@+id/loading_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/lexendregular"
         android:orientation="vertical">
 
         <include layout="@layout/rv_item_conversation_with_last_message_shimmer" />

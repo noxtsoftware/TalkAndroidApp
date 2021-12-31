@@ -116,7 +116,6 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
         holder.dialogName.setTextColor(ResourcesCompat.getColor(context.getResources(),
                                                                 R.color.conversation_item_header,
                                                                 null));
-
         if (adapter.hasFilter()) {
             FlexibleUtils.highlightText(holder.dialogName, conversation.getDisplayName(),
                     String.valueOf(adapter.getFilter(String.class)), NextcloudTalkApplication.Companion.getSharedApplication()
@@ -146,9 +145,9 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
                         ContextCompat.getColor(context, R.color.conversation_unread_bubble_text));
             }
         } else {
-            holder.dialogName.setTypeface(null, Typeface.NORMAL);
-            holder.dialogDate.setTypeface(null, Typeface.NORMAL);
-            holder.dialogLastMessage.setTypeface(null, Typeface.NORMAL);
+            holder.dialogName.setTypeface(holder.dialogName.getTypeface(), Typeface.NORMAL);
+            holder.dialogDate.setTypeface(holder.dialogDate.getTypeface(), Typeface.NORMAL);
+            holder.dialogLastMessage.setTypeface(holder.dialogLastMessage.getTypeface(), Typeface.NORMAL);
 
             holder.dialogUnreadBubble.setVisibility(View.GONE);
         }
