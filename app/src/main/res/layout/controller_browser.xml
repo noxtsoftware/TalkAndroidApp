@@ -64,7 +64,7 @@
             android:layout_alignParentEnd="true"
             android:visibility="invisible"
             app:cornerRadius="24dp"
-            app:icon="@drawable/ic_search_grey"
+            app:icon="@drawable/search_default"
             app:iconTint="@color/fontAppbar" />
 
     </RelativeLayout>

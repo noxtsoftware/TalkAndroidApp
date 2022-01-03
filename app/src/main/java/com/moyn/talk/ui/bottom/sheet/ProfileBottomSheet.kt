@@ -103,8 +103,8 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
     private fun configureActionListItem(action: HoverCardAction): BasicListItemWithImage {
 
         val drawable = when (AllowedAppIds.createFor(action)) {
-            PROFILE -> R.drawable.ic_user
-            EMAIL -> R.drawable.ic_email
+            PROFILE -> R.drawable.user_default
+            EMAIL -> R.drawable.mail_default
             SPREED -> R.drawable.ic_talk
         }
 

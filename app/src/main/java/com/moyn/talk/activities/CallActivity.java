@@ -332,9 +332,9 @@ public class CallActivity extends CallBaseActivity {
             if (audioManager != null) {
                 audioManager.toggleUseSpeakerphone();
                 if (audioManager.isSpeakerphoneAutoOn()) {
-                    binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.ic_volume_up_white_24dp);
+                    binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.unmute_dark );
                 } else {
-                    binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.ic_volume_mute_white_24dp);
+                    binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.mute_default);
                 }
             }
         });
@@ -865,7 +865,7 @@ public class CallActivity extends CallBaseActivity {
             videoOn = !videoOn;
 
             if (videoOn) {
-                binding.cameraButton.getHierarchy().setPlaceholderImage(R.drawable.ic_videocam_white_24px);
+                binding.cameraButton.getHierarchy().setPlaceholderImage(R.drawable.video_cam_default);
                 if (cameraEnumerator.getDeviceNames().length > 1) {
                     binding.switchSelfVideoButton.setVisibility(View.VISIBLE);
                 }
@@ -2177,7 +2177,7 @@ public class CallActivity extends CallBaseActivity {
                             binding.gridview.setVisibility(View.INVISIBLE);
                         }
 
-                        errorImageView.setImageResource(R.drawable.timer_dark);
+                        binding.callStates.errorImageView.setImageResource(R.drawable.timer_dark);
 
                         if (binding.callStates.errorImageView.getVisibility() != View.VISIBLE) {
                             binding.callStates.errorImageView.setVisibility(View.VISIBLE);
