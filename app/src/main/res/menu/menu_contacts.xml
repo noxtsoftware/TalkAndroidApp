@@ -24,7 +24,7 @@
     <item
         android:id="@+id/action_search"
         android:animateLayoutChanges="true"
-        android:icon="@drawable/ic_search_white_24dp"
+        android:icon="@drawable/search_dark"
         android:title="@string/nc_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView|always" />

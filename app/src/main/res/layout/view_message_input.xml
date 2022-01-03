@@ -47,7 +47,7 @@
             android:padding="12dp"
             android:layout_below="@id/quotedChatMessageView"
             android:background="@color/transparent"
-            android:src="@drawable/ic_baseline_attach_file_24"
+            android:src="@drawable/clip_add_default"
             app:tint="?attr/colorControlNormal"
             android:scaleType="centerCrop"
             android:contentDescription="@string/nc_add_attachment" />
@@ -60,7 +60,7 @@
             android:layout_below="@id/quotedChatMessageView"
             android:layout_toEndOf="@id/attachmentButton"
             android:background="@color/transparent"
-            android:src="@drawable/ic_insert_emoticon_black_24dp"
+            android:src="@drawable/emoji_default"
             android:scaleType="centerCrop"
             app:tint="?attr/colorControlNormal"
             android:contentDescription="@string/nc_add_emojis" />

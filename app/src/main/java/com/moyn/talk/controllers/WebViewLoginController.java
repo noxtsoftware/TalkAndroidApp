@@ -472,8 +472,8 @@ public class WebViewLoginController extends BaseController {
         super.onAttach(view);
 
         if (getActivity() != null && getResources() != null) {
-            DisplayUtils.applyColorToStatusBar(getActivity(), ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            DisplayUtils.applyColorToNavigationBar(getActivity().getWindow(), ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+            DisplayUtils.applyColorToStatusBar(getActivity(), ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
+            DisplayUtils.applyColorToNavigationBar(getActivity().getWindow(), ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
         }
     }
 

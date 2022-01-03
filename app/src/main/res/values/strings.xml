@@ -33,11 +33,12 @@
 
     <!-- Server selection -->
     <string name="nc_server_connect">Test server connection</string>
-    <string name="nc_server_helper_text">The link to your %1$s web interface when you open it in the browser.</string>
+    <string name="nc_server_helper_text">The name of your practice, if this does not work contact your supervisor or
+        your moyn! Team.</string>
     <string name="nc_server_testing_connection">Testing connection</string>
     <string name="nc_server_unsupported">Server does not have supported Talk app installed</string>
 
-    <string name="nc_server_url">Server address https://…</string>
+    <string name="nc_server_url">Name of your practice</string>
     <string name="nc_server_not_installed">Please finish your %1$s installation</string>
     <string name="nc_server_db_upgrade_needed">Please upgrade your %1$s database</string>
     <string name="nc_server_maintenance">Please bring your %1$s out of maintenance</string>
@@ -48,7 +49,7 @@
     <string name="nc_server_import_accounts">Import accounts from the %1$s app</string>
     <string name="nc_server_failed_to_import_account">Failed to import selected account</string>
     <string name="nc_Server_account_imported">Selected account is now imported and available</string>
-    <string name="nc_get_from_provider">Do you not have a server yet?\nClick here to get one from a provider</string>
+    <string name="nc_get_from_provider">You dont have moyn! yet?</string>
 
     <!-- Account verification -->
     <string name="nc_push_disabled">Push notifications disabled</string>

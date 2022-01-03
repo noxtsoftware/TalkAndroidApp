@@ -44,7 +44,7 @@
         android:layout_below="@id/file_icon"
         android:layout_alignEnd="@id/file_icon"
         android:contentDescription="@string/starred"
-        android:src="@drawable/ic_star_black_24dp"
+        android:src="@drawable/star_fill_default"
         app:tint="@color/favorite_icon_tint" />
 
     <ImageView
@@ -54,7 +54,7 @@
         android:layout_below="@id/file_icon"
         android:layout_alignStart="@+id/file_icon"
         android:contentDescription="@string/encrypted"
-        android:src="@drawable/ic_lock_grey600_24px" />
+        android:src="@drawable/lock_default" />
 
     <TextView
         android:id="@+id/file_modified_info"

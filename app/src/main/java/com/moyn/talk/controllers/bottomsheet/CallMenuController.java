@@ -143,7 +143,7 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
         shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, String.format(getResources().getString(R.string.nc_share_subject),
-            getResources().getString(R.string.nc_app_product_name)));
+                getResources().getString(R.string.nc_app_product_name)));
     }
 
     private void prepareMenu() {
@@ -161,73 +161,74 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
             currentUser = userUtils.getCurrentUser();
 
             if (conversation.isFavorite()) {
-                menuItems.add(new MenuItem(getResources().getString(R.string.nc_remove_from_favorites), 97, DisplayUtils.getTintedDrawable(getResources(), R.drawable.ic_star_border_black_24dp, R.color.grey_600)));
+                menuItems.add(new MenuItem(getResources().getString(R.string.nc_remove_from_favorites), 97,
+                        DisplayUtils.getTintedDrawable(getResources(), R.drawable.star_default,
+                                R.color.grey_600)));
             } else if (CapabilitiesUtil.hasSpreedFeatureCapability(currentUser, "favorites")) {
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_add_to_favorites),
-                    98,
-                    DisplayUtils.getTintedDrawable(getResources(),
-                        R.drawable.ic_star_black_24dp,
-                        R.color.grey_600)));
+                        98,
+                        DisplayUtils.getTintedDrawable(getResources(),
+                                R.drawable.star_fill_default,
+                                R.color.grey_600)));
             }
 
             if (conversation.isNameEditable(currentUser)) {
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_rename),
-                    2,
-                    ContextCompat.getDrawable(context,
-                        R.drawable.ic_pencil_grey600_24dp)));
+                        2,
+                        ContextCompat.getDrawable(context,
+                                R.drawable.pencil_default)));
             }
 
             if (conversation.canModerate(currentUser)) {
                 if (!conversation.isPublic()) {
                     menuItems.add(new MenuItem(getResources().getString(R.string.nc_make_call_public),
-                        3, ContextCompat.getDrawable(context,
-                        R.drawable.ic_link_grey600_24px)));
+                            3, ContextCompat.getDrawable(context,
+                                    R.drawable.link_default)));
                 } else {
                     if (conversation.isHasPassword()) {
                         menuItems.add(new MenuItem(getResources().getString(R.string.nc_change_password),
-                            4, ContextCompat.getDrawable(context,
-                            R.drawable.ic_lock_grey600_24px)));
+                                4, ContextCompat.getDrawable(context,
+                                        R.drawable.lock_default)));
                         menuItems.add(new MenuItem(getResources().getString(R.string.nc_clear_password),
-                            5,
-                            ContextCompat.getDrawable(context,
-                                R.drawable.ic_lock_open_grey600_24dp)));
+                                5,
+                                ContextCompat.getDrawable(context,
+                                        R.drawable.unlock_default)));
                     } else {
                         menuItems.add(new MenuItem(getResources().getString(R.string.nc_set_password),
-                            6, ContextCompat.getDrawable(context,
-                            R.drawable.ic_lock_plus_grey600_24dp)));
+                                6, ContextCompat.getDrawable(context,
+                                        R.drawable.lock_default)));
                     }
                 }
 
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_delete_call),
-                    9, ContextCompat.getDrawable(context,
-                    R.drawable.ic_delete_grey600_24dp)));
+                        9, ContextCompat.getDrawable(context,
+                                R.drawable.trash_default)));
             }
 
             if (conversation.isPublic()) {
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_share_link),
-                    7, ContextCompat.getDrawable(context,
-                    R.drawable.ic_link_grey600_24px)));
+                        7, ContextCompat.getDrawable(context,
+                                R.drawable.link_default)));
                 if (conversation.canModerate(currentUser)) {
                     menuItems.add(new MenuItem(getResources().getString(R.string.nc_make_call_private),
-                        8, ContextCompat.getDrawable(context,
-                        R.drawable.ic_group_grey600_24px)));
+                            8, ContextCompat.getDrawable(context,
+                                    R.drawable.contacts_default)));
                 }
             }
 
             if (conversation.canLeave(currentUser)) {
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_leave), 1,
-                    DisplayUtils.getTintedDrawable(getResources(),
-                        R.drawable.ic_exit_to_app_black_24dp, R.color.grey_600)
-                ));
+                        DisplayUtils.getTintedDrawable(getResources(),
+                                R.drawable.sign_out_default, R.color.grey_600)));
             }
         } else if (menuType.equals(MenuType.SHARE)) {
             prepareIntent();
             List<AppAdapter.AppInfo> appInfoList = ShareUtils.getShareApps(getActivity(), shareIntent, null,
-                null);
+                    null);
             menuItems.add(new AppItem(getResources().getString(R.string.nc_share_link_via),
-                "",
-                "",
-                ContextCompat.getDrawable(context, R.drawable.ic_link_grey600_24px)));
+                    "",
+                    "",
+                    ContextCompat.getDrawable(context, R.drawable.link_default)));
             if (appInfoList != null) {
                 for (AppAdapter.AppInfo appInfo : appInfoList) {
                     menuItems.add(new AppItem(appInfo.title, appInfo.packageName, appInfo.name, appInfo.drawable));
@@ -236,11 +237,11 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
         } else {
             menuItems.add(new MenuItem(getResources().getString(R.string.nc_start_conversation), 0, null));
             menuItems.add(new MenuItem(getResources().getString(R.string.nc_new_conversation),
-                1, ContextCompat.getDrawable(context,
-                R.drawable.ic_add_grey600_24px)));
+                    1, ContextCompat.getDrawable(context,
+                            R.drawable.plus_default)));
             menuItems.add(new MenuItem(getResources().getString(R.string.nc_join_via_link),
-                2, ContextCompat.getDrawable(context,
-                R.drawable.ic_link_grey600_24px)));
+                    2, ContextCompat.getDrawable(context,
+                            R.drawable.link_default)));
         }
     }
 
@@ -263,14 +264,16 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
                         if (tag == 1) {
                             Data data;
                             if ((data = getWorkerData()) != null) {
-                                OneTimeWorkRequest leaveConversationWorker =
-                                    new OneTimeWorkRequest.Builder(LeaveConversationWorker.class).setInputData(data).build();
+                                OneTimeWorkRequest leaveConversationWorker = new OneTimeWorkRequest.Builder(
+                                        LeaveConversationWorker.class).setInputData(data).build();
                                 WorkManager.getInstance().enqueue(leaveConversationWorker);
                             }
                         } else {
                             Bundle deleteConversationBundle;
                             if ((deleteConversationBundle = getDeleteConversationBundle()) != null) {
-                                conversationMenuInterface.openLovelyDialogWithIdAndBundle(ConversationsListController.ID_DELETE_CONVERSATION_DIALOG, deleteConversationBundle);
+                                conversationMenuInterface.openLovelyDialogWithIdAndBundle(
+                                        ConversationsListController.ID_DELETE_CONVERSATION_DIALOG,
+                                        deleteConversationBundle);
                             }
                         }
                         eventBus.post(new BottomSheetLockEvent(true, 0, false, true));
@@ -279,17 +282,17 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
                         if (tag != 2 && tag != 4 && tag != 6 && tag != 7) {
                             eventBus.post(new BottomSheetLockEvent(false, 0, false, false));
                             getRouter().pushController(RouterTransaction.with(new OperationsMenuController(bundle))
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
                         } else if (tag != 7) {
                             getRouter().pushController(RouterTransaction.with(new EntryMenuController(bundle))
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
                         } else {
                             bundle.putParcelable(BundleKeys.INSTANCE.getKEY_MENU_TYPE(), Parcels.wrap(MenuType.SHARE));
                             getRouter().pushController(RouterTransaction.with(new CallMenuController(bundle, null))
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
                         }
                     }
                 }
@@ -299,7 +302,7 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
             if (appItem != null && getActivity() != null) {
                 if (!conversation.hasPassword) {
                     shareIntent.putExtra(Intent.EXTRA_TEXT, ShareUtils.getStringForIntent(getActivity(), null,
-                        userUtils, conversation));
+                            userUtils, conversation));
                     Intent intent = new Intent(shareIntent);
                     intent.setComponent(new ComponentName(appItem.getPackageName(), appItem.getName()));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -311,8 +314,8 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
                     bundle.putString(BundleKeys.INSTANCE.getKEY_APP_ITEM_PACKAGE_NAME(), appItem.getPackageName());
                     bundle.putString(BundleKeys.INSTANCE.getKEY_APP_ITEM_NAME(), appItem.getName());
                     getRouter().pushController(RouterTransaction.with(new EntryMenuController(bundle))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
                 }
             }
         }

@@ -37,7 +37,7 @@
         android:contentDescription="@null"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        tools:src="@drawable/ic_add_grey600_24px" />
+        tools:src="@drawable/plus_default" />
 
     <TextView
         android:id="@+id/app_title_text_view"

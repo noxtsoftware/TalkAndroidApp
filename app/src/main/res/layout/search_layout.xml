@@ -55,7 +55,7 @@
                 android:contentDescription="@string/nc_action_open_main_menu"
                 android:visibility="gone"
                 app:cornerRadius="@dimen/button_corner_radius"
-                app:icon="@drawable/ic_menu"
+                app:icon="@drawable/menu_default"
                 app:iconTint="@color/fontAppbar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +101,7 @@
                     android:scaleType="fitCenter"
                     android:transitionName="userAvatar.transitionTag"
                     app:cornerRadius="@dimen/button_corner_radius"
-                    app:icon="@drawable/ic_user"
+                    app:icon="@drawable/user_default"
                     app:iconSize="@dimen/avatar_size_app_bar"
                     tools:visibility="visible" />
 

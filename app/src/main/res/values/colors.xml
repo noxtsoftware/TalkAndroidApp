@@ -24,6 +24,7 @@
 <resources>
     <color name="colorPrimary">#E0445C</color>
     <color name="colorPrimaryDark">#E0445C</color>
+    <color name="colorStatusBar">#21262C</color> <!--Farbe der Statusbar beim einlogen-->
     <color name="colorAccent">@color/colorPrimary</color>
     <color name="disabled_text">#ff888888</color>
     <color name="textColorOnPrimaryBackground">#ffffff</color> <!-- white/black depending on primary color -->
@@ -33,7 +34,7 @@
     <color name="appbar">@android:color/white</color>
     <color name="fontAppbar">#666666</color>
     <color name="fontSecondaryAppbar">#A5A5A5</color>
-    <color name="refresh_spinner_background">#ffffff</color>
+    <color name="refresh_spinner_background">#21262C</color>
 
     <!-- general text colors -->
     <color name="high_emphasis_text">#de000000</color>

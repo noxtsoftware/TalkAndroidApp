@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:scaleType="center"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_delete_grey600_24dp"
+            tools:src="@drawable/trash_default"
             android:layout_marginStart="16dp"
             tools:ignore="ContentDescription"
             />

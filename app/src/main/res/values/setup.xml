@@ -38,7 +38,7 @@
     <string name="weblogin_url" translatable="false"></string>
 
     <!-- Will not be shown if empty -->
-    <string name="nc_privacy_url" translatable="false">https://www.moyn.io/datenschutz</string>
+    <string name="nc_privacy_url" translatable="false">https://engineering.noxt.de/dsgvo/</string>
     <string name="nc_gpl3_url" translatable="false">https://www.gnu.org/licenses/gpl-3.0.en.html</string>
     <string name="nc_source_code_url" translatable="false">https://github.com/noxtsoftware/TalkAndroidApp</string>
     <string name="nc_providers_url" translatable="false">https://www.moyn.io/preise</string>

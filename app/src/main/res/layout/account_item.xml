@@ -53,9 +53,9 @@
                 android:layout_marginEnd="1dp"
                 android:layout_marginBottom="1dp"
                 android:contentDescription="@string/avatar"
-                android:src="@drawable/account_circle_48dp"
-                fresco:placeholderImage="@drawable/account_circle_48dp"
-                fresco:failureImage="@drawable/account_circle_48dp"
+                android:src="@drawable/user_default"
+                fresco:placeholderImage="@drawable/user_default"
+                fresco:failureImage="@drawable/user_default"
                 app:roundAsCircle="true"/>
 
             <ImageView
@@ -65,7 +65,7 @@
                 android:layout_gravity="bottom|end"
                 android:background="@drawable/round_bgnd"
                 android:contentDescription="@string/nc_account_chooser_active_user"
-                android:src="@drawable/ic_check_circle"
+                android:src="@drawable/check_circle_blue"
                 tools:visibility="gone" />
         </FrameLayout>
 
@@ -139,7 +139,7 @@
             android:focusable="true"
             android:paddingStart="@dimen/standard_half_padding"
             android:paddingEnd="10dp"
-            android:src="@drawable/ic_check_circle"
+            android:src="@drawable/check_circle_blue"
             app:tint="@color/colorPrimary" />
 
     </RelativeLayout>

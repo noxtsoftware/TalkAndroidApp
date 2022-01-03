@@ -82,8 +82,6 @@ public class ServerSelectionController extends BaseController {
     TextView hostUrlInputHelperText;
     @BindView(R.id.helper_text_view)
     TextView providersTextView;
-    @BindView(R.id.cert_text_view)
-    TextView certTextView;
 
     @Inject
     NcApi ncApi;
@@ -103,20 +101,6 @@ public class ServerSelectionController extends BaseController {
     }
 
     @SuppressLint("LongLogTag")
-    @OnClick(R.id.cert_text_view)
-    public void onCertClick() {
-        if (getActivity() != null) {
-            KeyChain.choosePrivateKeyAlias(getActivity(), alias -> {
-                if (alias != null) {
-                    appPreferences.setTemporaryClientCertAlias(alias);
-                } else {
-                    appPreferences.removeTemporaryClientCertAlias();
-                }
-
-                setCertTextView();
-            }, new String[]{"RSA", "EC"}, null, null, -1, null);
-        }
-    }
 
     @Override
     protected void onViewBound(@NonNull View view) {
@@ -133,22 +117,17 @@ public class ServerSelectionController extends BaseController {
 
         hostUrlInputHelperText.setText(String.format(
                 getResources().getString(R.string.nc_server_helper_text),
-                getResources().getString(R.string.nc_server_product_name))
-        );
+                getResources().getString(R.string.nc_server_product_name)));
 
         serverEntryTextInputLayout.setEndIconOnClickListener(view1 -> checkServerAndProceed());
 
-        if (getResources().getBoolean(R.bool.hide_auth_cert)) {
-            certTextView.setVisibility(View.GONE);
-        }
 
         if (getResources().getBoolean(R.bool.hide_provider) ||
-                TextUtils.isEmpty(getResources().getString(R.string.nc_providers_url)) && 
+                TextUtils.isEmpty(getResources().getString(R.string.nc_providers_url)) &&
                         (TextUtils.isEmpty(getResources().getString(R.string.nc_import_account_type)))) {
             providersTextView.setVisibility(View.INVISIBLE);
         } else {
-            if ((TextUtils.isEmpty(getResources
-                    ().getString(R.string.nc_import_account_type)) ||
+            if ((TextUtils.isEmpty(getResources().getString(R.string.nc_import_account_type)) ||
                     AccountUtils.INSTANCE.findAccounts(userUtils.getUsers()).size() == 0) &&
                     userUtils.getUsers().size() == 0) {
 
@@ -162,20 +141,21 @@ public class ServerSelectionController extends BaseController {
                 if (!TextUtils.isEmpty(AccountUtils.INSTANCE.getAppNameBasedOnPackage(getResources()
                         .getString(R.string.nc_import_accounts_from)))) {
                     if (AccountUtils.INSTANCE.findAccounts(userUtils.getUsers()).size() > 1) {
-                        providersTextView.setText(String.format(getResources().getString(R.string
-                                .nc_server_import_accounts), AccountUtils.INSTANCE.getAppNameBasedOnPackage(getResources()
-                                .getString(R.string.nc_import_accounts_from))));
+                        providersTextView
+                                .setText(String.format(getResources().getString(R.string.nc_server_import_accounts),
+                                        AccountUtils.INSTANCE.getAppNameBasedOnPackage(getResources()
+                                                .getString(R.string.nc_import_accounts_from))));
                     } else {
-                        providersTextView.setText(String.format(getResources().getString(R.string
-                                .nc_server_import_account), AccountUtils.INSTANCE.getAppNameBasedOnPackage(getResources()
-                                .getString(R.string.nc_import_accounts_from))));
+                        providersTextView
+                                .setText(String.format(getResources().getString(R.string.nc_server_import_account),
+                                        AccountUtils.INSTANCE.getAppNameBasedOnPackage(getResources()
+                                                .getString(R.string.nc_import_accounts_from))));
                     }
                 } else {
                     if (AccountUtils.INSTANCE.findAccounts(userUtils.getUsers()).size() > 1) {
                         providersTextView.setText(getResources().getString(R.string.nc_server_import_accounts_plain));
                     } else {
-                        providersTextView.setText(getResources().getString(R.string
-                                .nc_server_import_account_plain));
+                        providersTextView.setText(getResources().getString(R.string.nc_server_import_account_plain));
                     }
                 }
 
@@ -193,7 +173,7 @@ public class ServerSelectionController extends BaseController {
         }
 
         serverEntryTextInputEditText.requestFocus();
-        
+
         if (!TextUtils.isEmpty(getResources().getString(R.string.weblogin_url))) {
             serverEntryTextInputEditText.setText(getResources().getString(R.string.weblogin_url));
             checkServerAndProceed();
@@ -212,13 +192,12 @@ public class ServerSelectionController extends BaseController {
         dispose();
 
         String inputUrl = serverEntryTextInputEditText.getText().toString().trim();
-        String url = "https://"+inputUrl+".moyn.io";
+        String url = "https://" + inputUrl + ".moyn.io";
 
         serverEntryTextInputEditText.setEnabled(false);
         showProgressBar();
         if (providersTextView.getVisibility() != View.INVISIBLE) {
             providersTextView.setVisibility(View.INVISIBLE);
-            certTextView.setVisibility(View.INVISIBLE);
         }
 
         if (url.endsWith("/")) {
@@ -256,16 +235,13 @@ public class ServerSelectionController extends BaseController {
                         setErrorText(String.format(
                                 getResources().getString(R.string.nc_server_not_installed), productName));
                     } else if (status.isNeedsUpgrade()) {
-                        setErrorText(String.format(getResources().
-                                        getString(R.string.nc_server_db_upgrade_needed),
+                        setErrorText(String.format(getResources().getString(R.string.nc_server_db_upgrade_needed),
                                 productName));
                     } else if (status.isMaintenance()) {
-                        setErrorText(String.format(getResources().
-                                        getString(R.string.nc_server_maintenance),
+                        setErrorText(String.format(getResources().getString(R.string.nc_server_maintenance),
                                 productName));
                     } else if (!status.getVersion().startsWith("13.")) {
-                        setErrorText(String.format(getResources().
-                                        getString(R.string.nc_server_version),
+                        setErrorText(String.format(getResources().getString(R.string.nc_server_version),
                                 getResources().getString(R.string.nc_app_product_name),
                                 productName));
                     }
@@ -288,7 +264,6 @@ public class ServerSelectionController extends BaseController {
 
                         if (providersTextView.getVisibility() != View.INVISIBLE) {
                             providersTextView.setVisibility(View.VISIBLE);
-                            certTextView.setVisibility(View.VISIBLE);
                         }
 
                         dispose();
@@ -297,7 +272,6 @@ public class ServerSelectionController extends BaseController {
                     hideProgressBar();
                     if (providersTextView.getVisibility() != View.INVISIBLE) {
                         providersTextView.setVisibility(View.VISIBLE);
-                        certTextView.setVisibility(View.VISIBLE);
                     }
                     dispose();
                 });
@@ -338,26 +312,14 @@ public class ServerSelectionController extends BaseController {
         }
 
         if (getActivity() != null && getResources() != null) {
-            DisplayUtils.applyColorToStatusBar(getActivity(), ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            DisplayUtils.applyColorToNavigationBar(getActivity().getWindow(), ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+            DisplayUtils.applyColorToStatusBar(getActivity(),
+                    ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
+            DisplayUtils.applyColorToNavigationBar(getActivity().getWindow(),
+                    ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
         }
 
-        setCertTextView();
     }
 
-    private void setCertTextView() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> {
-                if (!TextUtils.isEmpty(appPreferences.getTemporaryClientCertAlias())) {
-                    certTextView.setText(R.string.nc_change_cert_auth);
-                } else {
-                    certTextView.setText(R.string.nc_configure_cert_auth);
-                }
-
-                hideProgressBar();
-            });
-        }
-    }
 
     @Override
     protected void onDestroyView(@NonNull View view) {

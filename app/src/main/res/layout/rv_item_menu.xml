@@ -42,6 +42,6 @@
         android:textColor="@color/conversation_item_header"
         android:textSize="16sp"
         tools:drawablePadding="16dp"
-        tools:drawableStart="@drawable/ic_add_grey600_24px"
+        tools:drawableStart="@drawable/plus_default"
         tools:text="Start a new conversation" />
 </RelativeLayout>

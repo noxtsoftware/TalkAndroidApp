@@ -39,7 +39,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/standard_margin"
         android:contentDescription="@string/selected_list_item"
-        android:src="@drawable/ic_check_black_24dp"
+        android:src="@drawable/check_default"
         app:tint="@color/colorPrimary" />
 
     <androidx.emoji.widget.EmojiTextView

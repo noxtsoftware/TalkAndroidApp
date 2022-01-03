@@ -23,21 +23,21 @@
 
     <item
         android:id="@+id/conversation_voice_call"
-        android:icon="@drawable/ic_call_white_24dp"
+        android:icon="@drawable/phone"
         android:orderInCategory="0"
         android:title="@string/nc_conversation_menu_voice_call"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/conversation_video_call"
-        android:icon="@drawable/ic_videocam_white_24px"
+        android:icon="@drawable/video_cam_dark"
         android:orderInCategory="1"
         android:title="@string/nc_conversation_menu_video_call"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/conversation_info"
-        android:icon="@drawable/ic_info_white_24dp"
+        android:icon="@drawable/info_default"
         android:orderInCategory="1"
         android:title="@string/nc_conversation_menu_conversation_info"
         app:showAsAction="never" />
