@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import autodagger.AutoInjector;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -137,7 +138,14 @@ public class BrowserFileItem extends AbstractFlexibleItem<BrowserFileItem.ViewHo
             holder.selectFileCheckbox.setVisibility(View.VISIBLE);
         }
 
-        holder.fileIconImageView.getHierarchy().setPlaceholderImage(context.getDrawable(DrawableUtils.INSTANCE.getDrawableResourceIdForMimeType(browserFile.getMimeType())));
+        if (context != null) {
+            holder
+                .fileIconImageView
+                .getHierarchy()
+                .setPlaceholderImage(
+                    AppCompatResources.getDrawable(
+                        context, DrawableUtils.INSTANCE.getDrawableResourceIdForMimeType(browserFile.getMimeType())));
+        }
 
         if (browserFile.isHasPreview()) {
             String path = ApiUtils.getUrlForFilePreviewWithRemotePath(activeUser.getBaseUrl(),

@@ -26,6 +26,7 @@
     <color name="colorPrimaryDark">#E0445C</color>
     <color name="colorStatusBar">#21262C</color> <!--Farbe der Statusbar beim einlogen-->
     <color name="colorAccent">@color/colorPrimary</color>
+    <color name="disabled_text">#ff888888</color>
     <color name="textColorOnPrimaryBackground">#ffffff</color> <!-- white/black depending on primary color -->
     <color name="nc_login_text_color">#B3FFFFFF</color>
 
@@ -88,5 +89,7 @@
 
     <!-- voicemessage -->
     <color name="nc_voice_message_outgoing_controls">#606060</color>
+
+    <color name="camera_bg_tint">#99121212</color>
 
 </resources>

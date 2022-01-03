@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:176075822948:android:a7e1a2007c815e33e14c71",
+        "android_client_info": {
+          "package_name": "com.moyn.talk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176075822948-3847870b4o1f2j8sljjc2ielge84kuc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChBRZQr_ZVahU4u4FT4RFVb-Gks-N3JXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176075822948-3847870b4o1f2j8sljjc2ielge84kuc7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "176075822948-757jaml18sc1u6vc1qlirrl1pi9ko9p3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.noxt.moynTalk"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:176075822948:android:ccbc7baa2f3ace1ce14c71",
         "android_client_info": {
           "package_name": "com.nextcloud.talk2"
@@ -29,6 +65,13 @@
             {
               "client_id": "176075822948-3847870b4o1f2j8sljjc2ielge84kuc7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "176075822948-757jaml18sc1u6vc1qlirrl1pi9ko9p3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.noxt.moynTalk"
+              }
             }
           ]
         }

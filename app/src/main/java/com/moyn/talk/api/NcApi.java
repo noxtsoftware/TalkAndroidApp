@@ -4,6 +4,8 @@
  *
  *   @author Mario Danic
  *   @author Marcel Hibbe
+ *   @author Tim Krüger
+ *   Copyright (C) 2021 Tim Krüger <t@timkrueger.me>
  *   Copyright (C) 2017 Mario Danic (mario@lovelyhq.com)
  *   Copyright (C) 2021 Marcel Hibbe <dev@mhibbe.de>
  *
@@ -29,6 +31,7 @@ import com.moyn.talk.models.json.conversations.RoomOverall;
 import com.moyn.talk.models.json.conversations.RoomsOverall;
 import com.moyn.talk.models.json.generic.GenericOverall;
 import com.moyn.talk.models.json.generic.Status;
+import com.moyn.talk.models.json.hovercard.HoverCardOverall;
 import com.moyn.talk.models.json.mention.MentionOverall;
 import com.moyn.talk.models.json.notifications.NotificationOverall;
 import com.moyn.talk.models.json.participants.AddParticipantOverall;
@@ -418,4 +421,12 @@ public interface NcApi {
 
     @DELETE
     Observable<GenericOverall> clearChatHistory(@Header("Authorization") String authorization, @Url String url);
+    
+    @FormUrlEncoded
+    @POST
+    Observable<GenericOverall> notificationCalls(@Header("Authorization") String authorization, @Url String url,
+                                                 @Field("level") Integer level);
+
+    @GET
+    Observable<HoverCardOverall> hoverCard(@Header("Authorization") String authorization, @Url String url);
 }

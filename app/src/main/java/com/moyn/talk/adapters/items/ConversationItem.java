@@ -42,6 +42,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.chip.Chip;
 import com.moyn.talk.R;
 import com.moyn.talk.application.NextcloudTalkApplication;
+import com.moyn.talk.models.database.CapabilitiesUtil;
 import com.moyn.talk.models.database.UserEntity;
 import com.moyn.talk.models.json.chat.ChatMessage;
 import com.moyn.talk.models.json.conversations.Conversation;
@@ -66,13 +67,12 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 public class ConversationItem extends AbstractFlexibleItem<ConversationItem.ConversationItemViewHolder> implements
         IFilterable<String> {
 
-
     private Conversation conversation;
     private UserEntity userEntity;
     private Context context;
 
     public ConversationItem(Conversation conversation, UserEntity userEntity,
-                            Context activityContext) {
+            Context activityContext) {
         this.conversation = conversation;
         this.userEntity = userEntity;
         this.context = activityContext;
@@ -108,17 +108,19 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, ConversationItemViewHolder holder, int position, List<Object> payloads) {
-        Context appContext =
-                NextcloudTalkApplication.Companion.getSharedApplication().getApplicationContext();
+    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, ConversationItemViewHolder holder, int position,
+            List<Object> payloads) {
+        Context appContext = NextcloudTalkApplication.Companion.getSharedApplication().getApplicationContext();
         holder.dialogAvatar.setController(null);
 
         holder.dialogName.setTextColor(ResourcesCompat.getColor(context.getResources(),
-                                                                R.color.conversation_item_header,
-                                                                null));
+                R.color.conversation_item_header,
+                null));
+
         if (adapter.hasFilter()) {
             FlexibleUtils.highlightText(holder.dialogName, conversation.getDisplayName(),
-                    String.valueOf(adapter.getFilter(String.class)), NextcloudTalkApplication.Companion.getSharedApplication()
+                    String.valueOf(adapter.getFilter(String.class)),
+                    NextcloudTalkApplication.Companion.getSharedApplication()
                             .getResources().getColor(R.color.colorPrimary));
         } else {
             holder.dialogName.setText(conversation.getDisplayName());
@@ -126,7 +128,6 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
 
         if (conversation.getUnreadMessages() > 0) {
             holder.dialogName.setTypeface(holder.dialogName.getTypeface(), Typeface.BOLD);
-            holder.dialogDate.setTypeface(holder.dialogDate.getTypeface(), Typeface.BOLD);
             holder.dialogLastMessage.setTypeface(holder.dialogLastMessage.getTypeface(), Typeface.BOLD);
             holder.dialogUnreadBubble.setVisibility(View.VISIBLE);
             if (conversation.getUnreadMessages() < 1000) {
@@ -135,14 +136,40 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
                 holder.dialogUnreadBubble.setText(R.string.tooManyUnreadMessages);
             }
 
-            if (conversation.isUnreadMention() || conversation.type == Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL) {
+            ColorStateList lightBubbleFillColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(context,
+                            R.color.conversation_unread_bubble));
+            int lightBubbleTextColor = ContextCompat.getColor(
+                    context,
+                    R.color.conversation_unread_bubble_text);
+            ColorStateList lightBubbleStrokeColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(context,
+                            R.color.colorPrimary));
+
+            if (conversation.type == Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL) {
                 holder.dialogUnreadBubble.setChipBackgroundColorResource(R.color.colorPrimary);
                 holder.dialogUnreadBubble.setTextColor(Color.WHITE);
+            } else if (conversation.isUnreadMention()) {
+                if (CapabilitiesUtil.hasSpreedFeatureCapability(userEntity, "direct-mention-flag")) {
+                    if (conversation.getUnreadMentionDirect()) {
+                        holder.dialogUnreadBubble.setChipBackgroundColorResource(R.color.colorPrimary);
+                        holder.dialogUnreadBubble.setTextColor(Color.WHITE);
+                    } else {
+                        holder.dialogUnreadBubble.setChipBackgroundColor(ColorStateList.valueOf(
+                                ContextCompat.getColor(context, R.color.white)));
+                        holder.dialogUnreadBubble.setTextColor(ContextCompat.getColor(
+                                context,
+                                R.color.colorPrimary));
+                        holder.dialogUnreadBubble.setChipStrokeWidth(6.0f);
+                        holder.dialogUnreadBubble.setChipStrokeColor(lightBubbleStrokeColor);
+                    }
+                } else {
+                    holder.dialogUnreadBubble.setChipBackgroundColorResource(R.color.colorPrimary);
+                    holder.dialogUnreadBubble.setTextColor(Color.WHITE);
+                }
             } else {
-                holder.dialogUnreadBubble.setChipBackgroundColor(
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.conversation_unread_bubble)));
-                holder.dialogUnreadBubble.setTextColor(
-                        ContextCompat.getColor(context, R.color.conversation_unread_bubble_text));
+                holder.dialogUnreadBubble.setChipBackgroundColor(lightBubbleFillColor);
+                holder.dialogUnreadBubble.setTextColor(lightBubbleTextColor);
             }
         } else {
             holder.dialogName.setTypeface(holder.dialogName.getTypeface(), Typeface.NORMAL);
@@ -163,20 +190,24 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
             holder.dialogDate.setText(DateUtils.getRelativeTimeSpanString(conversation.getLastActivity() * 1000L,
                     System.currentTimeMillis(), 0, DateUtils.FORMAT_ABBREV_RELATIVE));
 
-            if (!TextUtils.isEmpty(conversation.getLastMessage().getSystemMessage()) || Conversation.ConversationType.ROOM_SYSTEM.equals(conversation.getType())) {
+            if (!TextUtils.isEmpty(conversation.getLastMessage().getSystemMessage())
+                    || Conversation.ConversationType.ROOM_SYSTEM.equals(conversation.getType())) {
                 holder.dialogLastMessage.setText(conversation.getLastMessage().getText());
             } else {
                 String authorDisplayName = "";
                 conversation.getLastMessage().setActiveUser(userEntity);
                 String text;
-                if (conversation.getLastMessage().getMessageType().equals(ChatMessage.MessageType.REGULAR_TEXT_MESSAGE)) {
+                if (conversation.getLastMessage().getMessageType()
+                        .equals(ChatMessage.MessageType.REGULAR_TEXT_MESSAGE)) {
                     if (conversation.getLastMessage().getActorId().equals(userEntity.getUserId())) {
                         text = String.format(appContext.getString(R.string.nc_formatted_message_you),
                                 conversation.getLastMessage().getLastMessageDisplayText());
                     } else {
-                        authorDisplayName = !TextUtils.isEmpty(conversation.getLastMessage().getActorDisplayName()) ?
-                                conversation.getLastMessage().getActorDisplayName() :
-                                "guests".equals(conversation.getLastMessage().getActorType()) ? appContext.getString(R.string.nc_guest) : "";
+                        authorDisplayName = !TextUtils.isEmpty(conversation.getLastMessage().getActorDisplayName())
+                                ? conversation.getLastMessage().getActorDisplayName()
+                                : "guests".equals(conversation.getLastMessage().getActorType())
+                                        ? appContext.getString(R.string.nc_guest)
+                                        : "";
                         text = String.format(appContext.getString(R.string.nc_formatted_message),
                                 authorDisplayName,
                                 conversation.getLastMessage().getLastMessageDisplayText());
@@ -201,12 +232,12 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
                 case "share:password":
                     shouldLoadAvatar = false;
                     holder.dialogAvatar.setImageDrawable(ContextCompat.getDrawable(context,
-                                                                                   R.drawable.ic_circular_lock));
+                            R.drawable.ic_circular_lock));
                     break;
                 case "file":
                     shouldLoadAvatar = false;
                     holder.dialogAvatar.setImageDrawable(ContextCompat.getDrawable(context,
-                                                                                   R.drawable.ic_circular_document));
+                            R.drawable.ic_circular_document));
                     break;
                 default:
                     break;
@@ -233,7 +264,9 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
                         DraweeController draweeController = Fresco.newDraweeControllerBuilder()
                                 .setOldController(holder.dialogAvatar.getController())
                                 .setAutoPlayAnimations(true)
-                                .setImageRequest(DisplayUtils.getImageRequestForUrl(ApiUtils.getUrlForAvatarWithName(userEntity.getBaseUrl(), conversation.getName(), R.dimen.avatar_size), userEntity))
+                                .setImageRequest(DisplayUtils
+                                        .getImageRequestForUrl(ApiUtils.getUrlForAvatarWithName(userEntity.getBaseUrl(),
+                                                conversation.getName(), R.dimen.avatar_size), userEntity))
                                 .build();
                         holder.dialogAvatar.setController(draweeController);
                     } else {
@@ -241,12 +274,12 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
                     }
                     break;
                 case ROOM_GROUP_CALL:
-                        holder.dialogAvatar.setImageDrawable(ContextCompat.getDrawable(context,
-                                                                                       R.drawable.ic_circular_group));
+                    holder.dialogAvatar.setImageDrawable(ContextCompat.getDrawable(context,
+                            R.drawable.ic_circular_group));
                     break;
                 case ROOM_PUBLIC_CALL:
-                        holder.dialogAvatar.setImageDrawable(ContextCompat.getDrawable(context,
-                                                                                       R.drawable.ic_circular_link));
+                    holder.dialogAvatar.setImageDrawable(ContextCompat.getDrawable(context,
+                            R.drawable.ic_circular_link));
                     break;
                 default:
                     holder.dialogAvatar.setVisibility(View.GONE);
@@ -257,7 +290,8 @@ public class ConversationItem extends AbstractFlexibleItem<ConversationItem.Conv
     @Override
     public boolean filter(String constraint) {
         return conversation.getDisplayName() != null &&
-                Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL).matcher(conversation.getDisplayName().trim()).find();
+                Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
+                        .matcher(conversation.getDisplayName().trim()).find();
     }
 
     static class ConversationItemViewHolder extends FlexibleViewHolder {

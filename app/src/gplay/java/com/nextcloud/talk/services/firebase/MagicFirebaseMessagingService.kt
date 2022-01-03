@@ -41,7 +41,7 @@ import com.bluelinelabs.logansquare.LoganSquare
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.nextcloud.talk.R
-import com.nextcloud.talk.activities.MagicCallActivity
+import com.nextcloud.talk.activities.CallNotificationActivity
 import com.nextcloud.talk.api.NcApi
 import com.nextcloud.talk.application.NextcloudTalkApplication
 import com.nextcloud.talk.application.NextcloudTalkApplication.Companion.sharedApplication
@@ -63,6 +63,7 @@ import com.nextcloud.talk.utils.bundle.BundleKeys
 import com.nextcloud.talk.utils.bundle.BundleKeys.KEY_FROM_NOTIFICATION_START_CALL
 import com.nextcloud.talk.utils.bundle.BundleKeys.KEY_USER_ENTITY
 import com.nextcloud.talk.utils.preferences.AppPreferences
+import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -76,6 +77,7 @@ import java.io.IOException
 import java.net.CookieManager
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
+import java.util.concurrent.TimeUnit
 import java.security.PrivateKey
 import javax.crypto.Cipher
 import javax.crypto.NoSuchPaddingException
@@ -83,6 +85,8 @@ import javax.inject.Inject
 
 @AutoInjector(NextcloudTalkApplication::class)
 class MagicFirebaseMessagingService : FirebaseMessagingService() {
+    private val TAG = "MagicFirebaseMessagingService"
+
     @JvmField
     @Inject
     var appPreferences: AppPreferences? = null
@@ -112,11 +116,13 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: CallNotificationClick) {
+        Log.d(TAG, "CallNotification was clicked")
         isServiceInForeground = false
         stopForeground(true)
     }
 
     override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
         isServiceInForeground = false
         eventBus?.unregister(this)
         stopForeground(true)
@@ -128,12 +134,13 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         sharedApplication!!.componentApplication.inject(this)
         appPreferences!!.pushToken = token
+        Log.d(TAG, "onNewToken. token = $token")
         val pushRegistrationWork = OneTimeWorkRequest.Builder(PushRegistrationWorker::class.java).build()
         WorkManager.getInstance().enqueue(pushRegistrationWork)
     }
 
-    @SuppressLint("LongLogTag")
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        Log.d(TAG, "onMessageReceived")
         sharedApplication!!.componentApplication.inject(this)
         if (!remoteMessage.data["subject"].isNullOrEmpty() && !remoteMessage.data["signature"].isNullOrEmpty()) {
             decryptMessage(remoteMessage.data["subject"]!!, remoteMessage.data["signature"]!!)
@@ -160,6 +167,7 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                         DecryptedPushMessage::class.java
                     )
                     decryptedPushMessage?.apply {
+                        Log.d(TAG, this.toString())
                         timestamp = System.currentTimeMillis()
                         if (delete) {
                             cancelExistingNotificationWithId(
@@ -178,7 +186,7 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                                 )
                             }
                         } else if (type == "call") {
-                            val fullScreenIntent = Intent(applicationContext, MagicCallActivity::class.java)
+                            val fullScreenIntent = Intent(applicationContext, CallNotificationActivity::class.java)
                             val bundle = Bundle()
                             bundle.putString(BundleKeys.KEY_ROOM_ID, decryptedPushMessage!!.id)
                             bundle.putParcelable(KEY_USER_ENTITY, signatureVerification!!.userEntity)
@@ -296,10 +304,11 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
         signatureVerification: SignatureVerification,
         decryptedPushMessage: DecryptedPushMessage
     ) {
+        Log.d(TAG, "checkIfCallIsActive")
         val ncApi = retrofit!!.newBuilder()
             .client(okHttpClient!!.newBuilder().cookieJar(JavaNetCookieJar(CookieManager())).build()).build()
             .create(NcApi::class.java)
-        var hasParticipantsInCall = false
+        var hasParticipantsInCall = true
         var inCallOnDifferentDevice = false
 
         val apiVersion = ApiUtils.getConversationApiVersion(
@@ -315,8 +324,10 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                 decryptedPushMessage.id
             )
         )
-            .takeWhile {
-                isServiceInForeground
+            .repeatWhen { completed ->
+                completed.zipWith(Observable.range(1, 12), { _, i -> i })
+                    .flatMap { Observable.timer(5, TimeUnit.SECONDS) }
+                    .takeWhile { isServiceInForeground && hasParticipantsInCall && !inCallOnDifferentDevice }
             }
             .subscribeOn(Schedulers.io())
             .subscribe(object : Observer<ParticipantsOverall> {
@@ -328,7 +339,8 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                     hasParticipantsInCall = participantList.isNotEmpty()
                     if (hasParticipantsInCall) {
                         for (participant in participantList) {
-                            if (participant.userId == signatureVerification.userEntity.userId) {
+                            if (participant.actorId == signatureVerification.userEntity.userId &&
+                                participant.actorType == Participant.ActorType.USERS) {
                                 inCallOnDifferentDevice = true
                                 break
                             }
@@ -336,20 +348,16 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                     }
 
                     if (!hasParticipantsInCall || inCallOnDifferentDevice) {
+                        Log.d(TAG, "no participants in call OR inCallOnDifferentDevice")
                         stopForeground(true)
                         handler.removeCallbacksAndMessages(null)
-                    } else if (isServiceInForeground) {
-                        handler.postDelayed(
-                            {
-                                checkIfCallIsActive(signatureVerification, decryptedPushMessage)
-                            },
-                            5000
-                        )
                     }
                 }
 
                 override fun onError(e: Throwable) {}
                 override fun onComplete() {
+                    stopForeground(true)
+                    handler.removeCallbacksAndMessages(null)
                 }
             })
     }

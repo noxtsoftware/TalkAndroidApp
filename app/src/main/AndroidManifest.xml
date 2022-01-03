@@ -120,9 +120,24 @@
         </activity>
 
         <activity
-            android:name="com.moyn.talk.activities.MagicCallActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask" />
+            android:name="com.moyn.talk.activities.CallActivity"
+            android:theme="@style/AppTheme.CallLauncher"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTask"
+            android:taskAffinity=".call"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true"/>
+        
+        <activity
+            android:name=".activities.CallNotificationActivity"
+            android:theme="@style/AppTheme.CallLauncher"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTask"
+            android:taskAffinity=".call"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true" />
 
         <activity
             android:name="com.moyn.talk.activities.FullScreenImageActivity"
@@ -141,6 +156,11 @@
             android:theme="@style/FullScreenTextTheme"
             android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
+
+         <activity
+            android:name="com.moyn.talk.activities.TakePhotoActivity"
+            android:theme="@style/TakePhotoTheme"
+            android:windowSoftInputMode="stateHidden" />
 
         <receiver android:name="com.moyn.talk.receivers.PackageReplacedReceiver">
             <intent-filter>
@@ -197,4 +217,16 @@
         </provider>
 
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
+
 </manifest>

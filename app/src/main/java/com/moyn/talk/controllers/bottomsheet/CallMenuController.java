@@ -21,21 +21,14 @@
 package com.moyn.talk.controllers.bottomsheet;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import autodagger.AutoInjector;
-import butterknife.BindView;
+
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.kennyc.bottomsheet.adapters.AppAdapter;
@@ -55,16 +48,29 @@ import com.moyn.talk.utils.DisplayUtils;
 import com.moyn.talk.utils.ShareUtils;
 import com.moyn.talk.utils.bundle.BundleKeys;
 import com.moyn.talk.utils.database.user.UserUtils;
-import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+
 import org.greenrobot.eventbus.EventBus;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import autodagger.AutoInjector;
+import butterknife.BindView;
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 @AutoInjector(NextcloudTalkApplication.class)
 public class CallMenuController extends BaseController implements FlexibleAdapter.OnItemClickListener {
@@ -76,6 +82,9 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
 
     @Inject
     UserUtils userUtils;
+
+    @Inject
+    Context context;
 
     private Conversation conversation;
     private List<AbstractFlexibleItem> menuItems;
@@ -104,6 +113,7 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
     }
 
     @Override
+    @NonNull
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         return inflater.inflate(R.layout.controller_call_menu, container, false);
     }
@@ -152,60 +162,73 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
 
             if (conversation.isFavorite()) {
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_remove_from_favorites), 97,
-                                           DisplayUtils.getTintedDrawable(getResources(), R.drawable.star_default,
-                                                                          R.color.grey_600)));
+                        DisplayUtils.getTintedDrawable(getResources(), R.drawable.star_default,
+                                R.color.grey_600)));
             } else if (CapabilitiesUtil.hasSpreedFeatureCapability(currentUser, "favorites")) {
-                menuItems.add(new MenuItem(getResources().getString(R.string.nc_add_to_favorites)
-                        , 98, DisplayUtils.getTintedDrawable(getResources(), R.drawable.star_fill_default, R.color.grey_600)));
+                menuItems.add(new MenuItem(getResources().getString(R.string.nc_add_to_favorites),
+                        98,
+                        DisplayUtils.getTintedDrawable(getResources(),
+                                R.drawable.star_fill_default,
+                                R.color.grey_600)));
             }
 
             if (conversation.isNameEditable(currentUser)) {
-                menuItems.add(new MenuItem(getResources().getString(R.string.nc_rename), 2, getResources().getDrawable(R.drawable
-                        .pencil_default)));
+                menuItems.add(new MenuItem(getResources().getString(R.string.nc_rename),
+                        2,
+                        ContextCompat.getDrawable(context,
+                                R.drawable.pencil_default)));
             }
 
             if (conversation.canModerate(currentUser)) {
                 if (!conversation.isPublic()) {
-                    menuItems.add(new MenuItem(getResources().getString(R.string.nc_make_call_public), 3, getResources().getDrawable(R.drawable
-                            .link_default)));
+                    menuItems.add(new MenuItem(getResources().getString(R.string.nc_make_call_public),
+                            3, ContextCompat.getDrawable(context,
+                                    R.drawable.link_default)));
                 } else {
                     if (conversation.isHasPassword()) {
-                        menuItems.add(new MenuItem(getResources().getString(R.string.nc_change_password), 4, getResources().getDrawable(R.drawable
-                                .lock_default)));
-                        menuItems.add(new MenuItem(getResources().getString(R.string.nc_clear_password), 5, getResources().getDrawable(R.drawable
-                                .unlock_default)));
+                        menuItems.add(new MenuItem(getResources().getString(R.string.nc_change_password),
+                                4, ContextCompat.getDrawable(context,
+                                        R.drawable.lock_default)));
+                        menuItems.add(new MenuItem(getResources().getString(R.string.nc_clear_password),
+                                5,
+                                ContextCompat.getDrawable(context,
+                                        R.drawable.unlock_default)));
                     } else {
-                        menuItems.add(new MenuItem(getResources().getString(R.string.nc_set_password), 6, getResources().getDrawable(R.drawable
-                                .lock_default)));
+                        menuItems.add(new MenuItem(getResources().getString(R.string.nc_set_password),
+                                6, ContextCompat.getDrawable(context,
+                                        R.drawable.lock_default)));
                     }
                 }
 
-                menuItems.add(new MenuItem(getResources().getString(R.string.nc_delete_call), 9, getResources().getDrawable(R.drawable
-                        .trash_default)));
+                menuItems.add(new MenuItem(getResources().getString(R.string.nc_delete_call),
+                        9, ContextCompat.getDrawable(context,
+                                R.drawable.trash_default)));
             }
 
             if (conversation.isPublic()) {
-                menuItems.add(new MenuItem(getResources().getString(R.string.nc_share_link), 7, getResources().getDrawable(R.drawable
-                        .link_default)));
+                menuItems.add(new MenuItem(getResources().getString(R.string.nc_share_link),
+                        7, ContextCompat.getDrawable(context,
+                                R.drawable.link_default)));
                 if (conversation.canModerate(currentUser)) {
-                    menuItems.add(new MenuItem(getResources().getString(R.string.nc_make_call_private), 8, getResources().getDrawable(R.drawable
-                            .contacts_default)));
+                    menuItems.add(new MenuItem(getResources().getString(R.string.nc_make_call_private),
+                            8, ContextCompat.getDrawable(context,
+                                    R.drawable.contacts_default)));
                 }
             }
-
 
             if (conversation.canLeave(currentUser)) {
                 menuItems.add(new MenuItem(getResources().getString(R.string.nc_leave), 1,
                         DisplayUtils.getTintedDrawable(getResources(),
-                                R.drawable.sign_out_default, R.color.grey_600)
-                ));
+                                R.drawable.sign_out_default, R.color.grey_600)));
             }
         } else if (menuType.equals(MenuType.SHARE)) {
             prepareIntent();
             List<AppAdapter.AppInfo> appInfoList = ShareUtils.getShareApps(getActivity(), shareIntent, null,
                     null);
-            menuItems.add(new AppItem(getResources().getString(R.string.nc_share_link_via), "", "",
-                    getResources().getDrawable(R.drawable.link_default)));
+            menuItems.add(new AppItem(getResources().getString(R.string.nc_share_link_via),
+                    "",
+                    "",
+                    ContextCompat.getDrawable(context, R.drawable.link_default)));
             if (appInfoList != null) {
                 for (AppAdapter.AppInfo appInfo : appInfoList) {
                     menuItems.add(new AppItem(appInfo.title, appInfo.packageName, appInfo.name, appInfo.drawable));
@@ -213,10 +236,12 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
             }
         } else {
             menuItems.add(new MenuItem(getResources().getString(R.string.nc_start_conversation), 0, null));
-            menuItems.add(new MenuItem(getResources().getString(R.string.nc_new_conversation), 1,
-                                       getResources().getDrawable(R.drawable.plus_default)));
-            menuItems.add(new MenuItem(getResources().getString(R.string.nc_join_via_link), 2,
-                                       getResources().getDrawable(R.drawable.link_default)));
+            menuItems.add(new MenuItem(getResources().getString(R.string.nc_new_conversation),
+                    1, ContextCompat.getDrawable(context,
+                            R.drawable.plus_default)));
+            menuItems.add(new MenuItem(getResources().getString(R.string.nc_join_via_link),
+                    2, ContextCompat.getDrawable(context,
+                            R.drawable.link_default)));
         }
     }
 
@@ -239,14 +264,16 @@ public class CallMenuController extends BaseController implements FlexibleAdapte
                         if (tag == 1) {
                             Data data;
                             if ((data = getWorkerData()) != null) {
-                                OneTimeWorkRequest leaveConversationWorker =
-                                        new OneTimeWorkRequest.Builder(LeaveConversationWorker.class).setInputData(data).build();
+                                OneTimeWorkRequest leaveConversationWorker = new OneTimeWorkRequest.Builder(
+                                        LeaveConversationWorker.class).setInputData(data).build();
                                 WorkManager.getInstance().enqueue(leaveConversationWorker);
                             }
                         } else {
                             Bundle deleteConversationBundle;
                             if ((deleteConversationBundle = getDeleteConversationBundle()) != null) {
-                                conversationMenuInterface.openLovelyDialogWithIdAndBundle(ConversationsListController.ID_DELETE_CONVERSATION_DIALOG, deleteConversationBundle);
+                                conversationMenuInterface.openLovelyDialogWithIdAndBundle(
+                                        ConversationsListController.ID_DELETE_CONVERSATION_DIALOG,
+                                        deleteConversationBundle);
                             }
                         }
                         eventBus.post(new BottomSheetLockEvent(true, 0, false, true));

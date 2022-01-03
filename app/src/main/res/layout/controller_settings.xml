@@ -136,7 +136,7 @@
 
             <com.yarolegovich.mp.MaterialStandardPreference
                 android:id="@+id/settings_remove_account"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/server_age_warning_text_card">
 
@@ -147,7 +147,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/lexendregular"
                     android:text="@string/nc_settings_remove_account"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
             </com.yarolegovich.mp.MaterialStandardPreference>
 
         </RelativeLayout>
@@ -213,15 +213,6 @@
             android:layout_height="wrap_content"
             apc:mp_key="@string/nc_settings_message_ringtone_key"
             apc:mp_title="@string/nc_settings_other_notifications_ringtone" />
-
-        <com.yarolegovich.mp.MaterialSwitchPreference
-            android:id="@+id/settings_always_vibrate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            apc:mp_default_value="@bool/value_true"
-            apc:mp_key="@string/nc_settings_vibrate_key"
-            apc:mp_summary="@string/nc_settings_vibrate_desc"
-            apc:mp_title="@string/nc_settings_vibrate" />
 
     </com.yarolegovich.mp.MaterialPreferenceCategory>
 
@@ -340,7 +331,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             apc:mp_key="@string/nc_settings_proxy_host_key"
-            apc:mp_show_value="onRight"
+            apc:mp_show_value="onBottom"
             apc:mp_title="@string/nc_settings_proxy_host_title" />
 
         <com.yarolegovich.mp.MaterialEditTextPreference
@@ -348,7 +339,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             apc:mp_key="@string/nc_settings_proxy_port_key"
-            apc:mp_show_value="onRight"
+            apc:mp_show_value="onBottom"
             apc:mp_title="@string/nc_settings_proxy_port_title" />
 
         <com.yarolegovich.mp.MaterialEditTextPreference
@@ -356,7 +347,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             apc:mp_key="@string/nc_settings_proxy_username_key"
-            apc:mp_show_value="onRight"
+            apc:mp_show_value="onBottom"
             apc:mp_title="@string/nc_settings_proxy_username_title" />
 
         <com.yarolegovich.mp.MaterialEditTextPreference
@@ -364,7 +355,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             apc:mp_key="@string/nc_settings_proxy_password_key"
-            apc:mp_show_value="onRight"
+            apc:mp_show_value="onBottom"
             apc:mp_title="@string/nc_settings_proxy_password_title" />
 
         <com.yarolegovich.mp.MaterialSwitchPreference
@@ -373,7 +364,7 @@
             android:layout_height="wrap_content"
             apc:mp_default_value="false"
             apc:mp_key="@string/nc_settings_use_credentials_key"
-            apc:mp_show_value="onRight"
+            apc:mp_show_value="onBottom"
             apc:mp_title="@string/nc_settings_use_credentials_title">
 
         </com.yarolegovich.mp.MaterialSwitchPreference>
