@@ -1,4 +1,10 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+
  * Nextcloud Talk application
  *
  * @author Andy Scherzinger
@@ -120,7 +126,6 @@ public class ServerSelectionController extends BaseController {
                 getResources().getString(R.string.nc_server_product_name)));
 
         serverEntryTextInputLayout.setEndIconOnClickListener(view1 -> checkServerAndProceed());
-
 
         if (getResources().getBoolean(R.bool.hide_provider) ||
                 TextUtils.isEmpty(getResources().getString(R.string.nc_providers_url)) &&
@@ -319,7 +324,6 @@ public class ServerSelectionController extends BaseController {
         }
 
     }
-
 
     @Override
     protected void onDestroyView(@NonNull View view) {

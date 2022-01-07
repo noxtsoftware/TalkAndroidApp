@@ -1,6 +1,10 @@
 package com.moyn.talk
 
 /*
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
  * Nextcloud Talk application
  *
  * @author Mario Danic

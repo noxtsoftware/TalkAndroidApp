@@ -1,4 +1,10 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+
  * Nextcloud Talk application
  *
  * @author Mario Danic
@@ -94,7 +100,6 @@ public class UserItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder> 
         return userEntity;
     }
 
-
     @Override
     public int getLayoutRes() {
         if (header != null) {
@@ -126,29 +131,30 @@ public class UserItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder> 
             holder.contactDisplayName.setTextColor(ResourcesCompat.getColor(
                     holder.contactDisplayName.getContext().getResources(),
                     R.color.medium_emphasis_text,
-                    null)
-            );
+                    null));
             holder.simpleDraweeView.setAlpha(0.38f);
         } else {
             holder.contactDisplayName.setTextColor(ResourcesCompat.getColor(
                     holder.contactDisplayName.getContext().getResources(),
                     R.color.high_emphasis_text,
-                    null)
-            );
+                    null));
             holder.simpleDraweeView.setAlpha(1.0f);
         }
 
         if (adapter.hasFilter()) {
             FlexibleUtils.highlightText(holder.contactDisplayName, participant.getDisplayName(),
-                    String.valueOf(adapter.getFilter(String.class)), NextcloudTalkApplication.Companion.getSharedApplication()
+                    String.valueOf(adapter.getFilter(String.class)),
+                    NextcloudTalkApplication.Companion.getSharedApplication()
                             .getResources().getColor(R.color.colorPrimary));
         }
 
         holder.contactDisplayName.setText(participant.getDisplayName());
 
         if (TextUtils.isEmpty(participant.getDisplayName()) &&
-                (participant.getType().equals(Participant.ParticipantType.GUEST) || participant.getType().equals(Participant.ParticipantType.USER_FOLLOWING_LINK))) {
-            holder.contactDisplayName.setText(NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_guest));
+                (participant.getType().equals(Participant.ParticipantType.GUEST)
+                        || participant.getType().equals(Participant.ParticipantType.USER_FOLLOWING_LINK))) {
+            holder.contactDisplayName
+                    .setText(NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_guest));
         }
 
         if (participant.getActorType() == Participant.ActorType.GROUPS ||
@@ -172,17 +178,20 @@ public class UserItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder> 
             DraweeController draweeController = Fresco.newDraweeControllerBuilder()
                     .setOldController(holder.simpleDraweeView.getController())
                     .setAutoPlayAnimations(true)
-                    .setImageRequest(DisplayUtils.getImageRequestForUrl(ApiUtils.getUrlForAvatarWithNameForGuests(userEntity.getBaseUrl(),
-                                                                                                                  displayName, R.dimen.avatar_size), null))
+                    .setImageRequest(DisplayUtils
+                            .getImageRequestForUrl(ApiUtils.getUrlForAvatarWithNameForGuests(userEntity.getBaseUrl(),
+                                    displayName, R.dimen.avatar_size), null))
                     .build();
             holder.simpleDraweeView.setController(draweeController);
 
-        } else if (participant.getActorType() == Participant.ActorType.USERS || participant.getSource().equals("users")) {
+        } else if (participant.getActorType() == Participant.ActorType.USERS
+                || participant.getSource().equals("users")) {
             DraweeController draweeController = Fresco.newDraweeControllerBuilder()
                     .setOldController(holder.simpleDraweeView.getController())
                     .setAutoPlayAnimations(true)
-                    .setImageRequest(DisplayUtils.getImageRequestForUrl(ApiUtils.getUrlForAvatarWithName(userEntity.getBaseUrl(),
-                                                                                                         participant.getActorId(), R.dimen.avatar_size), null))
+                    .setImageRequest(
+                            DisplayUtils.getImageRequestForUrl(ApiUtils.getUrlForAvatarWithName(userEntity.getBaseUrl(),
+                                    participant.getActorId(), R.dimen.avatar_size), null))
                     .build();
             holder.simpleDraweeView.setController(draweeController);
         }
@@ -215,29 +224,37 @@ public class UserItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder> 
 
                 switch (new EnumParticipantTypeConverter().convertToInt(participant.getType())) {
                     case 1:
-                        //userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_owner);
-                        //break;
+                        // userType =
+                        // NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_owner);
+                        // break;
                     case 2:
                     case 6: // Guest moderator
-                        userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_moderator);
+                        userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                .getString(R.string.nc_moderator);
                         break;
                     case 3:
-                        userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_user);
+                        userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                .getString(R.string.nc_user);
                         if (participant.getActorType() == Participant.ActorType.GROUPS) {
-                            userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_group);
+                            userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                    .getString(R.string.nc_group);
                         }
                         if (participant.getActorType() == Participant.ActorType.CIRCLES) {
-                            userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_circle);
+                            userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                    .getString(R.string.nc_circle);
                         }
                         break;
                     case 4:
-                        userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_guest);
+                        userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                .getString(R.string.nc_guest);
                         if (participant.getActorType() == Participant.ActorType.EMAILS) {
-                            userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_email);
+                            userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                    .getString(R.string.nc_email);
                         }
                         break;
                     case 5:
-                        userType = NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_following_link);
+                        userType = NextcloudTalkApplication.Companion.getSharedApplication()
+                                .getString(R.string.nc_following_link);
                         break;
                     default:
                         break;
@@ -253,8 +270,10 @@ public class UserItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder> 
     @Override
     public boolean filter(String constraint) {
         return participant.getDisplayName() != null &&
-                (Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL).matcher(participant.getDisplayName().trim()).find() ||
-                        Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL).matcher(participant.getActorId().trim()).find());
+                (Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
+                        .matcher(participant.getDisplayName().trim()).find() ||
+                        Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
+                                .matcher(participant.getActorId().trim()).find());
     }
 
     @Override

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+-->
   <resources>
     <string name="account_icon">Konto-Icon</string>
     <string name="appbar_search_in">Suche in %s</string>

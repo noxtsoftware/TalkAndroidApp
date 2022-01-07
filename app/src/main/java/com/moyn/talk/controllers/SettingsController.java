@@ -1,4 +1,10 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+
  * Nextcloud Talk application
  *
  * @author Andy Scherzinger
@@ -229,10 +235,13 @@ public class SettingsController extends BaseController {
         }
 
         appPreferences.registerProxyTypeListener(proxyTypeChangeListener = new ProxyTypeChangeListener());
-        appPreferences.registerProxyCredentialsListener(proxyCredentialsChangeListener = new ProxyCredentialsChangeListener());
-        appPreferences.registerScreenSecurityListener(screenSecurityChangeListener = new ScreenSecurityChangeListener());
+        appPreferences.registerProxyCredentialsListener(
+                proxyCredentialsChangeListener = new ProxyCredentialsChangeListener());
+        appPreferences
+                .registerScreenSecurityListener(screenSecurityChangeListener = new ScreenSecurityChangeListener());
         appPreferences.registerScreenLockListener(screenLockChangeListener = new ScreenLockListener());
-        appPreferences.registerScreenLockTimeoutListener(screenLockTimeoutChangeListener = new ScreenLockTimeoutListener());
+        appPreferences
+                .registerScreenLockTimeoutListener(screenLockTimeoutChangeListener = new ScreenLockTimeoutListener());
         appPreferences.registerThemeChangeListener(themeChangeListener = new ThemeChangeListener());
         appPreferences.registerPhoneBookIntegrationChangeListener(
                 phoneBookIntegrationChangeListener = new PhoneBookIntegrationChangeListener(this));
@@ -248,8 +257,8 @@ public class SettingsController extends BaseController {
 
         if (!TextUtils.isEmpty(getResources().getString(R.string.nc_gpl3_url))) {
             licenceButton.addPreferenceClickListener(view1 -> {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().
-                        getString(R.string.nc_gpl3_url)));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(getResources().getString(R.string.nc_gpl3_url)));
                 startActivity(browserIntent);
             });
         } else {
@@ -269,11 +278,10 @@ public class SettingsController extends BaseController {
                     getResources().getString(R.string.nc_app_product_name)));
         }
 
-
         if (!TextUtils.isEmpty(getResources().getString(R.string.nc_privacy_url))) {
             privacyButton.addPreferenceClickListener(view12 -> {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().
-                        getString(R.string.nc_privacy_url)));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(getResources().getString(R.string.nc_privacy_url)));
                 startActivity(browserIntent);
             });
         } else {
@@ -318,25 +326,24 @@ public class SettingsController extends BaseController {
 
         String finalHost = host;
         int finalPort = port;
-        certificateSetup.addPreferenceClickListener(v -> KeyChain.choosePrivateKeyAlias(Objects.requireNonNull(getActivity()), alias -> {
-            String finalAlias = alias;
-            getActivity().runOnUiThread(() -> {
-                if (finalAlias != null) {
-                    certificateSetup.setTitle(R.string.nc_client_cert_change);
-                } else {
-                    certificateSetup.setTitle(R.string.nc_client_cert_setup);
-                }
-            });
+        certificateSetup.addPreferenceClickListener(
+                v -> KeyChain.choosePrivateKeyAlias(Objects.requireNonNull(getActivity()), alias -> {
+                    String finalAlias = alias;
+                    getActivity().runOnUiThread(() -> {
+                        if (finalAlias != null) {
+                            certificateSetup.setTitle(R.string.nc_client_cert_change);
+                        } else {
+                            certificateSetup.setTitle(R.string.nc_client_cert_setup);
+                        }
+                    });
 
-            if (alias == null) {
-                alias = "";
-            }
+                    if (alias == null) {
+                        alias = "";
+                    }
 
-
-            userUtils.createOrUpdateUser(null, null, null, null, null, null, null, currentUser.getId(),
-                    null, alias, null);
-        }, new String[]{"RSA", "EC"}, null, finalHost, finalPort, currentUser.getClientCertificate
-                ()));
+                    userUtils.createOrUpdateUser(null, null, null, null, null, null, null, currentUser.getId(),
+                            null, alias, null);
+                }, new String[] { "RSA", "EC" }, null, finalHost, finalPort, currentUser.getClientCertificate()));
     }
 
     private void showLovelyDialog(int dialogId, Bundle savedInstanceState) {
@@ -362,8 +369,8 @@ public class SettingsController extends BaseController {
     protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
         super.onRestoreViewState(view, savedViewState);
         if (LovelySaveStateHandler.wasDialogOnScreen(savedViewState)) {
-            //Dialog won't be restarted automatically, so we need to call this method.
-            //Each dialog knows how to restore its state
+            // Dialog won't be restarted automatically, so we need to call this method.
+            // Each dialog knows how to restore its state
             showLovelyDialog(LovelySaveStateHandler.getSavedDialogId(savedViewState), savedViewState);
         }
     }
@@ -424,22 +431,27 @@ public class SettingsController extends BaseController {
             certificateSetup.setTitle(R.string.nc_client_cert_setup);
         }
 
-        ((Checkable) screenSecuritySwitchPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.getIsScreenSecured());
+        ((Checkable) screenSecuritySwitchPreference.findViewById(R.id.mp_checkable))
+                .setChecked(appPreferences.getIsScreenSecured());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ((Checkable) incognitoKeyboardSwitchPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.getIsKeyboardIncognito());
+            ((Checkable) incognitoKeyboardSwitchPreference.findViewById(R.id.mp_checkable))
+                    .setChecked(appPreferences.getIsKeyboardIncognito());
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ((Checkable) incognitoKeyboardSwitchPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.getIsKeyboardIncognito());
+            ((Checkable) incognitoKeyboardSwitchPreference.findViewById(R.id.mp_checkable))
+                    .setChecked(appPreferences.getIsKeyboardIncognito());
         }
 
         if (CapabilitiesUtil.isReadStatusAvailable(userUtils.getCurrentUser())) {
-            ((Checkable) readPrivacyPreference.findViewById(R.id.mp_checkable)).setChecked(!CapabilitiesUtil.isReadStatusPrivate(currentUser));
+            ((Checkable) readPrivacyPreference.findViewById(R.id.mp_checkable))
+                    .setChecked(!CapabilitiesUtil.isReadStatusPrivate(currentUser));
         } else {
             readPrivacyPreference.setVisibility(View.GONE);
         }
 
-        ((Checkable) phoneBookIntegrationPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.isPhoneBookIntegrationEnabled());
+        ((Checkable) phoneBookIntegrationPreference.findViewById(R.id.mp_checkable))
+                .setChecked(appPreferences.isPhoneBookIntegrationEnabled());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -447,7 +459,8 @@ public class SettingsController extends BaseController {
             if (keyguardManager.isKeyguardSecure()) {
                 screenLockSwitchPreference.setEnabled(true);
                 screenLockTimeoutChoicePreference.setEnabled(true);
-                ((Checkable) screenLockSwitchPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.getIsScreenLocked());
+                ((Checkable) screenLockSwitchPreference.findViewById(R.id.mp_checkable))
+                        .setChecked(appPreferences.getIsScreenLocked());
 
                 screenLockTimeoutChoicePreference.setEnabled(appPreferences.getIsScreenLocked());
 
@@ -517,12 +530,12 @@ public class SettingsController extends BaseController {
                 serverAgeTextView.setTextColor(ContextCompat.getColor(context, R.color.nc_darkRed));
                 serverAgeTextView.setText(R.string.nc_settings_server_eol);
                 serverAgeIcon.setColorFilter(ContextCompat.getColor(context, R.color.nc_darkRed),
-                                             PorterDuff.Mode.SRC_IN);
+                        PorterDuff.Mode.SRC_IN);
             } else if (CapabilitiesUtil.isServerAlmostEOL(currentUser)) {
                 serverAgeTextView.setTextColor(ContextCompat.getColor(context, R.color.nc_darkYellow));
                 serverAgeTextView.setText(R.string.nc_settings_server_almost_eol);
                 serverAgeIcon.setColorFilter(ContextCompat.getColor(context, R.color.nc_darkYellow),
-                                             PorterDuff.Mode.SRC_IN);
+                        PorterDuff.Mode.SRC_IN);
             } else {
                 serverAgeCardView.setVisibility(View.GONE);
             }
@@ -537,7 +550,7 @@ public class SettingsController extends BaseController {
             if (currentUser.getDisplayName() != null) {
                 displayNameTextView.setText(currentUser.getDisplayName());
             }
-            
+
             DisplayUtils.loadAvatarImage(currentUser, avatarImageView, false);
 
             profileQueryDisposable = ncApi.getUserProfile(credentials,
@@ -557,7 +570,6 @@ public class SettingsController extends BaseController {
                                     .getDisplayNameAlt();
                         }
 
-
                         if ((!TextUtils.isEmpty(displayName) && !displayName.equals(currentUser.getDisplayName()))) {
 
                             dbQueryDisposable = userUtils.createOrUpdateUser(null,
@@ -567,8 +579,8 @@ public class SettingsController extends BaseController {
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(userEntityResult -> {
-                                                displayNameTextView.setText(userEntityResult.getDisplayName());
-                                            },
+                                        displayNameTextView.setText(userEntityResult.getDisplayName());
+                                    },
                                             throwable -> {
                                                 dispose(dbQueryDisposable);
                                             }, () -> dispose(dbQueryDisposable));
@@ -577,7 +589,6 @@ public class SettingsController extends BaseController {
                     }, throwable -> {
                         dispose(profileQueryDisposable);
                     }, () -> dispose(profileQueryDisposable));
-
 
             removeAccountButton.addPreferenceClickListener(view1 -> {
                 showLovelyDialog(ID_REMOVE_ACCOUNT_WARNING_DIALOG, null);
@@ -632,11 +643,10 @@ public class SettingsController extends BaseController {
             }
         }
 
-        avatarContainer.setOnClickListener(v ->
-                getRouter()
-                        .pushController((RouterTransaction.with(new ProfileController())
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()))));
+        avatarContainer.setOnClickListener(v -> getRouter()
+                .pushController((RouterTransaction.with(new ProfileController())
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()))));
     }
 
     @Override
@@ -653,7 +663,6 @@ public class SettingsController extends BaseController {
         }
         super.onDestroy();
     }
-
 
     private void hideProxySettings() {
         appPreferences.removeProxyHost();
@@ -713,7 +722,8 @@ public class SettingsController extends BaseController {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         if (requestCode == ContactAddressBookWorker.REQUEST_PERMISSION &&
                 grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -723,7 +733,8 @@ public class SettingsController extends BaseController {
             checkForPhoneNumber();
         } else {
             appPreferences.setPhoneBookIntegration(false);
-            ((Checkable) phoneBookIntegrationPreference.findViewById(R.id.mp_checkable)).setChecked(appPreferences.isPhoneBookIntegrationEnabled());
+            ((Checkable) phoneBookIntegrationPreference.findViewById(R.id.mp_checkable))
+                    .setChecked(appPreferences.isPhoneBookIntegrationEnabled());
             Toast.makeText(context, context.getResources().getString(
                     R.string.no_phone_book_integration_due_to_permissions),
                     Toast.LENGTH_LONG).show();
@@ -831,7 +842,7 @@ public class SettingsController extends BaseController {
         @Override
         public void onChanged(Boolean isEnabled) {
             if (isEnabled) {
-                if(ContactAddressBookWorker.Companion.checkPermission(controller, context)){
+                if (ContactAddressBookWorker.Companion.checkPermission(controller, context)) {
                     checkForPhoneNumber();
                 }
             } else {
@@ -843,8 +854,7 @@ public class SettingsController extends BaseController {
     private void checkForPhoneNumber() {
         ncApi.getUserData(
                 ApiUtils.getCredentials(currentUser.getUsername(), currentUser.getToken()),
-                ApiUtils.getUrlForUserProfile(currentUser.getBaseUrl())
-        ).subscribeOn(Schedulers.io())
+                ApiUtils.getUrlForUserProfile(currentUser.getBaseUrl())).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserProfileOverall>() {
 
@@ -927,8 +937,8 @@ public class SettingsController extends BaseController {
         String phoneNumber = textInputLayout.getEditText().getText().toString();
 
         ncApi.setUserData(ApiUtils.getCredentials(currentUser.getUsername(), currentUser.getToken()),
-                ApiUtils.getUrlForUserData(currentUser.getBaseUrl(), currentUser.getUserId()), "phone", phoneNumber
-        ).subscribeOn(Schedulers.io())
+                ApiUtils.getUrlForUserData(currentUser.getBaseUrl(), currentUser.getUserId()), "phone", phoneNumber)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<GenericOverall>() {
 

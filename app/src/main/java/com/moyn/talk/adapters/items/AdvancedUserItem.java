@@ -1,4 +1,8 @@
 /*
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
  * Nextcloud Talk application
  *
  * @author Mario Danic
@@ -139,15 +143,18 @@ public class AdvancedUserItem extends AbstractFlexibleItem<AdvancedUserItem.User
             DraweeController draweeController = Fresco.newDraweeControllerBuilder()
                     .setOldController(holder.avatarImageView.getController())
                     .setAutoPlayAnimations(true)
-                    .setImageRequest(DisplayUtils.getImageRequestForUrl(ApiUtils.getUrlForAvatarWithName(userEntity.getBaseUrl(),
-                            participant.getActorId(), R.dimen.small_item_height), null))
+                    .setImageRequest(
+                            DisplayUtils.getImageRequestForUrl(ApiUtils.getUrlForAvatarWithName(userEntity.getBaseUrl(),
+                                    participant.getActorId(), R.dimen.small_item_height), null))
                     .build();
             holder.avatarImageView.setController(draweeController);
         } else {
             holder.avatarImageView.setVisibility(View.GONE);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.linearLayout.getLayoutParams();
-            layoutParams.setMarginStart((int) NextcloudTalkApplication.Companion.getSharedApplication().getApplicationContext()
-                    .getResources().getDimension(R.dimen.activity_horizontal_margin));
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.linearLayout
+                    .getLayoutParams();
+            layoutParams.setMarginStart(
+                    (int) NextcloudTalkApplication.Companion.getSharedApplication().getApplicationContext()
+                            .getResources().getDimension(R.dimen.activity_horizontal_margin));
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             holder.linearLayout.setLayoutParams(layoutParams);
         }
@@ -156,9 +163,9 @@ public class AdvancedUserItem extends AbstractFlexibleItem<AdvancedUserItem.User
     @Override
     public boolean filter(String constraint) {
         return participant.getDisplayName() != null &&
-                Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL).matcher(participant.getDisplayName().trim()).find();
+                Pattern.compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
+                        .matcher(participant.getDisplayName().trim()).find();
     }
-
 
     static class UserItemViewHolder extends FlexibleViewHolder {
 

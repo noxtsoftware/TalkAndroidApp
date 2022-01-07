@@ -1,4 +1,10 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+
  * Nextcloud Talk application
  *
  * @author Mario Danic
@@ -332,7 +338,7 @@ public class CallActivity extends CallBaseActivity {
             if (audioManager != null) {
                 audioManager.toggleUseSpeakerphone();
                 if (audioManager.isSpeakerphoneAutoOn()) {
-                    binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.unmute_dark );
+                    binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.unmute_dark);
                 } else {
                     binding.speakerButton.getHierarchy().setPlaceholderImage(R.drawable.mute_default);
                 }

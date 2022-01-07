@@ -1,4 +1,10 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+
  * Nextcloud Talk application
  *
  * @author Mario Danic
@@ -142,11 +148,12 @@ public class NotificationWorker extends Worker {
         ArbitraryStorageEntity arbitraryStorageEntity;
 
         if ((arbitraryStorageEntity = arbitraryStorageUtils.getStorageSetting(userEntity.getId(),
-                "important_conversation", intent.getExtras().getString(BundleKeys.INSTANCE.getKEY_ROOM_TOKEN()))) != null) {
+                "important_conversation",
+                intent.getExtras().getString(BundleKeys.INSTANCE.getKEY_ROOM_TOKEN()))) != null) {
             importantConversation = Boolean.parseBoolean(arbitraryStorageEntity.getValue());
         }
 
-        int apiVersion = ApiUtils.getConversationApiVersion(userEntity, new int[] {ApiUtils.APIv4, 1});
+        int apiVersion = ApiUtils.getConversationApiVersion(userEntity, new int[] { ApiUtils.APIv4, 1 });
 
         ncApi.getRoom(credentials, ApiUtils.getUrlForRoom(apiVersion, userEntity.getBaseUrl(),
                 intent.getExtras().getString(BundleKeys.INSTANCE.getKEY_ROOM_TOKEN())))
@@ -162,8 +169,8 @@ public class NotificationWorker extends Worker {
 
                         intent.putExtra(BundleKeys.INSTANCE.getKEY_ROOM(), Parcels.wrap(conversation));
                         if (conversation.getType().equals(Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL) ||
-                                (!TextUtils.isEmpty(conversation.getObjectType()) && "share:password".equals
-                                        (conversation.getObjectType()))) {
+                                (!TextUtils.isEmpty(conversation.getObjectType())
+                                        && "share:password".equals(conversation.getObjectType()))) {
                             context.startActivity(intent);
                         } else {
                             if (conversation.getType().equals(Conversation.ConversationType.ROOM_GROUP_CALL)) {
@@ -204,13 +211,14 @@ public class NotificationWorker extends Worker {
 
                     @Override
                     public void onNext(NotificationOverall notificationOverall) {
-                        com.moyn.talk.models.json.notifications.Notification notification =
-                                notificationOverall.getOcs().getNotification();
+                        com.moyn.talk.models.json.notifications.Notification notification = notificationOverall.getOcs()
+                                .getNotification();
 
                         if (notification.getMessageRichParameters() != null &&
                                 notification.getMessageRichParameters().size() > 0) {
-                            decryptedPushMessage.setText(ChatUtils.Companion.getParsedMessage(notification.getMessageRich(),
-                                    notification.getMessageRichParameters()));
+                            decryptedPushMessage
+                                    .setText(ChatUtils.Companion.getParsedMessage(notification.getMessageRich(),
+                                            notification.getMessageRichParameters()));
                         } else {
                             decryptedPushMessage.setText(notification.getMessage());
                         }
@@ -326,21 +334,25 @@ public class NotificationWorker extends Worker {
         }
 
         Bundle notificationInfo = new Bundle();
-        notificationInfo.putLong(BundleKeys.INSTANCE.getKEY_INTERNAL_USER_ID(), signatureVerification.getUserEntity().getId());
+        notificationInfo.putLong(BundleKeys.INSTANCE.getKEY_INTERNAL_USER_ID(),
+                signatureVerification.getUserEntity().getId());
         // could be an ID or a TOKEN
         notificationInfo.putString(BundleKeys.INSTANCE.getKEY_ROOM_TOKEN(), decryptedPushMessage.getId());
-        notificationInfo.putLong(BundleKeys.INSTANCE.getKEY_NOTIFICATION_ID(), decryptedPushMessage.getNotificationId());
+        notificationInfo.putLong(BundleKeys.INSTANCE.getKEY_NOTIFICATION_ID(),
+                decryptedPushMessage.getNotificationId());
         notificationBuilder.setExtras(notificationInfo);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            /*NotificationUtils.createNotificationChannelGroup(context,
-                    Long.toString(crc32.getValue()),
-                    groupName);*/
+            /*
+             * NotificationUtils.createNotificationChannelGroup(context,
+             * Long.toString(crc32.getValue()),
+             * groupName);
+             */
 
             if (CHAT.equals(decryptedPushMessage.getType()) || ROOM.equals(decryptedPushMessage.getType())) {
-                AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder().setContentType
-                        (AudioAttributes.CONTENT_TYPE_SONIFICATION);
+                AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
                 audioAttributesBuilder.setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT);
 
                 String ringtonePreferencesString;
@@ -352,8 +364,8 @@ public class NotificationWorker extends Worker {
                             "/raw/librem_by_feandesign_message");
                 } else {
                     try {
-                        RingtoneSettings ringtoneSettings = LoganSquare.parse
-                                (ringtonePreferencesString, RingtoneSettings.class);
+                        RingtoneSettings ringtoneSettings = LoganSquare.parse(ringtonePreferencesString,
+                                RingtoneSettings.class);
                         soundUri = ringtoneSettings.getRingtoneUri();
                     } catch (IOException exception) {
                         soundUri = Uri.parse("android.resource://" + context.getPackageName() +
@@ -363,19 +375,25 @@ public class NotificationWorker extends Worker {
 
                 NotificationUtils.INSTANCE.createNotificationChannel(context,
                         NotificationUtils.INSTANCE.getNOTIFICATION_CHANNEL_MESSAGES_V3(), context.getResources()
-                                .getString(R.string.nc_notification_channel_messages), context.getResources()
-                                .getString(R.string.nc_notification_channel_messages), true,
+                                .getString(R.string.nc_notification_channel_messages),
+                        context.getResources()
+                                .getString(R.string.nc_notification_channel_messages),
+                        true,
                         NotificationManager.IMPORTANCE_HIGH, soundUri, audioAttributesBuilder.build(), null, false);
 
                 notificationBuilder.setChannelId(NotificationUtils.INSTANCE.getNOTIFICATION_CHANNEL_MESSAGES_V3());
             } else {
-                /*NotificationUtils.INSTANCE.createNotificationChannel(context,
-                        NotificationUtils.INSTANCE.getNOTIFICATION_CHANNEL_CALLS_V3(), context.getResources()
-                                .getString(R.string.nc_notification_channel_calls), context.getResources()
-                                .getString(R.string.nc_notification_channel_calls_description), true,
-                        NotificationManager.IMPORTANCE_HIGH);
-
-                notificationBuilder.setChannelId(NotificationUtils.INSTANCE.getNOTIFICATION_CHANNEL_CALLS_V3());*/
+                /*
+                 * NotificationUtils.INSTANCE.createNotificationChannel(context,
+                 * NotificationUtils.INSTANCE.getNOTIFICATION_CHANNEL_CALLS_V3(),
+                 * context.getResources()
+                 * .getString(R.string.nc_notification_channel_calls), context.getResources()
+                 * .getString(R.string.nc_notification_channel_calls_description), true,
+                 * NotificationManager.IMPORTANCE_HIGH);
+                 * 
+                 * notificationBuilder.setChannelId(NotificationUtils.INSTANCE.
+                 * getNOTIFICATION_CHANNEL_CALLS_V3());
+                 */
             }
 
         } else {
@@ -384,7 +402,6 @@ public class NotificationWorker extends Worker {
         }
 
         notificationBuilder.setContentIntent(pendingIntent);
-
 
         CRC32 crc32 = new CRC32();
 
@@ -397,9 +414,8 @@ public class NotificationWorker extends Worker {
         String stringForCrc = String.valueOf(System.currentTimeMillis());
         crc32.update(stringForCrc.getBytes());
 
-        StatusBarNotification activeStatusBarNotification =
-                NotificationUtils.INSTANCE.findNotificationForRoom(context,
-                        signatureVerification.getUserEntity(), decryptedPushMessage.getId());
+        StatusBarNotification activeStatusBarNotification = NotificationUtils.INSTANCE.findNotificationForRoom(context,
+                signatureVerification.getUserEntity(), decryptedPushMessage.getId());
 
         int notificationId;
 
@@ -409,31 +425,37 @@ public class NotificationWorker extends Worker {
             notificationId = (int) crc32.getValue();
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && decryptedPushMessage.getNotificationUser() != null && decryptedPushMessage.getType().equals("chat")) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N
+                && decryptedPushMessage.getNotificationUser() != null
+                && decryptedPushMessage.getType().equals("chat")) {
             NotificationCompat.MessagingStyle style = null;
             if (activeStatusBarNotification != null) {
                 Notification activeNotification = activeStatusBarNotification.getNotification();
                 style = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(activeNotification);
             }
 
-            Person.Builder person =
-                    new Person.Builder().setKey(signatureVerification.getUserEntity().getId() +
-                            "@" + decryptedPushMessage.getNotificationUser().getId()).setName(EmojiCompat.get().process(decryptedPushMessage.getNotificationUser().getName())).setBot(decryptedPushMessage.getNotificationUser().getType().equals("bot"));
+            Person.Builder person = new Person.Builder().setKey(signatureVerification.getUserEntity().getId() +
+                    "@" + decryptedPushMessage.getNotificationUser().getId())
+                    .setName(EmojiCompat.get().process(decryptedPushMessage.getNotificationUser().getName()))
+                    .setBot(decryptedPushMessage.getNotificationUser().getType().equals("bot"));
 
             notificationBuilder.setOnlyAlertOnce(true);
 
-            if (decryptedPushMessage.getNotificationUser().getType().equals("user") || decryptedPushMessage.getNotificationUser().getType().equals("guest")) {
-                String avatarUrl = ApiUtils.getUrlForAvatarWithName(signatureVerification.getUserEntity().getBaseUrl(), decryptedPushMessage.getNotificationUser().getId(), R.dimen.avatar_size);
+            if (decryptedPushMessage.getNotificationUser().getType().equals("user")
+                    || decryptedPushMessage.getNotificationUser().getType().equals("guest")) {
+                String avatarUrl = ApiUtils.getUrlForAvatarWithName(signatureVerification.getUserEntity().getBaseUrl(),
+                        decryptedPushMessage.getNotificationUser().getId(), R.dimen.avatar_size);
 
                 if (decryptedPushMessage.getNotificationUser().getType().equals("guest")) {
-                    avatarUrl = ApiUtils.getUrlForAvatarWithNameForGuests(signatureVerification.getUserEntity().getBaseUrl(),
+                    avatarUrl = ApiUtils.getUrlForAvatarWithNameForGuests(
+                            signatureVerification.getUserEntity().getBaseUrl(),
                             decryptedPushMessage.getNotificationUser().getName(), R.dimen.avatar_size);
                 }
 
-                ImageRequest imageRequest =
-                        DisplayUtils.getImageRequestForUrl(avatarUrl, null);
+                ImageRequest imageRequest = DisplayUtils.getImageRequestForUrl(avatarUrl, null);
                 ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, context);
+                DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline
+                        .fetchDecodedImage(imageRequest, context);
 
                 NotificationCompat.MessagingStyle finalStyle = style;
                 dataSource.subscribe(
@@ -467,16 +489,18 @@ public class NotificationWorker extends Worker {
 
     }
 
-    private NotificationCompat.MessagingStyle getStyle(Person person, @Nullable NotificationCompat.MessagingStyle style) {
+    private NotificationCompat.MessagingStyle getStyle(Person person,
+            @Nullable NotificationCompat.MessagingStyle style) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            NotificationCompat.MessagingStyle newStyle =
-                    new NotificationCompat.MessagingStyle(person);
+            NotificationCompat.MessagingStyle newStyle = new NotificationCompat.MessagingStyle(person);
 
             newStyle.setConversationTitle(decryptedPushMessage.getSubject());
             newStyle.setGroupConversation(!conversationType.equals("one2one"));
 
             if (style != null) {
-                style.getMessages().forEach(message -> newStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message.getText(), message.getTimestamp(), message.getPerson())));
+                style.getMessages().forEach(
+                        message -> newStyle.addMessage(new NotificationCompat.MessagingStyle.Message(message.getText(),
+                                message.getTimestamp(), message.getPerson())));
             }
 
             newStyle.addMessage(decryptedPushMessage.getText(), decryptedPushMessage.getTimestamp(), person);
@@ -491,7 +515,6 @@ public class NotificationWorker extends Worker {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationId, notification);
 
-
         if (!notification.category.equals(Notification.CATEGORY_CALL) || !muteCall) {
             String ringtonePreferencesString;
             Uri soundUri;
@@ -502,8 +525,8 @@ public class NotificationWorker extends Worker {
                         "/raw/librem_by_feandesign_message");
             } else {
                 try {
-                    RingtoneSettings ringtoneSettings = LoganSquare.parse
-                            (ringtonePreferencesString, RingtoneSettings.class);
+                    RingtoneSettings ringtoneSettings = LoganSquare.parse(ringtonePreferencesString,
+                            RingtoneSettings.class);
                     soundUri = ringtoneSettings.getRingtoneUri();
                 } catch (IOException exception) {
                     soundUri = Uri.parse("android.resource://" + context.getPackageName() +
@@ -513,8 +536,8 @@ public class NotificationWorker extends Worker {
 
             if (soundUri != null && !ApplicationWideCurrentRoomHolder.getInstance().isInCall() &&
                     (DoNotDisturbUtils.INSTANCE.shouldPlaySound() || importantConversation)) {
-                AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder().setContentType
-                        (AudioAttributes.CONTENT_TYPE_SONIFICATION);
+                AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
 
                 if (CHAT.equals(decryptedPushMessage.getType()) || ROOM.equals(decryptedPushMessage.getType())) {
                     audioAttributesBuilder.setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT);
@@ -567,26 +590,30 @@ public class NotificationWorker extends Worker {
 
                     decryptedPushMessage.setTimestamp(System.currentTimeMillis());
                     if (decryptedPushMessage.isDelete()) {
-                        NotificationUtils.INSTANCE.cancelExistingNotificationWithId(context, signatureVerification.getUserEntity(), decryptedPushMessage.getNotificationId());
+                        NotificationUtils.INSTANCE.cancelExistingNotificationWithId(context,
+                                signatureVerification.getUserEntity(), decryptedPushMessage.getNotificationId());
                     } else if (decryptedPushMessage.isDeleteAll()) {
-                        NotificationUtils.INSTANCE.cancelAllNotificationsForAccount(context, signatureVerification.getUserEntity());
+                        NotificationUtils.INSTANCE.cancelAllNotificationsForAccount(context,
+                                signatureVerification.getUserEntity());
                     } else if (decryptedPushMessage.isDeleteMultiple()) {
                         for (long notificationId : decryptedPushMessage.getNotificationIds()) {
-                            NotificationUtils.INSTANCE.cancelExistingNotificationWithId(context, signatureVerification.getUserEntity(), notificationId);
+                            NotificationUtils.INSTANCE.cancelExistingNotificationWithId(context,
+                                    signatureVerification.getUserEntity(), notificationId);
                         }
                     } else {
                         credentials = ApiUtils.getCredentials(signatureVerification.getUserEntity().getUsername(),
                                 signatureVerification.getUserEntity().getToken());
 
-                        ncApi = retrofit.newBuilder().client(okHttpClient.newBuilder().cookieJar(new
-                                JavaNetCookieJar(new CookieManager())).build()).build().create(NcApi.class);
+                        ncApi = retrofit
+                                .newBuilder().client(okHttpClient.newBuilder()
+                                        .cookieJar(new JavaNetCookieJar(new CookieManager())).build())
+                                .build().create(NcApi.class);
 
                         boolean shouldShowNotification = decryptedPushMessage.getApp().equals("spreed");
 
                         if (shouldShowNotification) {
                             Intent intent;
                             Bundle bundle = new Bundle();
-
 
                             boolean startACall = decryptedPushMessage.getType().equals("call");
                             if (startACall) {
@@ -599,7 +626,8 @@ public class NotificationWorker extends Worker {
 
                             bundle.putString(BundleKeys.INSTANCE.getKEY_ROOM_TOKEN(), decryptedPushMessage.getId());
 
-                            bundle.putParcelable(BundleKeys.INSTANCE.getKEY_USER_ENTITY(), signatureVerification.getUserEntity());
+                            bundle.putParcelable(BundleKeys.INSTANCE.getKEY_USER_ENTITY(),
+                                    signatureVerification.getUserEntity());
 
                             bundle.putBoolean(BundleKeys.INSTANCE.getKEY_FROM_NOTIFICATION_START_CALL(),
                                     startACall);

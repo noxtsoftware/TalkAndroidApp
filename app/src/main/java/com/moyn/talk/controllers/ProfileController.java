@@ -1,4 +1,10 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
+
  * Nextcloud Talk application
  *
  * @author Tobias Kaminsky
@@ -171,7 +177,8 @@ public class ProfileController extends BaseController {
                 getActivity().findViewById(R.id.userinfo_list).setVisibility(View.VISIBLE);
 
                 if (CapabilitiesUtil.isAvatarEndpointAvailable(currentUser)) {
-                    // TODO later avatar can also be checked via user fields, for now it is in Talk capability
+                    // TODO later avatar can also be checked via user fields, for now it is in Talk
+                    // capability
                     getActivity().findViewById(R.id.avatar_buttons).setVisibility(View.VISIBLE);
                 }
 
@@ -187,7 +194,8 @@ public class ProfileController extends BaseController {
                             }
 
                             @Override
-                            public void onNext(@io.reactivex.annotations.NonNull UserProfileFieldsOverall userProfileFieldsOverall) {
+                            public void onNext(
+                                    @io.reactivex.annotations.NonNull UserProfileFieldsOverall userProfileFieldsOverall) {
                                 editableFields = userProfileFieldsOverall.getOcs().getData();
                                 adapter.notifyDataSetChanged();
                             }
@@ -233,11 +241,11 @@ public class ProfileController extends BaseController {
         String credentials = ApiUtils.getCredentials(currentUser.getUsername(), currentUser.getToken());
 
         getActivity().findViewById(R.id.avatar_upload).setOnClickListener(v -> sendSelectLocalFileIntent());
-        getActivity().findViewById(R.id.avatar_choose).setOnClickListener(v ->
-                showBrowserScreen(BrowserController.BrowserType.DAV_BROWSER));
+        getActivity().findViewById(R.id.avatar_choose)
+                .setOnClickListener(v -> showBrowserScreen(BrowserController.BrowserType.DAV_BROWSER));
 
-        getActivity().findViewById(R.id.avatar_delete).setOnClickListener(v ->
-                ncApi.deleteAvatar(credentials, ApiUtils.getUrlForTempAvatar(currentUser.getBaseUrl()))
+        getActivity().findViewById(R.id.avatar_delete).setOnClickListener(
+                v -> ncApi.deleteAvatar(credentials, ApiUtils.getUrlForTempAvatar(currentUser.getBaseUrl()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<GenericOverall>() {
@@ -310,8 +318,8 @@ public class ProfileController extends BaseController {
 
         if (currentUser.getBaseUrl() != null) {
             ((TextView) getActivity()
-                .findViewById(R.id.userinfo_baseurl))
-                .setText(Uri.parse(currentUser.getBaseUrl()).getHost());
+                    .findViewById(R.id.userinfo_baseurl))
+                            .setText(Uri.parse(currentUser.getBaseUrl()).getHost());
         }
 
         DisplayUtils.loadAvatarImage(currentUser, getActivity().findViewById(R.id.avatar_image), false);
@@ -347,7 +355,8 @@ public class ProfileController extends BaseController {
 
         // show edit button
         if (CapabilitiesUtil.canEditScopes(currentUser)) {
-            ncApi.getEditableUserProfileFields(ApiUtils.getCredentials(currentUser.getUsername(), currentUser.getToken()),
+            ncApi.getEditableUserProfileFields(
+                    ApiUtils.getCredentials(currentUser.getUsername(), currentUser.getToken()),
                     ApiUtils.getUrlForUserFields(currentUser.getBaseUrl()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -358,7 +367,8 @@ public class ProfileController extends BaseController {
                         }
 
                         @Override
-                        public void onNext(@io.reactivex.annotations.NonNull UserProfileFieldsOverall userProfileFieldsOverall) {
+                        public void onNext(
+                                @io.reactivex.annotations.NonNull UserProfileFieldsOverall userProfileFieldsOverall) {
                             editableFields = userProfileFieldsOverall.getOcs().getData();
 
                             getActivity().invalidateOptionsMenu();
@@ -410,7 +420,7 @@ public class ProfileController extends BaseController {
                 Field.PHONE,
                 userInfo.getPhoneScope());
         addToList(result, R.drawable.mail_default, userInfo.getEmail(), R.string.user_info_email, Field.EMAIL,
-                  userInfo.getEmailScope());
+                userInfo.getEmailScope());
         addToList(result,
                 R.drawable.location_default,
                 userInfo.getAddress(),
@@ -435,11 +445,11 @@ public class ProfileController extends BaseController {
     }
 
     private void addToList(List<UserInfoDetailsItem> info,
-                           @DrawableRes int icon,
-                           String text,
-                           @StringRes int contentDescriptionInt,
-                           Field field,
-                           Scope scope) {
+            @DrawableRes int icon,
+            String text,
+            @StringRes int contentDescriptionInt,
+            Field field,
+            Scope scope) {
         info.add(new UserInfoDetailsItem(icon, text, getResources().getString(contentDescriptionInt), field, scope));
     }
 
@@ -547,7 +557,7 @@ public class ProfileController extends BaseController {
         });
     }
 
-    @SuppressWarnings({"IOI_USE_OF_FILE_STREAM_CONSTRUCTORS"}) // only possible with API26
+    @SuppressWarnings({ "IOI_USE_OF_FILE_STREAM_CONSTRUCTORS" }) // only possible with API26
     private void saveBitmapAndPassToImagePicker(Bitmap bitmap) {
         File file = null;
         try {
@@ -706,8 +716,8 @@ public class ProfileController extends BaseController {
         }
 
         public UserInfoAdapter(List<UserInfoDetailsItem> displayList,
-                               @ColorInt int tintColor,
-                               ProfileController controller) {
+                @ColorInt int tintColor,
+                ProfileController controller) {
             this.displayList = displayList == null ? new LinkedList<>() : displayList;
             mTintColor = tintColor;
             this.controller = controller;
@@ -750,7 +760,6 @@ public class ProfileController extends BaseController {
             } else {
                 item = filteredDisplayList.get(position);
             }
-
 
             if (item.scope == null) {
                 holder.scope.setVisibility(View.GONE);
@@ -808,8 +817,7 @@ public class ProfileController extends BaseController {
                 if (controller.getActivity() != null) {
                     holder.text.setTextColor(ContextCompat.getColor(
                             controller.getActivity(),
-                            R.color.conversation_item_header)
-                    );
+                            R.color.conversation_item_header));
                 }
 
                 if (controller.edit &&

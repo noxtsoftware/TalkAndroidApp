@@ -1,4 +1,9 @@
 /*
+
+########################################################################
+Durch noxt! GmbH bearbeitet
+Justus 
+########################################################################
  *
  *   Nextcloud Talk application
  *
@@ -107,7 +112,6 @@ public class WebViewLoginController extends BaseController {
     EventBus eventBus;
     @Inject
     CookieManager cookieManager;
-
 
     @BindView(R.id.webview)
     WebView webView;
@@ -240,12 +244,13 @@ public class WebViewLoginController extends BaseController {
                     } else if (!automatedLoginAttempted) {
                         automatedLoginAttempted = true;
                         if (TextUtils.isEmpty(password)) {
-                            webView.loadUrl("javascript:var justStore = document.getElementById('user').value = '" + username + "';");
+                            webView.loadUrl("javascript:var justStore = document.getElementById('user').value = '"
+                                    + username + "';");
                         } else {
                             webView.loadUrl("javascript: {" +
-                                                    "document.getElementById('user').value = '" + username + "';" +
-                                                    "document.getElementById('password').value = '" + password + "';" +
-                                                    "document.getElementById('submit').click(); };");
+                                    "document.getElementById('user').value = '" + username + "';" +
+                                    "document.getElementById('password').value = '" + password + "';" +
+                                    "document.getElementById('submit').click(); };");
                         }
                     }
                 }
@@ -289,7 +294,8 @@ public class WebViewLoginController extends BaseController {
                                 PrivateKey privateKey = null;
                                 try {
                                     privateKey = KeyChain.getPrivateKey(getActivity(), chosenAlias);
-                                    X509Certificate[] certificates = KeyChain.getCertificateChain(getActivity(), chosenAlias);
+                                    X509Certificate[] certificates = KeyChain.getCertificateChain(getActivity(),
+                                            chosenAlias);
                                     if (privateKey != null && certificates != null) {
                                         request.proceed(privateKey, certificates);
                                     } else {
@@ -302,7 +308,7 @@ public class WebViewLoginController extends BaseController {
                         } else {
                             request.cancel();
                         }
-                    }, new String[]{"RSA", "EC"}, null, request.getHost(), request.getPort(), null);
+                    }, new String[] { "RSA", "EC" }, null, request.getHost(), request.getPort(), null);
                 }
             }
 
@@ -318,7 +324,7 @@ public class WebViewLoginController extends BaseController {
                         handler.cancel();
                     } else {
                         try {
-                            magicTrustManager.checkServerTrusted(new X509Certificate[]{cert}, "generic");
+                            magicTrustManager.checkServerTrusted(new X509Certificate[] { cert }, "generic");
                             handler.proceed();
                         } catch (CertificateException exception) {
                             eventBus.post(new CertificateEvent(cert, magicTrustManager, handler));
@@ -391,8 +397,8 @@ public class WebViewLoginController extends BaseController {
                     bundle.putString(BundleKeys.INSTANCE.getKEY_ORIGINAL_PROTOCOL(), protocol);
                 }
 
-                getRouter().pushController(RouterTransaction.with(new AccountVerificationController
-                        (bundle)).pushChangeHandler(new HorizontalChangeHandler())
+                getRouter().pushController(RouterTransaction.with(new AccountVerificationController(bundle))
+                        .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
             } else {
                 if (isPasswordUpdate) {
@@ -403,22 +409,24 @@ public class WebViewLoginController extends BaseController {
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(userEntity -> {
-                                            if (finalMessageType != null) {
-                                                ApplicationWideMessageHolder.getInstance().setMessageType(finalMessageType);
-                                            }
+                                    if (finalMessageType != null) {
+                                        ApplicationWideMessageHolder.getInstance().setMessageType(finalMessageType);
+                                    }
 
-                                            OneTimeWorkRequest pushRegistrationWork = new OneTimeWorkRequest.Builder(PushRegistrationWorker.class).build();
-                                            WorkManager.getInstance().enqueue(pushRegistrationWork);
+                                    OneTimeWorkRequest pushRegistrationWork = new OneTimeWorkRequest.Builder(
+                                            PushRegistrationWorker.class).build();
+                                    WorkManager.getInstance().enqueue(pushRegistrationWork);
 
-                                            getRouter().popCurrentController();
-                                        }, throwable -> dispose(),
+                                    getRouter().popCurrentController();
+                                }, throwable -> dispose(),
                                         this::dispose);
                     }
                 } else {
                     if (finalMessageType != null) {
                         // FIXME when the user registers a new account that was setup before (aka
-                        //  ApplicationWideMessageHolder.MessageType.ACCOUNT_UPDATED_NOT_ADDED)
-                        //  The token is not updated in the database and therefor the account not visible/usable
+                        // ApplicationWideMessageHolder.MessageType.ACCOUNT_UPDATED_NOT_ADDED)
+                        // The token is not updated in the database and therefor the account not
+                        // visible/usable
                         ApplicationWideMessageHolder.getInstance().setMessageType(finalMessageType);
                     }
                     getRouter().popToRoot();
@@ -472,8 +480,10 @@ public class WebViewLoginController extends BaseController {
         super.onAttach(view);
 
         if (getActivity() != null && getResources() != null) {
-            DisplayUtils.applyColorToStatusBar(getActivity(), ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
-            DisplayUtils.applyColorToNavigationBar(getActivity().getWindow(), ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
+            DisplayUtils.applyColorToStatusBar(getActivity(),
+                    ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
+            DisplayUtils.applyColorToNavigationBar(getActivity().getWindow(),
+                    ResourcesCompat.getColor(getResources(), R.color.colorStatusBar, null));
         }
     }
 
