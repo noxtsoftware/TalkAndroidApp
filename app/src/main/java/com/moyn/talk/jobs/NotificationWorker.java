@@ -279,7 +279,7 @@ public class NotificationWorker extends Worker {
         String category;
         int priority = Notification.PRIORITY_HIGH;
 
-        smallIcon = R.drawable.ic_logo;
+        smallIcon = R.drawable.push_icon;
 
         if (CHAT.equals(decryptedPushMessage.getType()) || ROOM.equals(decryptedPushMessage.getType())) {
             category = Notification.CATEGORY_MESSAGE;
@@ -316,9 +316,6 @@ public class NotificationWorker extends Worker {
                 .setSmallIcon(smallIcon)
                 .setCategory(category)
                 .setPriority(priority)
-                .setSubText(baseUrl)
-                .setWhen(decryptedPushMessage.getTimestamp())
-                .setShowWhen(true)
                 .setContentTitle(EmojiCompat.get().process(decryptedPushMessage.getSubject()))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
@@ -494,8 +491,16 @@ public class NotificationWorker extends Worker {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             NotificationCompat.MessagingStyle newStyle = new NotificationCompat.MessagingStyle(person);
 
-            newStyle.setConversationTitle(decryptedPushMessage.getSubject());
-            newStyle.setGroupConversation(!conversationType.equals("one2one"));
+            switch (conversationType) {
+                case "group":
+                    newStyle.setConversationTitle(decryptedPushMessage.getSubject());
+                    newStyle.setGroupConversation(!conversationType.equals("one2one"));
+                    break;
+                case "public":
+                    newStyle.setConversationTitle(decryptedPushMessage.getSubject());
+                    newStyle.setGroupConversation(!conversationType.equals("one2one"));
+                    break;
+            }
 
             if (style != null) {
                 style.getMessages().forEach(

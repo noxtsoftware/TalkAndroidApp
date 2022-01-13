@@ -147,8 +147,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage : RemoteMessage) {
 
-        Log.d(TAG, "From moyn: ${remoteMessage.from}")
-        Log.w(TAG,"moyn YUPI")
+        Log.w(TAG, "From moyn: ${remoteMessage.from}")
 
         if(remoteMessage.data.isNotEmpty()){
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
@@ -277,7 +276,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                                     .setCategory(NotificationCompat.CATEGORY_CALL)
                                     .setSmallIcon(R.drawable.ic_call_black_24dp)
-                                    .setSubText(baseUrl)
                                     .setShowWhen(true)
                                     .setWhen(decryptedPushMessage!!.timestamp)
                                     .setContentTitle(EmojiCompat.get().process(decryptedPushMessage!!.subject))
