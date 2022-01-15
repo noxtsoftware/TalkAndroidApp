@@ -261,7 +261,6 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                                     .setCategory(NotificationCompat.CATEGORY_CALL)
                                     .setSmallIcon(R.drawable.ic_call_black_24dp)
-                                    .setSubText(baseUrl)
                                     .setShowWhen(true)
                                     .setWhen(decryptedPushMessage!!.timestamp)
                                     .setContentTitle(EmojiCompat.get().process(decryptedPushMessage!!.subject))
