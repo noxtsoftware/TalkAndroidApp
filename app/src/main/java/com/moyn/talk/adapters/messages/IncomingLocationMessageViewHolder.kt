@@ -118,7 +118,8 @@ class IncomingLocationMessageViewHolder(incomingView: View, payload: Any) : Mess
                 // do nothing, avatar is set
             } else if (message.actorType == "bots" && message.actorId == "changelog") {
                 val layers = arrayOfNulls<Drawable>(2)
-                layers[0] = AppCompatResources.getDrawable(context!!, R.drawable.moyn_peace)
+                layers[0] = AppCompatResources.getDrawable(context!!, R.drawable.launcher_background);
+                layers[1] = AppCompatResources.getDrawable(context!!, R.drawable.moyn_peace)
 
                 val layerDrawable = LayerDrawable(layers)
                 binding.messageUserAvatar.setImageDrawable(DisplayUtils.getRoundedDrawable(layerDrawable))

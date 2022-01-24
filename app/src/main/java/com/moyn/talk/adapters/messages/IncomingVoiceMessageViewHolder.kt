@@ -209,7 +209,8 @@ class IncomingVoiceMessageViewHolder(incomingView: View, payload: Any) : Message
             } else if (message.actorType == "bots" && message.actorId == "changelog") {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     val layers = arrayOfNulls<Drawable>(2)
-                    layers[0] = ContextCompat.getDrawable(context!!, R.drawable.moyn_peace)
+                    layers[0] = ContextCompat.getDrawable(context!!, R.drawable.launcher_background);
+                    layers[1] = ContextCompat.getDrawable(context!!, R.drawable.moyn_peace)
                     val layerDrawable = LayerDrawable(layers)
                     binding.messageUserAvatar.setImageDrawable(DisplayUtils.getRoundedDrawable(layerDrawable))
                 } else {

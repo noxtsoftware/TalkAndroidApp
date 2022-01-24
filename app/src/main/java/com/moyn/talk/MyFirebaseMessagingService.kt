@@ -158,6 +158,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         if (!remoteMessage.data["subject"].isNullOrEmpty() && !remoteMessage.data["signature"].isNullOrEmpty()) {
+            
             decryptMessage(remoteMessage.data["subject"]!!, remoteMessage.data["signature"]!!)
         }
     }
@@ -173,6 +174,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     base64DecodedSignature,
                     base64DecodedSubject
                 )
+                
                 if (signatureVerification!!.signatureValid) {
                     val cipher = Cipher.getInstance("RSA/None/PKCS1Padding")
                     cipher.init(Cipher.DECRYPT_MODE, privateKey)
@@ -181,10 +183,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                         String(decryptedSubject),
                         DecryptedPushMessage::class.java
                     )
+                    Log.w(TAG,"Ich werde entschlüsselt")
                     decryptedPushMessage?.apply {
                         Log.d(TAG, this.toString())
                         timestamp = System.currentTimeMillis()
                         if (delete) {
+                            Log.w(TAG,"Ich lösche");
                             cancelExistingNotificationWithId(
                                 applicationContext,
                                 signatureVerification!!.userEntity,
