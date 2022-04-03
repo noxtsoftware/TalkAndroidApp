@@ -23,12 +23,16 @@
 package com.nextcloud.talk.activities
 
 import android.app.KeyguardManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.TextUtils
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import autodagger.AutoInjector
 import com.bluelinelabs.conductor.Conductor
@@ -36,7 +40,9 @@ import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import com.nextcloud.talk.R
 import com.nextcloud.talk.api.NcApi
 import com.nextcloud.talk.application.NextcloudTalkApplication
@@ -47,9 +53,9 @@ import com.nextcloud.talk.controllers.SettingsController
 import com.nextcloud.talk.controllers.WebViewLoginController
 import com.nextcloud.talk.controllers.base.providers.ActionBarProvider
 import com.nextcloud.talk.databinding.ActivityMainBinding
+import com.nextcloud.talk.models.database.UserEntity
 import com.nextcloud.talk.models.json.conversations.RoomOverall
 import com.nextcloud.talk.utils.ApiUtils
-import com.nextcloud.talk.utils.ConductorRemapping
 import com.nextcloud.talk.utils.ConductorRemapping.remapChatController
 import com.nextcloud.talk.utils.SecurityUtils
 import com.nextcloud.talk.utils.bundle.BundleKeys
@@ -86,7 +92,10 @@ class MainActivity : BaseActivity(), ActionBarProvider {
 
     private var router: Router? = null
 
+    @Suppress("Detekt.TooGenericExceptionCaught")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate: Activity: " + System.identityHashCode(this).toString())
+
         super.onCreate(savedInstanceState)
         // Set the default theme to replace the launch screen theme.
         setTheme(R.style.AppTheme)
@@ -98,6 +107,51 @@ class MainActivity : BaseActivity(), ActionBarProvider {
         setSupportActionBar(binding.toolbar)
 
         router = Conductor.attachRouter(this, binding.controllerContainer, savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create channel to show notifications.
+            val channelId = "fcm_default_channel"
+            val channelName = "Weather"
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager?.createNotificationChannel(
+                NotificationChannel(channelId,
+                channelName, NotificationManager.IMPORTANCE_LOW)
+            )
+        }
+
+        // If a notification message is tapped, any data accompanying the notification
+        // message is available in the intent extras. In this sample the launcher
+        // intent is fired when the notification is tapped, so any accompanying data would
+        // be handled here. If you want a different intent fired, set the click_action
+        // field of the notification message to the desired intent. The launcher intent
+        // is used when no click_action is specified.
+        //
+        // Handle possible data accompanying notification message.
+        // [START handle_data_extras]
+        intent.extras?.let {
+            for (key in it.keySet()) {
+                val value = intent.extras?.get(key)
+                Log.d(TAG, "Key: $key Value: $value")
+            }
+        }
+        // [END handle_data_extras]
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = "FCM registration Token: %s"+ token;
+            Log.d(TAG, msg)
+            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        })
+
+
 
         var hasDb = true
 
@@ -162,12 +216,29 @@ class MainActivity : BaseActivity(), ActionBarProvider {
     }
 
     override fun onStart() {
+        Log.d(TAG, "onStart: Activity: " + System.identityHashCode(this).toString())
+
         super.onStart()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkIfWeAreSecure()
         }
 
         handleActionFromContact(intent)
+    }
+
+    override fun onResume() {
+        Log.d(TAG, "onResume: Activity: " + System.identityHashCode(this).toString())
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "onPause: Activity: " + System.identityHashCode(this).toString())
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d(TAG, "onStop: Activity: " + System.identityHashCode(this).toString())
+        super.onStop()
     }
 
     fun resetConversationsList() {
@@ -246,7 +317,9 @@ class MainActivity : BaseActivity(), ActionBarProvider {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<RoomOverall> {
-                override fun onSubscribe(d: Disposable) {}
+                override fun onSubscribe(d: Disposable) {
+                    // unused atm
+                }
                 override fun onNext(roomOverall: RoomOverall) {
                     val bundle = Bundle()
                     bundle.putParcelable(KEY_USER_ENTITY, currentUser)
@@ -265,7 +338,9 @@ class MainActivity : BaseActivity(), ActionBarProvider {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(object : Observer<RoomOverall> {
-                            override fun onSubscribe(d: Disposable) {}
+                            override fun onSubscribe(d: Disposable) {
+                                // unused atm
+                            }
                             override fun onNext(roomOverall: RoomOverall) {
                                 bundle.putParcelable(
                                     KEY_ACTIVE_CONVERSATION,
@@ -277,13 +352,21 @@ class MainActivity : BaseActivity(), ActionBarProvider {
                                 )
                             }
 
-                            override fun onError(e: Throwable) {}
-                            override fun onComplete() {}
+                            override fun onError(e: Throwable) {
+                                // unused atm
+                            }
+                            override fun onComplete() {
+                                // unused atm
+                            }
                         })
                 }
 
-                override fun onError(e: Throwable) {}
-                override fun onComplete() {}
+                override fun onError(e: Throwable) {
+                    // unused atm
+                }
+                override fun onComplete() {
+                    // unused atm
+                }
             })
     }
 
@@ -305,6 +388,7 @@ class MainActivity : BaseActivity(), ActionBarProvider {
     }
 
     override fun onNewIntent(intent: Intent) {
+        Log.d(TAG, "onNewIntent Activity: " + System.identityHashCode(this).toString())
         super.onNewIntent(intent)
         handleActionFromContact(intent)
         if (intent.hasExtra(BundleKeys.KEY_FROM_NOTIFICATION_START_CALL)) {
@@ -313,9 +397,9 @@ class MainActivity : BaseActivity(), ActionBarProvider {
                 intent.extras?.let { callNotificationIntent.putExtras(it) }
                 startActivity(callNotificationIntent)
             } else {
-                ConductorRemapping.remapChatController(
-                    router!!, intent.getLongExtra(BundleKeys.KEY_INTERNAL_USER_ID, -1),
-                    intent.getStringExtra(KEY_ROOM_TOKEN)!!, intent.extras!!, false
+                remapChatController(
+                    router!!, intent.getParcelableExtra<UserEntity>(KEY_USER_ENTITY)!!.id,
+                    intent.getStringExtra(KEY_ROOM_TOKEN)!!, intent.extras!!, false, true
                 )
             }
         }

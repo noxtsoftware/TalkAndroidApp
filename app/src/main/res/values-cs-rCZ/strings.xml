@@ -2,15 +2,28 @@
   <resources>
     <string name="account_icon">Ikona účtu</string>
     <string name="appbar_search_in">Hledat v %s</string>
+    <string name="audio_output_bluetooth">Bluetooth</string>
+    <string name="audio_output_dialog_headline">Zvukový výstup</string>
+    <string name="audio_output_phone">Telefon</string>
+    <string name="audio_output_speaker">Reproduktor</string>
+    <string name="audio_output_wired_headset">Drátová náhlavní souprava</string>
     <string name="avatar">Profilový obrázek</string>
+    <string name="away">Pryč</string>
     <string name="choose_avatar_from_cloud">Vybrat profilový obrázek z cloudu</string>
+    <string name="clear_status_message">Vyčistit stavovou zprávu</string>
+    <string name="clear_status_message_after">Vyčistit stavovou zprávu po uplynutí</string>
+    <string name="conversations">Konverzace</string>
     <string name="delete_avatar">Vymazat profilový obrázek</string>
+    <string name="dnd">Nerušit</string>
+    <string name="dontClear">Nečistit</string>
     <string name="edit">Upravit</string>
     <string name="encrypted">Šifrované</string>
     <string name="failed_to_save">Nepodařilo se uložit %1$s</string>
     <string name="file_list_folder">složka</string>
     <string name="file_list_loading">Načítání…</string>
     <string name="filename_progress">%1$s (%2$d)</string>
+    <string name="fourHours">4 hodiny</string>
+    <string name="invisible">Neviditelný</string>
     <string name="lock_symbol">Uzamknout symbol</string>
     <string name="menu_item_sort_by_date_newest_first">Nejnovější jako první</string>
     <string name="menu_item_sort_by_date_oldest_first">Nejstarší jako první</string>
@@ -106,7 +119,6 @@
     <string name="nc_failed_signaling_settings">Cílový server nepodporuje připojování se k veřejným konverzacím prostřednictvím mobilních telefonů. Můžete se pokusit připojit ke konverzaci prostřednictvím webového prohlížeče.</string>
     <string name="nc_failed_to_perform_operation">Omlouváme se, něco se pokazilo!</string>
     <string name="nc_file_browser_back">Zpět</string>
-    <string name="nc_file_browser_refresh">Načíst znovu</string>
     <string name="nc_file_browser_reshare_forbidden">Nemáte oprávnění sdílet tento soubor dál dalším</string>
     <string name="nc_following_link">Uživatel následující veřejný odkaz</string>
     <string name="nc_formatted_message_you">Vy: %1$s</string>
@@ -136,7 +148,6 @@
     <string name="nc_lobby_start_date">Tato schůzka je naplánována na %1$s</string>
     <string name="nc_lobby_start_soon">Schůzka brzy začne</string>
     <string name="nc_lobby_waiting">V tuto chvíli se nacházíte v čekárně.</string>
-    <string name="nc_lobby_waiting_with_date">V tuto chvíli se nacházíte v čekárně.\n Toto setkání je naplánováno na %1$s.</string>
     <string name="nc_location_current_position_description">Vaše stávající umístění</string>
     <string name="nc_location_permission_required">vyžadováno oprávnění pro přístup k údaji o poloze</string>
     <string name="nc_location_unknown">Pozice neznámá</string>
@@ -145,13 +156,13 @@
     <string name="nc_make_call_private">Udělat konverzaci neveřejnou</string>
     <string name="nc_make_call_public">Zveřejnit konverzaci</string>
     <string name="nc_manual">Nenastaveno</string>
+    <string name="nc_mark_as_read">Označit jako přečtené</string>
+    <string name="nc_mark_as_unread">Označit jako nepřečtené</string>
     <string name="nc_message_quote_cancel_reply">Odebrat odpověď</string>
     <string name="nc_message_read">Zpráva přečtena</string>
     <string name="nc_message_sent">Zpráva odeslána</string>
     <string name="nc_microphone_permission_permanently_denied">Pro zapnutí hlasové komunikace udělte v nastavení systému oprávnění „Mikrofon“ .</string>
     <string name="nc_moderator">Moderátor</string>
-    <string name="nc_mute_calls">Ztišit hovory</string>
-    <string name="nc_mute_calls_desc">Příchozí hovory budou ztišeny</string>
     <string name="nc_never">Nikdy nepřipojeno</string>
     <string name="nc_new_conversation">Nová konverzace</string>
     <string name="nc_new_mention">Nepřečtená zmínění</string>
@@ -167,9 +178,10 @@
     <string name="nc_none">Žádné</string>
     <string name="nc_not_defined_error">Neznámá chyba</string>
     <string name="nc_notification_channel">%1$s v %2$s kanálu upozornění</string>
-    <string name="nc_notification_channel_calls">Kanál pro upozorňování na volání</string>
-    <string name="nc_notification_channel_calls_description">Zobrazí příchozí hovory</string>
-    <string name="nc_notification_channel_messages">Kanál pro upozorňování na zprávy</string>
+    <string name="nc_notification_channel_calls">Volání</string>
+    <string name="nc_notification_channel_calls_description">Oznámit příchozí volání</string>
+    <string name="nc_notification_channel_messages">Zprávy</string>
+    <string name="nc_notification_channel_messages_description">Oznámit příchozí zprávy</string>
     <string name="nc_notification_settings">Nastavení upozorňování</string>
     <string name="nc_notify_me_always">Vždy upozorňovat</string>
     <string name="nc_notify_me_mention">Upozornit, když vás někdo zmíní</string>
@@ -254,8 +266,9 @@
     <string name="nc_settings_incognito_keyboard_title">Inkognito klávesnice</string>
     <string name="nc_settings_no_ringtone">Žádný zvuk</string>
     <string name="nc_settings_no_talk_installed">Aplikace Talk není na serveru, vůči kterému jste se pokusili ověřit, vůbec nainstalována</string>
-    <string name="nc_settings_notification_sounds">Zvuk</string>
-    <string name="nc_settings_other_notifications_ringtone">Upozornění</string>
+    <string name="nc_settings_notification_sounds">Zvuky upozornění</string>
+    <string name="nc_settings_notification_sounds_post_oreo">Upozornění</string>
+    <string name="nc_settings_other_notifications_ringtone">Zprávy</string>
     <string name="nc_settings_phone_book_integration_desc">Najít kontakty se stejným telefonním číslem a přidat zkratku Talk do systémové aplikace pro kontakty</string>
     <string name="nc_settings_phone_book_integration_phone_number_dialog_description">Můžete si nastavit své telefonní číslo a tak vás budou moci ostatní uživatelé najít</string>
     <string name="nc_settings_phone_book_integration_phone_number_dialog_invalid">Neplatné telefonní číslo</string>
@@ -327,6 +340,10 @@
     <string name="nc_wrong_password">Nesprávné heslo</string>
     <string name="nc_yes">Ano</string>
     <string name="no_phone_book_integration_due_to_permissions">Není možné propojit telefonní čísla, protože chybí potřebná oprávnění</string>
+    <string name="oneHour">1 hodina</string>
+    <string name="online">Online</string>
+    <string name="online_status">Stav online</string>
+    <string name="openConversations">Otevřít konverzace</string>
     <string name="open_in_files_app">Otevřít v aplikaci Soubory</string>
     <string name="password_protected">Chráněno heslem</string>
     <string name="play_pause_voice_message">Přehrát/pozastavit hlasovou zprávu</string>
@@ -342,11 +359,16 @@
     <string name="scope_published_title">Zveřejněno</string>
     <string name="scope_toggle">Přepnout pohled</string>
     <string name="scope_toggle_description">Změnit úroveň soukromí pro %1$s</string>
+    <string name="secondsAgo">sekund před</string>
     <string name="selected_list_item">Vybráno</string>
     <string name="send_to">Odeslat k</string>
     <string name="send_to_three_dots">Odeslat k…</string>
+    <string name="set_status">Nastavit stav</string>
+    <string name="set_status_message">Nastavit stavovou zprávu</string>
     <string name="share">Sdílet</string>
     <string name="starred">Oblíbené</string>
+    <string name="startCallForbidden">Nemáte oprávnění pro zahájení hovoru</string>
+    <string name="status_message">Stavová zpráva</string>
     <string name="take_photo">Vyfotit</string>
     <string name="take_photo_error_deleting_picture">Chyba při pořizování obrázku</string>
     <string name="take_photo_permission">Focení není možné bez udělení oprávnění</string>
@@ -356,6 +378,9 @@
     <string name="take_photo_toggle_crop">Oříznout fotku</string>
     <string name="take_photo_toggle_lowres">Zmenšit velikost obrázku</string>
     <string name="take_photo_toggle_torch">Vyp/zap. přisvícení</string>
+    <string name="thirtyMinutes">30 minut</string>
+    <string name="thisWeek">Tento týden</string>
+    <string name="today">Dnes</string>
     <string name="upload_new_avatar_from_device">Nahrát nový profilový obrázek ze zařízení</string>
     <string name="user_info_address">Adresa</string>
     <string name="user_info_displayname">Celé jméno</string>
@@ -363,7 +388,9 @@
     <string name="user_info_phone">Telefonní číslo</string>
     <string name="user_info_twitter">Twitter</string>
     <string name="user_info_website">Webová stránka</string>
+    <string name="user_status">Stav</string>
     <string name="userinfo_error_text">Nepodařilo se získat osobní údaje uživatele.</string>
     <string name="userinfo_no_info_headline">Osobní údaje nejsou nastaveny</string>
     <string name="userinfo_no_info_text">Přidejte jméno, obrázek a kontaktní údaje na svou profilovou stránku.</string>
-</resources>
+    <string name="whats_your_status">Jaký je váš stav?</string>
+    </resources>

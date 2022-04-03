@@ -40,6 +40,8 @@ import com.nextcloud.talk.models.json.push.PushRegistrationOverall;
 import com.nextcloud.talk.models.json.search.ContactsByNumberOverall;
 import com.nextcloud.talk.models.json.signaling.SignalingOverall;
 import com.nextcloud.talk.models.json.signaling.settings.SignalingSettingsOverall;
+import com.nextcloud.talk.models.json.status.StatusOverall;
+import com.nextcloud.talk.models.json.statuses.StatusesOverall;
 import com.nextcloud.talk.models.json.userprofile.UserProfileFieldsOverall;
 import com.nextcloud.talk.models.json.userprofile.UserProfileOverall;
 
@@ -187,6 +189,10 @@ public interface NcApi {
     @GET
     Observable<ParticipantsOverall> getPeersForCall(@Header("Authorization") String authorization, @Url String url);
 
+    @GET
+    Observable<ParticipantsOverall> getPeersForCall(@Header("Authorization") String authorization, @Url String url,
+                                                    @QueryMap Map<String, Boolean> fields);
+
     @FormUrlEncoded
     @POST
     Observable<RoomOverall> joinRoom(@Nullable @Header("Authorization") String authorization, @Url String url, @Nullable @Field("password") String password);
@@ -283,8 +289,8 @@ public interface NcApi {
 
     @FormUrlEncoded
     @POST
-    Observable<Void> registerDeviceForNotificationsWithProxy(@Url String url,
-                                                             @FieldMap Map<String, String> fields);
+    Observable<Void> registerDeviceForNotificationsWithPushProxy(@Url String url,
+                                                                 @FieldMap Map<String, String> fields);
 
 
     /*
@@ -333,7 +339,8 @@ public interface NcApi {
     @GET
     Observable<MentionOverall> getMentionAutocompleteSuggestions(@Header("Authorization") String authorization,
                                                                  @Url String url, @Query("search") String query,
-                                                                 @Nullable @Query("limit") Integer limit);
+                                                                 @Nullable @Query("limit") Integer limit,
+                                                                 @QueryMap Map<String, String> fields);
 
     // Url is: /api/{apiVersion}/room/{token}/pin
     @POST
@@ -429,4 +436,56 @@ public interface NcApi {
 
     @GET
     Observable<HoverCardOverall> hoverCard(@Header("Authorization") String authorization, @Url String url);
+
+    // Url is: /api/{apiVersion}/chat/{token}/read
+    @FormUrlEncoded
+    @POST
+    Observable<GenericOverall> setChatReadMarker(@Header("Authorization") String authorization,
+                                                 @Url String url,
+                                                 @Field("lastReadMessage") int lastReadMessage);
+
+    /*
+    Server URL is: baseUrl + ocsApiVersion + spreedApiVersion + /listed-room
+    */
+    @GET
+    Observable<RoomsOverall> getOpenConversations(@Header("Authorization") String authorization, @Url String url);
+
+
+    /*
+     * OCS Status API
+     */
+    @GET
+    Observable<StatusOverall> status(@Header("Authorization") String authorization, @Url String url);
+
+    @GET
+    Observable<ResponseBody> getPredefinedStatuses(@Header("Authorization") String authorization, @Url String url);
+
+    @DELETE
+    Observable<GenericOverall> statusDeleteMessage(@Header("Authorization") String authorization, @Url String url);
+
+
+    @FormUrlEncoded
+    @PUT
+    Observable<GenericOverall> setPredefinedStatusMessage(@Header("Authorization") String authorization,
+                                      @Url String url,
+                                      @Field("messageId") String selectedPredefinedMessageId,
+                                      @Field("clearAt") Long clearAt);
+
+    @FormUrlEncoded
+    @PUT
+    Observable<GenericOverall> setCustomStatusMessage(@Header("Authorization") String authorization,
+                                  @Url String url,
+                                  @Field("statusIcon") String statusIcon,
+                                  @Field("message") String message,
+                                  @Field("clearAt") Long clearAt);
+
+    @FormUrlEncoded
+    @PUT
+    Observable<GenericOverall> setStatusType(@Header("Authorization") String authorization,
+                                                      @Url String url,
+                                                      @Field("statusType") String statusType);
+
+    @GET
+    Observable<StatusesOverall> getUserStatuses(@Header("Authorization") String authorization, @Url String url);
+
 }

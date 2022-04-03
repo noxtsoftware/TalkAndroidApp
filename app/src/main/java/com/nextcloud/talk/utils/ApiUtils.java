@@ -40,8 +40,12 @@ import androidx.annotation.Nullable;
 import okhttp3.Credentials;
 
 public class ApiUtils {
+    public static final int APIv1 = 1;
+    public static final int APIv2 = 2;
     public static final int APIv3 = 3;
     public static final int APIv4 = 4;
+    public static final int AVATAR_SIZE_BIG = 512;
+    public static final int AVATAR_SIZE_SMALL = 64;
     private static final String TAG = "ApiUtils";
     private static final String ocsApiVersion = "/ocs/v2.php";
     private static final String spreedApiVersion = "/apps/spreed/api/v1";
@@ -59,7 +63,7 @@ public class ApiUtils {
      */
     @Deprecated
     public static String getUrlForRemovingParticipantFromConversation(String baseUrl, String roomToken, boolean isGuest) {
-        String url = getUrlForParticipants(1, baseUrl, roomToken);
+        String url = getUrlForParticipants(APIv1, baseUrl, roomToken);
 
         if (isGuest) {
             url += "/guests";
@@ -121,7 +125,7 @@ public class ApiUtils {
     public static int getConversationApiVersion(UserEntity user, int[] versions) throws NoSupportedApiException {
         boolean hasApiV4 = false;
         for (int version : versions) {
-            hasApiV4 |= version == 4;
+            hasApiV4 |= version == APIv4;
         }
 
         if (!hasApiV4) {
@@ -135,11 +139,11 @@ public class ApiUtils {
             }
 
             // Fallback for old API versions
-            if ((version == 1 || version == 2)) {
+            if ((version == APIv1 || version == APIv2)) {
                 if (CapabilitiesUtil.hasSpreedFeatureCapability(user, "conversation-v2")) {
                     return version;
                 }
-                if (version == 1  &&
+                if (version == APIv1  &&
                         CapabilitiesUtil.hasSpreedFeatureCapability(user, "mention-flag") &&
                         !CapabilitiesUtil.hasSpreedFeatureCapability(user, "conversation-v4")) {
                     return version;
@@ -155,13 +159,13 @@ public class ApiUtils {
                 return version;
             }
 
-            if (version == 2 &&
+            if (version == APIv2 &&
                     CapabilitiesUtil.hasSpreedFeatureCapability(user, "sip-support") &&
                     !CapabilitiesUtil.hasSpreedFeatureCapability(user, "signaling-v3")) {
                 return version;
             }
 
-            if (version == 1 &&
+            if (version == APIv1 &&
                     !CapabilitiesUtil.hasSpreedFeatureCapability(user, "signaling-v3")) {
                 // Has no capability, we just assume it is always there when there is no v3 or later
                 return version;
@@ -172,7 +176,7 @@ public class ApiUtils {
 
     public static int getChatApiVersion(UserEntity user, int[] versions) throws NoSupportedApiException {
         for (int version : versions) {
-            if (version == 1 && CapabilitiesUtil.hasSpreedFeatureCapability(user, "chat-v2")) {
+            if (version == APIv1 && CapabilitiesUtil.hasSpreedFeatureCapability(user, "chat-v2")) {
                 // Do not question that chat-v2 capability shows the availability of api/v1/ endpoint *see no evil*
                 return version;
             }
@@ -273,6 +277,10 @@ public class ApiUtils {
         return getUrlForSignaling(version, baseUrl) + "/" + token;
     }
 
+    public static String getUrlForOpenConversations(int version, String baseUrl) {
+        return getUrlForApi(version, baseUrl) + "/listed-room";
+    }
+
     public static RetrofitBucket getRetrofitBucketForCreateRoom(int version, String baseUrl, String roomType,
                                                                 @Nullable String source,
                                                                 @Nullable String invite,
@@ -341,22 +349,13 @@ public class ApiUtils {
         return "/status.php";
     }
 
-    public static String getUrlForAvatarWithNameAndPixels(String baseUrl, String name, int avatarSize) {
+    public static String getUrlForAvatar(String baseUrl, String name, boolean requestBigSize) {
+        int avatarSize = requestBigSize ? AVATAR_SIZE_BIG : AVATAR_SIZE_SMALL;
         return baseUrl + "/index.php/avatar/" + Uri.encode(name) + "/" + avatarSize;
     }
 
-    public static String getUrlForAvatarWithName(String baseUrl, String name, @DimenRes int avatarSize) {
-        avatarSize = Math.round(NextcloudTalkApplication
-                .Companion.getSharedApplication().getResources().getDimension(avatarSize));
-
-        return baseUrl + "/index.php/avatar/" + Uri.encode(name) + "/" + avatarSize;
-    }
-
-    public static String getUrlForAvatarWithNameForGuests(String baseUrl, String name,
-                                                          @DimenRes int avatarSize) {
-        avatarSize = Math.round(NextcloudTalkApplication
-                .Companion.getSharedApplication().getResources().getDimension(avatarSize));
-
+    public static String getUrlForGuestAvatar(String baseUrl, String name, boolean requestBigSize) {
+        int avatarSize = requestBigSize ? AVATAR_SIZE_BIG : AVATAR_SIZE_SMALL;
         return baseUrl + "/index.php/avatar/guest/" + Uri.encode(name) + "/" + avatarSize;
     }
 
@@ -406,4 +405,40 @@ public class ApiUtils {
 
     public static String getUrlForHoverCard(String baseUrl, String userId) { return baseUrl + ocsApiVersion +
         "/hovercard/v1/" + userId; }
+
+    public static String getUrlForSetChatReadMarker(int version, String baseUrl, String roomToken) {
+        return getUrlForChat(version, baseUrl, roomToken) + "/read";
+    }
+
+    /*
+     * OCS Status API
+     */
+
+    public static String getUrlForStatus(String baseUrl) {
+        return baseUrl + ocsApiVersion + "/apps/user_status/api/v1/user_status";
+    }
+
+    public static String getUrlForSetStatusType(String baseUrl) {
+        return getUrlForStatus(baseUrl) + "/status";
+    }
+
+    public static String getUrlForPredefinedStatuses(String baseUrl) {
+        return baseUrl + ocsApiVersion + "/apps/user_status/api/v1/predefined_statuses";
+    }
+
+    public static String getUrlForStatusMessage(String baseUrl) {
+        return getUrlForStatus(baseUrl) + "/message";
+    }
+
+    public static String getUrlForSetCustomStatus(String baseUrl) {
+        return baseUrl + ocsApiVersion + "/apps/user_status/api/v1/user_status/message/custom";
+    }
+
+    public static String getUrlForSetPredefinedStatus(String baseUrl) {
+        return baseUrl + ocsApiVersion + "/apps/user_status/api/v1/user_status/message/predefined";
+    }
+
+    public static String getUrlForUserStatuses(String baseUrl) {
+        return baseUrl + ocsApiVersion + "/apps/user_status/api/v1/statuses";
+    }
 }

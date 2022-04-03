@@ -1,6 +1,6 @@
 # [Nextcloud](https://nextcloud.com) Talk for Android :speech_balloon:
 
-[![Build Status](https://drone.nextcloud.com/api/badges/nextcloud/talk-android/status.svg)](https://drone.nextcloud.com/nextcloud/talk-android) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/21a6fb22279e401baba31fb296b6f20e)](https://www.codacy.com/app/Nextcloud/talk-android?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nextcloud/talk-android&amp;utm_campaign=Badge_Grade) [![Releases](https://img.shields.io/github/release/nextcloud/talk-android.svg)](https://github.com/nextcloud/talk-android/releases/latest)
+[![Build Status](https://drone.nextcloud.com/api/badges/nextcloud/talk-android/status.svg)](https://drone.nextcloud.com/nextcloud/talk-android) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b89a720efbd24754984a776804913bca)](https://www.codacy.com/gh/nextcloud/talk-android/dashboard) [![Releases](https://img.shields.io/github/release/nextcloud/talk-android.svg)](https://github.com/nextcloud/talk-android/releases/latest)
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
       alt="Download from Google Play" 
@@ -53,6 +53,14 @@ More information how to contribute: [https://nextcloud.com/contribute/](https://
 Make sure you read [SETUP.md](/SETUP.md) and [CONTRIBUTING.md](/CONTRIBUTING.md) before you start working on this project.
 But basically: fork this repository and contribute back using pull requests to the master branch.
 Easy starting points are also reviewing [pull requests](https://github.com/nextcloud/talk-android/pulls) and working on [starter issues](https://github.com/nextcloud/talk-android/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
+
+Please be aware that currently java8 is needed to compile this project! (needs to be fixed 
+with https://github.com/nextcloud/talk-android/issues/1125)
+In Android Studio go to "File | Settings | Build, Execution, Deployment | Build Tools | Gradle"
+and set the path to your JDK8 location. You can also download JDK8 Eclipse Temurin in the dropdown list when 
+selecting "Download JDK" and then selecting version "1.8".
+
+![java8gradleJDK](/docs/java8gradleJDK.png "Branching Model")
 
 ### Testing :test_tube:
 

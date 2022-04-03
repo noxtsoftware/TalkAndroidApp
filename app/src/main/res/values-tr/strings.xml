@@ -2,15 +2,28 @@
   <resources>
     <string name="account_icon">Hesap simgesi</string>
     <string name="appbar_search_in">%s içinde arama</string>
+    <string name="audio_output_bluetooth">Bluetooth</string>
+    <string name="audio_output_dialog_headline">Ses çıkışı</string>
+    <string name="audio_output_phone">Telefon</string>
+    <string name="audio_output_speaker">Hoparlör</string>
+    <string name="audio_output_wired_headset">Kablolu kulaklık</string>
     <string name="avatar">Avatar</string>
+    <string name="away">Uzakta</string>
     <string name="choose_avatar_from_cloud">Buluttan avatar seç</string>
+    <string name="clear_status_message">Durum iletisini kaldır</string>
+    <string name="clear_status_message_after">Durum iletisinin kaldırılma süresi</string>
+    <string name="conversations">Görüşmeler</string>
     <string name="delete_avatar">Avatarı sil</string>
+    <string name="dnd">Rahatsız etmeyin</string>
+    <string name="dontClear">Kaldırılmasın</string>
     <string name="edit">Düzenle</string>
     <string name="encrypted">Şifrelenmiş</string>
     <string name="failed_to_save">%1$s kaydedilemedi</string>
     <string name="file_list_folder">klasör</string>
     <string name="file_list_loading">Yükleniyor…</string>
     <string name="filename_progress">%1$s (%2$d)</string>
+    <string name="fourHours">4 saat</string>
+    <string name="invisible">Görünmez</string>
     <string name="lock_symbol">Kilit simgesi</string>
     <string name="menu_item_sort_by_date_newest_first">Yeniden eskiye</string>
     <string name="menu_item_sort_by_date_oldest_first">Eskiden yeniye</string>
@@ -106,7 +119,6 @@
     <string name="nc_failed_signaling_settings">Hedef sunucu cep telefonları üzerinden herkese açık görüşmelere katılmayı desteklemiyor. Görüşmeye web tarayıcı kullanarak katılmayı deneyebilirsiniz.</string>
     <string name="nc_failed_to_perform_operation">Maalesef bir şeyler ters gitti!</string>
     <string name="nc_file_browser_back">Geri</string>
-    <string name="nc_file_browser_refresh">Yenile</string>
     <string name="nc_file_browser_reshare_forbidden">Bu dosyayı paylaşma izniniz yok</string>
     <string name="nc_following_link">Herkese açık bir bağlantıyı izleyen kullanıcı</string>
     <string name="nc_formatted_message_you">Siz: %1$s</string>
@@ -136,7 +148,6 @@
     <string name="nc_lobby_start_date">Bu toplantı %1$s zamanına ayarlanmış</string>
     <string name="nc_lobby_start_soon">Toplantı yakında başlayacak</string>
     <string name="nc_lobby_waiting">Şu anda girişte bekliyorsunuz</string>
-    <string name="nc_lobby_waiting_with_date">Şu anda girişte bekliyorsunuz.\n Bu görüşme %1$s zamanında başlayacak.</string>
     <string name="nc_location_current_position_description">Geçerli konumunuz</string>
     <string name="nc_location_permission_required">konum izinleri gerekli</string>
     <string name="nc_location_unknown">Konum bilinmiyor</string>
@@ -145,13 +156,13 @@
     <string name="nc_make_call_private">Görüşmeyi özel yap</string>
     <string name="nc_make_call_public">Görüşmeyi herkese açık yap</string>
     <string name="nc_manual">Ayarlanmamış</string>
+    <string name="nc_mark_as_read">Okunmuş olarak işaretle</string>
+    <string name="nc_mark_as_unread">Okunmamış olarak işaretle</string>
     <string name="nc_message_quote_cancel_reply">Yanıtı iptal et</string>
     <string name="nc_message_read">İleti okundu</string>
     <string name="nc_message_sent">İleti gönderildi</string>
     <string name="nc_microphone_permission_permanently_denied">Sesli iletişim kurabilmek için sistem ayarlarından \"Mikrofon\" erişme iznini verin.</string>
     <string name="nc_moderator">Sorumlu</string>
-    <string name="nc_mute_calls">Bildirimleri kapat</string>
-    <string name="nc_mute_calls_desc">Gelen çağrılar sessize alınacak</string>
     <string name="nc_never">Hiç katılmadı</string>
     <string name="nc_new_conversation">Yeni görüşme</string>
     <string name="nc_new_mention">Okunmamış anmalar</string>
@@ -167,9 +178,10 @@
     <string name="nc_none">Yok</string>
     <string name="nc_not_defined_error">Bilinmeyen sorun</string>
     <string name="nc_notification_channel">%1$s %2$s bildiri kanalında</string>
-    <string name="nc_notification_channel_calls">Görüşme bildirimi kanalı</string>
-    <string name="nc_notification_channel_calls_description">Gelen görüşme çağrılarını görüntüler</string>
-    <string name="nc_notification_channel_messages">Bildirim kanalındaki ileti</string>
+    <string name="nc_notification_channel_calls">Çağrılar</string>
+    <string name="nc_notification_channel_calls_description">Gelen çağrılar bildirilsin</string>
+    <string name="nc_notification_channel_messages">İletiler</string>
+    <string name="nc_notification_channel_messages_description">Gelen iletiler bildirilsin</string>
     <string name="nc_notification_settings">Bildirim ayarları</string>
     <string name="nc_notify_me_always">Her zaman bildirilsin</string>
     <string name="nc_notify_me_mention">Anmalar bildirilsin</string>
@@ -254,8 +266,9 @@
     <string name="nc_settings_incognito_keyboard_title">Tuş takımı gizliliği</string>
     <string name="nc_settings_no_ringtone">Ses yok</string>
     <string name="nc_settings_no_talk_installed">Kimlik doğrulaması yapmak istediğiniz sunucu üzerinde Talk uygulaması kurulu değil</string>
-    <string name="nc_settings_notification_sounds">Ses</string>
-    <string name="nc_settings_other_notifications_ringtone">Bildirimler</string>
+    <string name="nc_settings_notification_sounds"> Bildirim sesleri</string>
+    <string name="nc_settings_notification_sounds_post_oreo">Bildirimler</string>
+    <string name="nc_settings_other_notifications_ringtone">İletiler</string>
     <string name="nc_settings_phone_book_integration_desc">Kişileri telefon numaralarına göre eşleştirerek sistem kişiler uygulamasında Talk kısa yolunu görüntüler</string>
     <string name="nc_settings_phone_book_integration_phone_number_dialog_description">Telefon numaranızı ayarlayarak diğer kullanıcıların sizi bulmasını sağlayabilirsiniz</string>
     <string name="nc_settings_phone_book_integration_phone_number_dialog_invalid">Telefon numarası geçersiz</string>
@@ -327,6 +340,10 @@
     <string name="nc_wrong_password">Parola yanlış</string>
     <string name="nc_yes">Evet</string>
     <string name="no_phone_book_integration_due_to_permissions">İzinler eksik olduğundan telefon numarası bütünleştirmesi yok</string>
+    <string name="oneHour">1 saat</string>
+    <string name="online">Çevrimiçi</string>
+    <string name="online_status">Çevrimiçi durumu</string>
+    <string name="openConversations">Açık görüşmeler</string>
     <string name="open_in_files_app">Dosyalar uygulamasında aç</string>
     <string name="password_protected">Parola korumalı</string>
     <string name="play_pause_voice_message">Ses iletisini oynat/duraklat</string>
@@ -342,11 +359,16 @@
     <string name="scope_published_title">Yayınlanmış</string>
     <string name="scope_toggle">Ölçeği değiştir</string>
     <string name="scope_toggle_description">%1$s gizlilik düzeyini değiştir</string>
+    <string name="secondsAgo">saniye önce</string>
     <string name="selected_list_item">Seçilmiş</string>
     <string name="send_to">Şuraya gönder</string>
     <string name="send_to_three_dots">Şuraya gönder …</string>
+    <string name="set_status">Durumu ayarla</string>
+    <string name="set_status_message">Durum iletisini ayarla</string>
     <string name="share">Paylaş</string>
     <string name="starred">Sık kullanılanlara ekle</string>
+    <string name="startCallForbidden">Bir çağrı başlatma izniniz yok</string>
+    <string name="status_message">Durum iletisi</string>
     <string name="take_photo">Bir fotoğraf çekin</string>
     <string name="take_photo_error_deleting_picture">Fotoğraf çekilirken sorun çıktı</string>
     <string name="take_photo_permission">İzin verilmeden bir fotoğraf çekilemez</string>
@@ -356,6 +378,9 @@
     <string name="take_photo_toggle_crop">Fotoğrafı kırp</string>
     <string name="take_photo_toggle_lowres">Görsel boyutunu küçült</string>
     <string name="take_photo_toggle_torch">El fenerini aç/kapat</string>
+    <string name="thirtyMinutes">30 dakika</string>
+    <string name="thisWeek">Bu hafta</string>
+    <string name="today">Bugün</string>
     <string name="upload_new_avatar_from_device">Aygıttan yeni avatar yükle</string>
     <string name="user_info_address">Adres</string>
     <string name="user_info_displayname">Tam ad</string>
@@ -363,7 +388,9 @@
     <string name="user_info_phone">Telefon numarası</string>
     <string name="user_info_twitter">Twitter</string>
     <string name="user_info_website">Web sitesi</string>
+    <string name="user_status">Durum</string>
     <string name="userinfo_error_text">Kullanıcının kişisel bilgileri alınamadı</string>
     <string name="userinfo_no_info_headline">Herhangi bir kişisel bilgi ayarlanmamış</string>
     <string name="userinfo_no_info_text">Profil sayfanızdan ad, görsel ve iletişim bilgilerinizi ekleyin.</string>
-</resources>
+    <string name="whats_your_status">Durumunuz nedir?</string>
+    </resources>

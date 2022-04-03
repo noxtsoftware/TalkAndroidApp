@@ -56,7 +56,7 @@ public abstract class CapabilitiesUtil {
                 Capabilities capabilities = LoganSquare.parse(user.getCapabilities(), Capabilities.class);
                 if (capabilities.getExternalCapability() != null &&
                         capabilities.getExternalCapability().containsKey("v1")) {
-                    return capabilities.getExternalCapability().get("v1").contains("capabilityName");
+                    return capabilities.getExternalCapability().get("v1").contains(capabilityName);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to get capabilities for the user");
@@ -73,6 +73,10 @@ public abstract class CapabilitiesUtil {
     public static boolean isServerAlmostEOL(@Nullable UserEntity user) {
         // Capability is available since Talk 8 => Nextcloud 18 => January 2020
         return !hasSpreedFeatureCapability(user, "chat-replies");
+    }
+
+    public static boolean canSetChatReadMarker(@Nullable UserEntity user) {
+        return hasSpreedFeatureCapability(user, "chat-read-marker");
     }
 
     public static boolean hasSpreedFeatureCapability(@Nullable UserEntity user, String capabilityName) {
@@ -163,6 +167,22 @@ public abstract class CapabilitiesUtil {
                     if (map != null && map.containsKey("read-privacy")) {
                         return Integer.parseInt(map.get("read-privacy")) == 1;
                     }
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to get capabilities for the user");
+            }
+        }
+        return false;
+    }
+
+    public static boolean isUserStatusAvailable(@Nullable UserEntity user) {
+        if (user != null && user.getCapabilities() != null) {
+            try {
+                Capabilities capabilities = LoganSquare.parse(user.getCapabilities(), Capabilities.class);
+                if (capabilities.getUserStatusCapability() != null &&
+                    capabilities.getUserStatusCapability().getEnabled() &&
+                    capabilities.getUserStatusCapability().getSupportsEmoji()) {
+                    return true;
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to get capabilities for the user");

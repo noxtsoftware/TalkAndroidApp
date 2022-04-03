@@ -2,8 +2,12 @@
  *
  *   Nextcloud Talk application
  *
- *   @author Mario Danic
- *   Copyright (C) 2017 Mario Danic (mario@lovelyhq.com)
+ * @author Marcel Hibbe
+ * @author Andy Scherzinger
+ * @author Mario Danic
+ * Copyright (C) 2022 Marcel Hibbe <dev@mhibbe.de>
+ * Copyright (C) 2022 Andy Scherzinger <info@andy-scherzinger.de>
+ * Copyright (C) 2017 Mario Danic <mario@lovelyhq.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -53,18 +57,18 @@ import com.nextcloud.talk.dagger.modules.DatabaseModule
 import com.nextcloud.talk.dagger.modules.RestModule
 import com.nextcloud.talk.jobs.AccountRemovalWorker
 import com.nextcloud.talk.jobs.CapabilitiesWorker
-import com.nextcloud.talk.jobs.PushRegistrationWorker
 import com.nextcloud.talk.jobs.SignalingSettingsWorker
 import com.nextcloud.talk.utils.ClosedInterfaceImpl
 import com.nextcloud.talk.utils.DeviceUtils
 import com.nextcloud.talk.utils.DisplayUtils
+import com.nextcloud.talk.utils.NotificationUtils
 import com.nextcloud.talk.utils.OkHttpNetworkFetcherWithCache
 import com.nextcloud.talk.utils.database.arbitrarystorage.ArbitraryStorageModule
 import com.nextcloud.talk.utils.database.user.UserModule
 import com.nextcloud.talk.utils.preferences.AppPreferences
 import com.nextcloud.talk.webrtc.MagicWebRTCUtils
 import com.vanniktech.emoji.EmojiManager
-import com.vanniktech.emoji.googlecompat.GoogleCompatEmojiProvider
+import com.vanniktech.emoji.google.GoogleEmojiProvider
 import de.cotech.hw.SecurityKeyManager
 import de.cotech.hw.SecurityKeyManagerConfig
 import okhttp3.OkHttpClient
@@ -128,6 +132,7 @@ class NextcloudTalkApplication : MultiDexApplication(), LifecycleObserver {
 
     //region Overridden methods
     override fun onCreate() {
+        Log.d(TAG, "onCreate")
         sharedApplication = this
 
         val securityKeyManager = SecurityKeyManager.getInstance()
@@ -164,20 +169,18 @@ class NextcloudTalkApplication : MultiDexApplication(), LifecycleObserver {
         ClosedInterfaceImpl().providerInstallerInstallIfNeededAsync()
         DeviceUtils.ignoreSpecialBatteryFeatures()
 
-        val pushRegistrationWork = OneTimeWorkRequest.Builder(PushRegistrationWorker::class.java).build()
         val accountRemovalWork = OneTimeWorkRequest.Builder(AccountRemovalWorker::class.java).build()
         val periodicCapabilitiesUpdateWork = PeriodicWorkRequest.Builder(
             CapabilitiesWorker::class.java,
-            12, TimeUnit.HOURS
+            HALF_DAY, TimeUnit.HOURS
         ).build()
         val capabilitiesUpdateWork = OneTimeWorkRequest.Builder(CapabilitiesWorker::class.java).build()
         val signalingSettingsWork = OneTimeWorkRequest.Builder(SignalingSettingsWorker::class.java).build()
 
-        WorkManager.getInstance().enqueue(pushRegistrationWork)
-        WorkManager.getInstance().enqueue(accountRemovalWork)
-        WorkManager.getInstance().enqueue(capabilitiesUpdateWork)
-        WorkManager.getInstance().enqueue(signalingSettingsWork)
-        WorkManager.getInstance().enqueueUniquePeriodicWork(
+        WorkManager.getInstance(applicationContext).enqueue(accountRemovalWork)
+        WorkManager.getInstance(applicationContext).enqueue(capabilitiesUpdateWork)
+        WorkManager.getInstance(applicationContext).enqueue(signalingSettingsWork)
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             "DailyCapabilitiesUpdateWork",
             ExistingPeriodicWorkPolicy.REPLACE,
             periodicCapabilitiesUpdateWork
@@ -187,7 +190,9 @@ class NextcloudTalkApplication : MultiDexApplication(), LifecycleObserver {
         config.setReplaceAll(true)
         val emojiCompat = EmojiCompat.init(config)
 
-        EmojiManager.install(GoogleCompatEmojiProvider(emojiCompat))
+        EmojiManager.install(GoogleEmojiProvider())
+
+        NotificationUtils.registerNotificationChannels(applicationContext, appPreferences)
     }
 
     override fun onTerminate() {
@@ -215,7 +220,7 @@ class NextcloudTalkApplication : MultiDexApplication(), LifecycleObserver {
 
     private fun buildDefaultImageLoader(): ImageLoader {
         return ImageLoader.Builder(applicationContext)
-            .availableMemoryPercentage(0.5) // Use 50% of the application's available memory.
+            .availableMemoryPercentage(FIFTY_PERCENT) // Use 50% of the application's available memory.
             .crossfade(true) // Show a short crossfade when loading images from network or disk into an ImageView.
             .componentRegistry {
                 if (SDK_INT >= P) {
@@ -231,6 +236,8 @@ class NextcloudTalkApplication : MultiDexApplication(), LifecycleObserver {
 
     companion object {
         private val TAG = NextcloudTalkApplication::class.java.simpleName
+        const val FIFTY_PERCENT = 0.5
+        const val HALF_DAY: Long = 12
         //region Singleton
         //endregion
 

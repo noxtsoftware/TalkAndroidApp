@@ -32,11 +32,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -50,7 +48,6 @@ import com.nextcloud.talk.api.NcApi;
 import com.nextcloud.talk.application.NextcloudTalkApplication;
 import com.nextcloud.talk.databinding.CallNotificationActivityBinding;
 import com.nextcloud.talk.events.CallNotificationClick;
-import com.nextcloud.talk.models.RingtoneSettings;
 import com.nextcloud.talk.models.database.CapabilitiesUtil;
 import com.nextcloud.talk.models.database.UserEntity;
 import com.nextcloud.talk.models.json.conversations.Conversation;
@@ -60,6 +57,7 @@ import com.nextcloud.talk.models.json.participants.ParticipantsOverall;
 import com.nextcloud.talk.utils.ApiUtils;
 import com.nextcloud.talk.utils.DisplayUtils;
 import com.nextcloud.talk.utils.DoNotDisturbUtils;
+import com.nextcloud.talk.utils.NotificationUtils;
 import com.nextcloud.talk.utils.bundle.BundleKeys;
 import com.nextcloud.talk.utils.preferences.AppPreferences;
 
@@ -216,8 +214,12 @@ public class CallNotificationActivity extends CallBaseActivity {
     private void checkIfAnyParticipantsRemainInRoom() {
         int apiVersion = ApiUtils.getCallApiVersion(userBeingCalled, new int[]{ApiUtils.APIv4, 1});
 
-        ncApi.getPeersForCall(credentials, ApiUtils.getUrlForCall(apiVersion, userBeingCalled.getBaseUrl(),
-                                                                  currentConversation.getToken()))
+        ncApi.getPeersForCall(
+            credentials,
+            ApiUtils.getUrlForCall(
+                apiVersion,
+                userBeingCalled.getBaseUrl(),
+                currentConversation.getToken()))
             .subscribeOn(Schedulers.io())
             .repeatWhen(completed -> completed.zipWith(Observable.range(1, 12), (n, i) -> i)
                 .flatMap(retryCount -> Observable.timer(5, TimeUnit.SECONDS))
@@ -252,7 +254,7 @@ public class CallNotificationActivity extends CallBaseActivity {
 
                 @Override
                 public void onError(Throwable e) {
-
+                    Log.e(TAG, "error while getPeersForCall", e);
                 }
 
                 @Override
@@ -313,8 +315,7 @@ public class CallNotificationActivity extends CallBaseActivity {
     }
 
     private boolean isInCallWithVideo(int callFlag) {
-        return (Participant.ParticipantFlags.IN_CALL_WITH_VIDEO.getValue() == callFlag
-            || Participant.ParticipantFlags.IN_CALL_WITH_AUDIO_AND_VIDEO.getValue() == callFlag);
+        return (callFlag >= Participant.InCallFlags.IN_CALL + Participant.InCallFlags.WITH_VIDEO);
     }
 
     private void setUpAfterConversationIsKnown() {
@@ -333,9 +334,9 @@ public class CallNotificationActivity extends CallBaseActivity {
     private void setAvatarForOneToOneCall() {
         ImageRequest imageRequest =
             DisplayUtils.getImageRequestForUrl(
-                ApiUtils.getUrlForAvatarWithName(userBeingCalled.getBaseUrl(),
-                                                 currentConversation.getName(),
-                                                 R.dimen.avatar_size_big), null);
+                ApiUtils.getUrlForAvatar(userBeingCalled.getBaseUrl(),
+                                         currentConversation.getName(),
+                                         true), null);
 
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, null);
@@ -390,25 +391,7 @@ public class CallNotificationActivity extends CallBaseActivity {
     }
 
     private void playRingtoneSound() {
-        String callRingtonePreferenceString = appPreferences.getCallRingtoneUri();
-        Uri ringtoneUri;
-
-        if (TextUtils.isEmpty(callRingtonePreferenceString)) {
-            // play default sound
-            ringtoneUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() +
-                                        "/raw/librem_by_feandesign_call");
-        } else {
-            try {
-                RingtoneSettings ringtoneSettings = LoganSquare.parse(
-                    callRingtonePreferenceString, RingtoneSettings.class);
-                ringtoneUri = ringtoneSettings.getRingtoneUri();
-            } catch (IOException e) {
-                Log.e(TAG, "Failed to parse ringtone settings");
-                ringtoneUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() +
-                                            "/raw/librem_by_feandesign_call");
-            }
-        }
-
+        Uri ringtoneUri = NotificationUtils.INSTANCE.getCallRingtoneUri(getApplicationContext(), appPreferences);
         if (ringtoneUri != null) {
             mediaPlayer = new MediaPlayer();
             try {

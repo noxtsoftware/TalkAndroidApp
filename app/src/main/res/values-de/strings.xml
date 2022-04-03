@@ -2,15 +2,28 @@
   <resources>
     <string name="account_icon">Konto-Icon</string>
     <string name="appbar_search_in">Suche in %s</string>
+    <string name="audio_output_bluetooth">Bluetooth</string>
+    <string name="audio_output_dialog_headline">Audio-Ausgabe</string>
+    <string name="audio_output_phone">Telefon</string>
+    <string name="audio_output_speaker">Lautsprecher</string>
+    <string name="audio_output_wired_headset">Kabelgebundener Kopfhörer</string>
     <string name="avatar">Avatar</string>
+    <string name="away">Abwesend</string>
     <string name="choose_avatar_from_cloud">Avatar aus der Cloud auswählen</string>
+    <string name="clear_status_message">Statusmeldung löschen</string>
+    <string name="clear_status_message_after">Statusmeldung löschen nach</string>
+    <string name="conversations">Unterhaltungen</string>
     <string name="delete_avatar">Avatar löschen</string>
+    <string name="dnd">Nicht stören</string>
+    <string name="dontClear">Nicht löschen</string>
     <string name="edit">Bearbeiten</string>
     <string name="encrypted">Verschlüsselt</string>
     <string name="failed_to_save">Speichern von %1$s fehlgeschlagen</string>
     <string name="file_list_folder">Ordner</string>
     <string name="file_list_loading">Lade…</string>
     <string name="filename_progress">%1$s (%2$d)</string>
+    <string name="fourHours">4 Stunden</string>
+    <string name="invisible">Unsichtbar</string>
     <string name="lock_symbol">Schloss-Symbol</string>
     <string name="menu_item_sort_by_date_newest_first">Neueste zuerst</string>
     <string name="menu_item_sort_by_date_oldest_first">Älteste zuerst</string>
@@ -106,7 +119,6 @@
     <string name="nc_failed_signaling_settings">Der Zielserver erlaubt es nicht, öffentlichen Unterhaltungen via Mobiltelefon beizutreten. Sie können versuchen, der Unterhaltung mit einem Internetbrowser beizutreten.</string>
     <string name="nc_failed_to_perform_operation">Leider ist etwas schiefgelaufen!</string>
     <string name="nc_file_browser_back">Zurück</string>
-    <string name="nc_file_browser_refresh">Aktualisieren</string>
     <string name="nc_file_browser_reshare_forbidden">Sie dürfen diese Datei nicht weiterteilen</string>
     <string name="nc_following_link">Benutzer kommt von einem öffentlichen Link</string>
     <string name="nc_formatted_message_you">Sie: %1$s</string>
@@ -136,7 +148,6 @@
     <string name="nc_lobby_start_date">Dieses Treffen ist geplant für %1$s</string>
     <string name="nc_lobby_start_soon">Das Treffen beginnt bald</string>
     <string name="nc_lobby_waiting">Sie warten aktuell in der Lobby.</string>
-    <string name="nc_lobby_waiting_with_date">Sie warten aktuell in der Lobby.\n Dieses Meeting ist für %1$s geplant.</string>
     <string name="nc_location_current_position_description">Ihre aktuelle Position</string>
     <string name="nc_location_permission_required">Standort-Berechtigung wird benötigt</string>
     <string name="nc_location_unknown">Position unbekannt</string>
@@ -145,13 +156,13 @@
     <string name="nc_make_call_private">Unterhaltung privat machen</string>
     <string name="nc_make_call_public">Unterhaltung öffentlich machen</string>
     <string name="nc_manual">Nicht eingestellt</string>
+    <string name="nc_mark_as_read">Als gelesen markieren</string>
+    <string name="nc_mark_as_unread">Als ungelesen markieren</string>
     <string name="nc_message_quote_cancel_reply">Antwort abbrechen</string>
     <string name="nc_message_read">Nachricht gelesen</string>
     <string name="nc_message_sent">Nachricht gesendet</string>
     <string name="nc_microphone_permission_permanently_denied">Um Audioanrufe zu ermöglichen, gewähren Sie die Berechtigung für das \"Mikrofon\" in den Systemeinstellungen</string>
     <string name="nc_moderator">Moderator</string>
-    <string name="nc_mute_calls">Anrufe stummschalten</string>
-    <string name="nc_mute_calls_desc">Eingehende Anrufe werden stummgeschaltet</string>
     <string name="nc_never">Nie beigetreten</string>
     <string name="nc_new_conversation">Neue Unterhaltung</string>
     <string name="nc_new_mention">Ungelesene Erwähnungen</string>
@@ -167,9 +178,10 @@
     <string name="nc_none">Keine</string>
     <string name="nc_not_defined_error">Unbekannter Fehler</string>
     <string name="nc_notification_channel">%1$s auf %2$s Benachrichtigungskanal</string>
-    <string name="nc_notification_channel_calls">Benachrichtigungskanal für Anrufe</string>
-    <string name="nc_notification_channel_calls_description">Eingehende Anrufe anzeigen</string>
-    <string name="nc_notification_channel_messages">Benachrichtigungskanal für Nachrichten</string>
+    <string name="nc_notification_channel_calls">Anrufe</string>
+    <string name="nc_notification_channel_calls_description">Bei eingehenden Anrufen benachrichtigen</string>
+    <string name="nc_notification_channel_messages">Nachrichten</string>
+    <string name="nc_notification_channel_messages_description">Bei eingehenden Nachrichten benachrichtigen </string>
     <string name="nc_notification_settings">Benachrichtigungseinstellungen</string>
     <string name="nc_notify_me_always">Immer benachrichtigen</string>
     <string name="nc_notify_me_mention">Bei Erwähnung benachrichtigen</string>
@@ -254,8 +266,9 @@
     <string name="nc_settings_incognito_keyboard_title">Inkognito-Tastatur</string>
     <string name="nc_settings_no_ringtone">Kein Ton</string>
     <string name="nc_settings_no_talk_installed">Die Talk-App ist nicht auf dem Server installiert, auf dem Sie versucht haben sich zu authentisieren</string>
-    <string name="nc_settings_notification_sounds">Ton</string>
-    <string name="nc_settings_other_notifications_ringtone">Benachrichtigungen</string>
+    <string name="nc_settings_notification_sounds">Benachrichtigungstöne</string>
+    <string name="nc_settings_notification_sounds_post_oreo">Benachrichtigungen</string>
+    <string name="nc_settings_other_notifications_ringtone">Nachrichten</string>
     <string name="nc_settings_phone_book_integration_desc">Abgleich von Kontakten basierend auf der Telefonnummer zur Integration der Talk-Verknüpfung im Telefonbuch</string>
     <string name="nc_settings_phone_book_integration_phone_number_dialog_description">Sie können Ihre Telefonnummer so einstellen, dass andere Benutzer Sie finden können.</string>
     <string name="nc_settings_phone_book_integration_phone_number_dialog_invalid">Ungültige Telefonnummer</string>
@@ -327,6 +340,10 @@
     <string name="nc_wrong_password">Falsches Passwort</string>
     <string name="nc_yes">Ja</string>
     <string name="no_phone_book_integration_due_to_permissions">Keine Rufnummernintegration aufgrund fehlender Berechtigungen</string>
+    <string name="oneHour">1 Stunde</string>
+    <string name="online">Online</string>
+    <string name="online_status">Online-Status</string>
+    <string name="openConversations">Unterhaltungen öffnen</string>
     <string name="open_in_files_app">In Dateien-App öffnen</string>
     <string name="password_protected">Passwortgeschützt</string>
     <string name="play_pause_voice_message">Sprachnachricht wiedergeben/pausieren</string>
@@ -342,11 +359,16 @@
     <string name="scope_published_title">Veröffentlicht</string>
     <string name="scope_toggle">Bereich umschalten</string>
     <string name="scope_toggle_description">Ändere Datenschutzstufe von %1$s</string>
+    <string name="secondsAgo">Gerade eben</string>
     <string name="selected_list_item">Ausgewählt</string>
     <string name="send_to">Senden an</string>
     <string name="send_to_three_dots">Senden an …</string>
+    <string name="set_status">Status setzen</string>
+    <string name="set_status_message">Statusnachricht setzen</string>
     <string name="share">Freigabe</string>
     <string name="starred">Favorit</string>
+    <string name="startCallForbidden">Sie dürfen keinen Anruf zu tätigen</string>
+    <string name="status_message">Statusnachricht</string>
     <string name="take_photo">Ein Foto aufnehmen</string>
     <string name="take_photo_error_deleting_picture">Fehler beim Aufnehmen des Fotos</string>
     <string name="take_photo_permission">Das Fotografieren ist ohne Berechtigungen nicht möglich</string>
@@ -356,6 +378,9 @@
     <string name="take_photo_toggle_crop">Foto beschneiden</string>
     <string name="take_photo_toggle_lowres">Bildgröße verringern</string>
     <string name="take_photo_toggle_torch">Taschenlampe umschalten</string>
+    <string name="thirtyMinutes">30 Minuten</string>
+    <string name="thisWeek">Diese Woche</string>
+    <string name="today">Heute</string>
     <string name="upload_new_avatar_from_device">Neuen Avatar vom Gerät hochladen</string>
     <string name="user_info_address">Adresse</string>
     <string name="user_info_displayname">Vollständiger Name</string>
@@ -363,7 +388,9 @@
     <string name="user_info_phone">Telefonnummer</string>
     <string name="user_info_twitter">Twitter</string>
     <string name="user_info_website">Webseite</string>
+    <string name="user_status">Status</string>
     <string name="userinfo_error_text">Fehler beim Laden der persönlichen Nutzerinformationen.</string>
     <string name="userinfo_no_info_headline">Keine persönlichen Informationen eingestellt</string>
     <string name="userinfo_no_info_text">Fügen Sie Name, Bild und Kontaktdaten auf Ihrer Profilseite hinzu.</string>
-</resources>
+    <string name="whats_your_status">Wie ist Ihr Status?</string>
+    </resources>

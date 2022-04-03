@@ -62,6 +62,8 @@ public class ChatMessage implements MessageContentType, MessageContentType.Image
     public boolean isDeleted;
     @JsonField(name = "id")
     public int jsonMessageId;
+    @JsonIgnore
+    public int previousMessageId = -1;
     @JsonField(name = "token")
     public String token;
     // guests or users
@@ -288,10 +290,10 @@ public class ChatMessage implements MessageContentType, MessageContentType.Image
             @Override
             public String getAvatar() {
                 if (getActorType().equals("users")) {
-                    return ApiUtils.getUrlForAvatarWithName(getActiveUser().getBaseUrl(), actorId, R.dimen.avatar_size);
+                    return ApiUtils.getUrlForAvatar(getActiveUser().getBaseUrl(), actorId, true);
                 } else if (getActorType().equals("bridged")) {
-                    return ApiUtils.getUrlForAvatarWithName(getActiveUser().getBaseUrl(), "bridge-bot",
-                                                            R.dimen.avatar_size);
+                    return ApiUtils.getUrlForAvatar(getActiveUser().getBaseUrl(), "bridge-bot",
+                                                    true);
                 } else {
                     String apiId =
                             NextcloudTalkApplication.Companion.getSharedApplication().getString(R.string.nc_guest);
@@ -299,7 +301,7 @@ public class ChatMessage implements MessageContentType, MessageContentType.Image
                     if (!TextUtils.isEmpty(getActorDisplayName())) {
                         apiId = getActorDisplayName();
                     }
-                    return ApiUtils.getUrlForAvatarWithNameForGuests(getActiveUser().getBaseUrl(), apiId, R.dimen.avatar_size);
+                    return ApiUtils.getUrlForGuestAvatar(getActiveUser().getBaseUrl(), apiId, true);
                 }
             }
         };
@@ -609,6 +611,9 @@ public class ChatMessage implements MessageContentType, MessageContentType.Image
         VOICE_MESSAGE
     }
 
+    /**
+     * see https://nextcloud-talk.readthedocs.io/en/latest/chat/#system-messages
+     */
     public enum SystemMessageType {
         DUMMY,
         CONVERSATION_CREATED,
@@ -619,6 +624,7 @@ public class ChatMessage implements MessageContentType, MessageContentType.Image
         CALL_JOINED,
         CALL_LEFT,
         CALL_ENDED,
+        CALL_ENDED_EVERYONE,
         CALL_MISSED,
         CALL_TRIED,
         READ_ONLY_OFF,
@@ -635,6 +641,10 @@ public class ChatMessage implements MessageContentType, MessageContentType.Image
         PASSWORD_REMOVED,
         USER_ADDED,
         USER_REMOVED,
+        GROUP_ADDED,
+        GROUP_REMOVED,
+        CIRCLE_ADDED,
+        CIRCLE_REMOVED,
         MODERATOR_PROMOTED,
         MODERATOR_DEMOTED,
         GUEST_MODERATOR_PROMOTED,

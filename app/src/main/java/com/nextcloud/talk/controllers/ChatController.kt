@@ -30,6 +30,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -55,7 +56,6 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -67,10 +67,8 @@ import android.view.animation.LinearInterpolator
 import android.widget.AbsListView
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.PermissionChecker
@@ -140,6 +138,7 @@ import com.nextcloud.talk.models.json.mention.Mention
 import com.nextcloud.talk.presenters.MentionAutocompletePresenter
 import com.nextcloud.talk.ui.bottom.sheet.ProfileBottomSheet
 import com.nextcloud.talk.ui.dialog.AttachmentDialog
+import com.nextcloud.talk.ui.dialog.MessageActionsDialog
 import com.nextcloud.talk.ui.recyclerview.MessageSwipeActions
 import com.nextcloud.talk.ui.recyclerview.MessageSwipeCallback
 import com.nextcloud.talk.utils.ApiUtils
@@ -148,7 +147,7 @@ import com.nextcloud.talk.utils.ConductorRemapping.remapChatController
 import com.nextcloud.talk.utils.ContactUtils
 import com.nextcloud.talk.utils.DateUtils
 import com.nextcloud.talk.utils.DisplayUtils
-import com.nextcloud.talk.utils.KeyboardUtils
+import com.nextcloud.talk.utils.ImageEmojiEditText
 import com.nextcloud.talk.utils.MagicCharPolicy
 import com.nextcloud.talk.utils.NotificationUtils
 import com.nextcloud.talk.utils.UriUtils
@@ -192,6 +191,7 @@ import java.util.HashMap
 import java.util.Objects
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AutoInjector(NextcloudTalkApplication::class)
 class ChatController(args: Bundle) :
@@ -233,13 +233,13 @@ class ChatController(args: Bundle) :
     var adapter: TalkMessagesListAdapter<ChatMessage>? = null
     var mentionAutocomplete: Autocomplete<*>? = null
     var layoutManager: LinearLayoutManager? = null
+    var pullChatMessagesPending = false
     var lookingIntoFuture = false
     var newMessagesCount = 0
     var startCallFromNotification: Boolean? = null
     val roomId: String
     val voiceOnly: Boolean
     var isFirstMessagesProcessing = true
-    var wasDetached: Boolean = false
     var emojiPopup: EmojiPopup? = null
 
     var myFirstMessage: CharSequence? = null
@@ -252,7 +252,6 @@ class ChatController(args: Bundle) :
     var magicWebSocketInstance: MagicWebSocketInstance? = null
 
     var lobbyTimerHandler: Handler? = null
-    val roomJoined: Boolean = false
     var pastPreconditionFailed = false
     var futurePreconditionFailed = false
 
@@ -268,7 +267,7 @@ class ChatController(args: Bundle) :
     var currentlyPlayedVoiceMessage: ChatMessage? = null
 
     init {
-        Log.d(TAG, "init ChatController")
+        Log.d(TAG, "init ChatController: " + System.identityHashCode(this).toString())
 
         setHasOptionsMenu(true)
         NextcloudTalkApplication.sharedApplication!!.componentApplication.inject(this)
@@ -311,6 +310,8 @@ class ChatController(args: Bundle) :
         if (conversationUser != null) {
             val apiVersion = ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
 
+            val startNanoTime = System.nanoTime()
+            Log.d(TAG, "getRoomInfo - getRoom - calling: " + startNanoTime)
             ncApi?.getRoom(credentials, ApiUtils.getUrlForRoom(apiVersion, conversationUser.baseUrl, roomToken))
                 ?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
@@ -321,9 +322,11 @@ class ChatController(args: Bundle) :
 
                     @Suppress("Detekt.TooGenericExceptionCaught")
                     override fun onNext(roomOverall: RoomOverall) {
+                        Log.d(TAG, "getRoomInfo - getRoom - got response: " + startNanoTime)
                         currentConversation = roomOverall.ocs.data
                         Log.d(
-                            TAG, "getRoomInfo. token: " + currentConversation?.getToken() +
+                            TAG,
+                            "getRoomInfo. token: " + currentConversation?.getToken() +
                                 " sessionId: " + currentConversation?.sessionId
                         )
                         loadAvatarForStatusBar()
@@ -345,9 +348,11 @@ class ChatController(args: Bundle) :
                     }
 
                     override fun onError(e: Throwable) {
+                        Log.e(TAG, "getRoomInfo - getRoom - ERROR", e)
                     }
 
                     override fun onComplete() {
+                        Log.d(TAG, "getRoomInfo - getRoom - onComplete: " + startNanoTime)
                         if (shouldRepeat) {
                             if (lobbyTimerHandler == null) {
                                 lobbyTimerHandler = Handler()
@@ -367,6 +372,7 @@ class ChatController(args: Bundle) :
             apiVersion = ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
         }
 
+        Log.d(TAG, "handleFromNotification - getRooms - calling")
         ncApi?.getRooms(credentials, ApiUtils.getUrlForRooms(apiVersion, conversationUser?.baseUrl))
             ?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(object : Observer<RoomsOverall> {
@@ -375,6 +381,7 @@ class ChatController(args: Bundle) :
                 }
 
                 override fun onNext(roomsOverall: RoomsOverall) {
+                    Log.d(TAG, "handleFromNotification - getRooms - got response")
                     for (conversation in roomsOverall.ocs.data) {
                         if (roomId == conversation.roomId) {
                             roomToken = conversation.token
@@ -387,25 +394,22 @@ class ChatController(args: Bundle) :
                 }
 
                 override fun onError(e: Throwable) {
+                    Log.e(TAG, "handleFromNotification - getRooms - ERROR: ", e)
                 }
 
                 override fun onComplete() {
+                    // unused atm
                 }
             })
     }
 
     private fun loadAvatarForStatusBar() {
         if (inOneToOneCall() && activity != null && conversationVoiceCallMenuItem != null) {
-            val avatarSize = DisplayUtils.convertDpToPixel(
-                conversationVoiceCallMenuItem?.icon!!
-                    .intrinsicWidth.toFloat(),
-                activity
-            ).toInt()
 
             val imageRequest = DisplayUtils.getImageRequestForUrl(
-                ApiUtils.getUrlForAvatarWithNameAndPixels(
+                ApiUtils.getUrlForAvatar(
                     conversationUser?.baseUrl,
-                    currentConversation?.name, avatarSize / 2
+                    currentConversation?.name, true
                 ),
                 conversationUser!!
             )
@@ -417,14 +421,25 @@ class ChatController(args: Bundle) :
                 object : BaseBitmapDataSubscriber() {
                     override fun onNewResultImpl(bitmap: Bitmap?) {
                         if (actionBar != null && bitmap != null && resources != null) {
-                            val roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(resources!!, bitmap)
-                            roundedBitmapDrawable.isCircular = true
-                            roundedBitmapDrawable.setAntiAlias(true)
-                            actionBar?.setIcon(roundedBitmapDrawable)
+
+                            val avatarSize = (actionBar?.height!! / TOOLBAR_AVATAR_RATIO).roundToInt()
+                            if (avatarSize > 0) {
+                                val bitmapResized = Bitmap.createScaledBitmap(bitmap, avatarSize, avatarSize, false)
+
+                                val roundedBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(resources!!, bitmapResized)
+                                roundedBitmapDrawable.isCircular = true
+                                roundedBitmapDrawable.setAntiAlias(true)
+                                actionBar?.setIcon(roundedBitmapDrawable)
+                            } else {
+                                Log.d(TAG, "loadAvatarForStatusBar avatarSize <= 0")
+                            }
                         }
                     }
 
-                    override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {}
+                    override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+                        // unused atm
+                    }
                 },
                 UiThreadImmediateExecutorService.getInstance()
             )
@@ -436,6 +451,7 @@ class ChatController(args: Bundle) :
         .ROOM_TYPE_ONE_TO_ONE_CALL
 
     override fun onViewBound(view: View) {
+        Log.d(TAG, "onViewBound: " + System.identityHashCode(this).toString())
         actionBar?.show()
         var adapterWasNull = false
 
@@ -562,7 +578,7 @@ class ChatController(args: Bundle) :
                 object : MessageSwipeActions {
                     override fun showReplyUI(position: Int) {
                         val chatMessage = adapter?.items?.get(position)?.item as ChatMessage?
-                        replyToMessage(chatMessage, chatMessage?.jsonMessageId)
+                        replyToMessage(chatMessage)
                     }
                 }
             )
@@ -620,6 +636,7 @@ class ChatController(args: Bundle) :
 
         binding.messageInputView.inputEditText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // unused atm
             }
 
             @Suppress("Detekt.TooGenericExceptionCaught")
@@ -664,8 +681,15 @@ class ChatController(args: Bundle) :
             }
 
             override fun afterTextChanged(s: Editable) {
+                // unused atm
             }
         })
+
+        // Image keyboard support
+        // See: https://developer.android.com/guide/topics/text/image-keyboard
+        (binding.messageInputView.inputEditText as ImageEmojiEditText).onCommitContentListener = {
+            uploadFiles(mutableListOf(it.toString()), false)
+        }
 
         showMicrophoneButton(true)
 
@@ -1018,7 +1042,7 @@ class ChatController(args: Bundle) :
         binding.messageInputView.audioRecordDuration.start()
 
         val animation: Animation = AlphaAnimation(1.0f, 0.0f)
-        animation.duration = 750
+        animation.duration = ANIMATION_DURATION
         animation.interpolator = LinearInterpolator()
         animation.repeatCount = Animation.INFINITE
         animation.repeatMode = Animation.REVERSE
@@ -1254,7 +1278,9 @@ class ChatController(args: Bundle) :
                             UploadAndShareFilesWorker.requestStoragePermission(this)
                         }
                     }
-                    .setNegativeButton(R.string.nc_no) {}
+                    .setNegativeButton(R.string.nc_no) {
+                        // unused atm
+                    }
                     .show()
             } catch (e: IllegalStateException) {
                 Toast.makeText(context, context?.resources?.getString(R.string.nc_upload_failed), Toast.LENGTH_LONG)
@@ -1467,7 +1493,7 @@ class ChatController(args: Bundle) :
 
     private fun setupMentionAutocomplete() {
         if (isAlive()) {
-            val elevation = 6f
+            val elevation = MENTION_AUTO_COMPLETE_ELEVATION
             resources?.let {
                 val backgroundDrawable = ColorDrawable(it.getColor(R.color.bg_default))
                 val presenter = MentionAutocompletePresenter(activity, roomToken)
@@ -1490,9 +1516,19 @@ class ChatController(args: Bundle) :
         }
     }
 
+    private fun validSessionId(): Boolean {
+        return currentConversation != null &&
+            !TextUtils.isEmpty(currentConversation?.sessionId) &&
+            currentConversation?.sessionId != "0"
+    }
+
     override fun onAttach(view: View) {
         super.onAttach(view)
-        Log.d(TAG, "onAttach")
+        Log.d(
+            TAG,
+            "onAttach: Controller: " + System.identityHashCode(this).toString() +
+                " Activity: " + System.identityHashCode(activity).toString()
+        )
         eventBus?.register(this)
 
         if (conversationUser?.userId != "?" &&
@@ -1533,19 +1569,12 @@ class ChatController(args: Bundle) :
             cancelReply()
         }
 
-        if (activity != null) {
-            KeyboardUtils(activity, getView(), false)
-        }
-
         cancelNotificationsForCurrentConversation()
 
+        Log.d(TAG, "onAttach inConversation: " + inConversation.toString())
         if (inConversation) {
-            if (wasDetached) {
-                currentConversation?.sessionId = "0"
-                wasDetached = false
-                Log.d(TAG, "execute joinRoomWithPassword in onAttach")
-                joinRoomWithPassword()
-            }
+            Log.d(TAG, "execute joinRoomWithPassword in onAttach")
+            joinRoomWithPassword()
         }
     }
 
@@ -1568,27 +1597,37 @@ class ChatController(args: Bundle) :
 
     override fun onDetach(view: View) {
         super.onDetach(view)
-        Log.d(TAG, "onDetach")
+        Log.d(
+            TAG,
+            "onDetach: Controller: " + System.identityHashCode(this).toString() +
+                " Activity: " + System.identityHashCode(activity).toString()
+        )
+
         eventBus?.unregister(this)
 
         if (activity != null) {
             activity?.findViewById<View>(R.id.toolbar)?.setOnClickListener(null)
         }
 
-        if (conversationUser != null &&
-            activity != null &&
-            !activity?.isChangingConfigurations!! &&
-            !ApplicationWideCurrentRoomHolder.getInstance().isInCall &&
-            !ApplicationWideCurrentRoomHolder.getInstance().isDialing
-        ) {
+        if (conversationUser != null && isActivityNotChangingConfigurations() && isNotInCall()) {
             ApplicationWideCurrentRoomHolder.getInstance().clear()
-            wasDetached = true
-            leaveRoom()
+            if (inConversation && validSessionId()) {
+                leaveRoom()
+            }
         }
 
         if (mentionAutocomplete != null && mentionAutocomplete!!.isPopupShowing) {
             mentionAutocomplete?.dismissPopup()
         }
+    }
+
+    private fun isActivityNotChangingConfigurations(): Boolean {
+        return activity != null && !activity?.isChangingConfigurations!!
+    }
+
+    private fun isNotInCall(): Boolean {
+        return !ApplicationWideCurrentRoomHolder.getInstance().isInCall &&
+            !ApplicationWideCurrentRoomHolder.getInstance().isDialing
     }
 
     override val title: String
@@ -1629,17 +1668,21 @@ class ChatController(args: Bundle) :
     }
 
     private fun joinRoomWithPassword() {
+        Log.d(
+            TAG,
+            "joinRoomWithPassword start: " + (currentConversation == null).toString() +
+                "  sessionId: " + currentConversation?.sessionId
+        )
 
-        if (currentConversation == null ||
-            TextUtils.isEmpty(currentConversation?.sessionId) ||
-            currentConversation?.sessionId == "0"
-        ) {
+        if (! validSessionId()) {
             var apiVersion = 1
             // FIXME Fix API checking with guests?
             if (conversationUser != null) {
                 apiVersion = ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
             }
 
+            val startNanoTime = System.nanoTime()
+            Log.d(TAG, "joinRoomWithPassword - joinRoom - calling: " + startNanoTime)
             ncApi?.joinRoom(
                 credentials,
                 ApiUtils.getUrlForParticipantsActive(apiVersion, conversationUser?.baseUrl, roomToken),
@@ -1647,7 +1690,7 @@ class ChatController(args: Bundle) :
             )
                 ?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
-                ?.retry(3)
+                ?.retry(RETRIES)
                 ?.subscribe(object : Observer<RoomOverall> {
                     override fun onSubscribe(d: Disposable) {
                         disposableList.add(d)
@@ -1655,8 +1698,10 @@ class ChatController(args: Bundle) :
 
                     @Suppress("Detekt.TooGenericExceptionCaught")
                     override fun onNext(roomOverall: RoomOverall) {
+                        Log.d(TAG, "joinRoomWithPassword - joinRoom - got response: " + startNanoTime)
                         inConversation = true
                         currentConversation?.sessionId = roomOverall.ocs.data.sessionId
+                        Log.d(TAG, "joinRoomWithPassword - sessionId: " + currentConversation?.sessionId)
 
                         ApplicationWideCurrentRoomHolder.getInstance().session =
                             currentConversation?.sessionId
@@ -1690,9 +1735,11 @@ class ChatController(args: Bundle) :
                     }
 
                     override fun onError(e: Throwable) {
+                        Log.e(TAG, "joinRoomWithPassword - joinRoom - ERROR", e)
                     }
 
                     override fun onComplete() {
+                        // unused atm
                     }
                 })
         } else {
@@ -1720,6 +1767,8 @@ class ChatController(args: Bundle) :
             apiVersion = ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
         }
 
+        val startNanoTime = System.nanoTime()
+        Log.d(TAG, "leaveRoom - leaveRoom - calling: " + startNanoTime)
         ncApi?.leaveRoom(
             credentials,
             ApiUtils.getUrlForParticipantsActive(
@@ -1736,6 +1785,7 @@ class ChatController(args: Bundle) :
                 }
 
                 override fun onNext(genericOverall: GenericOverall) {
+                    Log.d(TAG, "leaveRoom - leaveRoom - got response: " + startNanoTime)
                     checkingLobbyStatus = false
 
                     if (lobbyTimerHandler != null) {
@@ -1751,14 +1801,15 @@ class ChatController(args: Bundle) :
                         Log.e(TAG, "magicWebSocketInstance or currentConversation were null! Failed to leave the room!")
                     }
 
-                    if (!isDestroyed && !isBeingDestroyed && !wasDetached) {
-                        router.popCurrentController()
-                    }
+                    currentConversation?.sessionId = "0"
                 }
 
-                override fun onError(e: Throwable) {}
+                override fun onError(e: Throwable) {
+                    Log.e(TAG, "leaveRoom - leaveRoom - ERROR", e)
+                }
 
                 override fun onComplete() {
+                    Log.d(TAG, "leaveRoom - leaveRoom - completed: " + startNanoTime)
                     dispose()
                 }
             })
@@ -1871,6 +1922,16 @@ class ChatController(args: Bundle) :
             return
         }
 
+        if (pullChatMessagesPending) {
+            // Sometimes pullChatMessages may be called before response to a previous call is received.
+            // In such cases just ignore the second call. Message processing will continue when response to the
+            // earlier call is received.
+            // More details: https://github.com/nextcloud/talk-android/pull/1766
+            Log.d(TAG, "pullChatMessages - pullChatMessagesPending is true, exiting")
+            return
+        }
+        pullChatMessagesPending = true
+
         if (currentConversation != null && currentConversation!!.shouldShowLobby(conversationUser)) {
             // return
         }
@@ -1889,7 +1950,7 @@ class ChatController(args: Bundle) :
         }
 
         val timeout = if (lookingIntoFuture) {
-            30
+            LOOKING_INTO_FUTURE_TIMEOUT
         } else {
             0
         }
@@ -1897,7 +1958,7 @@ class ChatController(args: Bundle) :
         fieldMap["timeout"] = timeout
 
         fieldMap["lookIntoFuture"] = lookIntoFuture
-        fieldMap["limit"] = 100
+        fieldMap["limit"] = MESSAGE_PULL_LIMIT
         fieldMap["setReadMarker"] = setReadMarker
 
         val lastKnown: Int
@@ -1912,89 +1973,94 @@ class ChatController(args: Bundle) :
             fieldMap["lastCommonReadId"] = it
         }
 
-        if (!wasDetached) {
-            var apiVersion = 1
-            // FIXME this is a best guess, guests would need to get the capabilities themselves
-            if (conversationUser != null) {
-                apiVersion = ApiUtils.getChatApiVersion(conversationUser, intArrayOf(1))
-            }
+        var apiVersion = 1
+        // FIXME this is a best guess, guests would need to get the capabilities themselves
+        if (conversationUser != null) {
+            apiVersion = ApiUtils.getChatApiVersion(conversationUser, intArrayOf(1))
+        }
 
-            if (lookIntoFuture > 0) {
-                val finalTimeout = timeout
-                ncApi?.pullChatMessages(
-                    credentials,
-                    ApiUtils.getUrlForChat(apiVersion, conversationUser?.baseUrl, roomToken), fieldMap
-                )
-                    ?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.takeWhile { observable -> inConversation && !wasDetached }
-                    ?.subscribe(object : Observer<Response<*>> {
-                        override fun onSubscribe(d: Disposable) {
-                            disposableList.add(d)
-                        }
+        if (lookIntoFuture > 0) {
+            val finalTimeout = timeout
+            Log.d(TAG, "pullChatMessages - pullChatMessages[lookIntoFuture > 0] - calling")
+            ncApi?.pullChatMessages(
+                credentials,
+                ApiUtils.getUrlForChat(apiVersion, conversationUser?.baseUrl, roomToken), fieldMap
+            )
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe(object : Observer<Response<*>> {
+                    override fun onSubscribe(d: Disposable) {
+                        disposableList.add(d)
+                    }
 
-                        @Suppress("Detekt.TooGenericExceptionCaught")
-                        override fun onNext(response: Response<*>) {
-                            try {
-                                if (response.code() == 304) {
-                                    pullChatMessages(1, setReadMarker, xChatLastCommonRead)
-                                } else if (response.code() == 412) {
-                                    futurePreconditionFailed = true
-                                } else {
-                                    processMessages(response, true, finalTimeout)
-                                }
-                            } catch (npe: NullPointerException) {
-                                // view binding can be null
-                                // since this is called asynchrously and UI might have been destroyed in the meantime
-                                Log.i(TAG, "UI destroyed - view binding already gone")
+                    @Suppress("Detekt.TooGenericExceptionCaught")
+                    override fun onNext(response: Response<*>) {
+                        Log.d(TAG, "pullChatMessages - pullChatMessages[lookIntoFuture > 0] - got response")
+                        pullChatMessagesPending = false
+                        try {
+                            if (response.code() == HTTP_CODE_NOT_MODIFIED) {
+                                Log.d(TAG, "pullChatMessages - quasi recursive call to pullChatMessages")
+                                pullChatMessages(1, setReadMarker, xChatLastCommonRead)
+                            } else if (response.code() == HTTP_CODE_PRECONDITION_FAILED) {
+                                futurePreconditionFailed = true
+                            } else {
+                                processMessages(response, true, finalTimeout)
                             }
+                        } catch (npe: NullPointerException) {
+                            // view binding can be null
+                            // since this is called asynchrously and UI might have been destroyed in the meantime
+                            Log.i(TAG, "UI destroyed - view binding already gone")
                         }
+                    }
 
-                        override fun onError(e: Throwable) {
-                            Log.e(TAG, "failed to pull chat messages", e)
-                        }
+                    override fun onError(e: Throwable) {
+                        Log.e(TAG, "pullChatMessages - pullChatMessages[lookIntoFuture > 0] - ERROR", e)
+                        pullChatMessagesPending = false
+                    }
 
-                        override fun onComplete() {
-                            // unused atm
-                        }
-                    })
-            } else {
-                ncApi?.pullChatMessages(
-                    credentials,
-                    ApiUtils.getUrlForChat(apiVersion, conversationUser?.baseUrl, roomToken), fieldMap
-                )
-                    ?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.takeWhile { observable -> inConversation && !wasDetached }
-                    ?.subscribe(object : Observer<Response<*>> {
-                        override fun onSubscribe(d: Disposable) {
-                            disposableList.add(d)
-                        }
+                    override fun onComplete() {
+                        pullChatMessagesPending = false
+                    }
+                })
+        } else {
+            Log.d(TAG, "pullChatMessages - pullChatMessages[lookIntoFuture <= 0] - calling")
+            ncApi?.pullChatMessages(
+                credentials,
+                ApiUtils.getUrlForChat(apiVersion, conversationUser?.baseUrl, roomToken), fieldMap
+            )
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe(object : Observer<Response<*>> {
+                    override fun onSubscribe(d: Disposable) {
+                        disposableList.add(d)
+                    }
 
-                        @Suppress("Detekt.TooGenericExceptionCaught")
-                        override fun onNext(response: Response<*>) {
-                            try {
-                                if (response.code() == 412) {
-                                    pastPreconditionFailed = true
-                                } else {
-                                    processMessages(response, false, 0)
-                                }
-                            } catch (npe: NullPointerException) {
-                                // view binding can be null
-                                // since this is called asynchrously and UI might have been destroyed in the meantime
-                                Log.i(TAG, "UI destroyed - view binding already gone")
+                    @Suppress("Detekt.TooGenericExceptionCaught")
+                    override fun onNext(response: Response<*>) {
+                        Log.d(TAG, "pullChatMessages - pullChatMessages[lookIntoFuture <= 0] - got response")
+                        pullChatMessagesPending = false
+                        try {
+                            if (response.code() == HTTP_CODE_PRECONDITION_FAILED) {
+                                pastPreconditionFailed = true
+                            } else {
+                                processMessages(response, false, 0)
                             }
+                        } catch (npe: NullPointerException) {
+                            // view binding can be null
+                            // since this is called asynchrously and UI might have been destroyed in the meantime
+                            Log.i(TAG, "UI destroyed - view binding already gone")
                         }
+                    }
 
-                        override fun onError(e: Throwable) {
-                            // unused atm
-                        }
+                    override fun onError(e: Throwable) {
+                        Log.e(TAG, "pullChatMessages - pullChatMessages[lookIntoFuture <= 0] - ERROR", e)
+                        pullChatMessagesPending = false
+                    }
 
-                        override fun onComplete() {
-                            // unused atm
-                        }
-                    })
-            }
+                    override fun onComplete() {
+                        pullChatMessagesPending = false
+                    }
+                })
         }
     }
 
@@ -2041,14 +2107,28 @@ class ChatController(args: Bundle) :
 
             var countGroupedMessages = 0
             if (!isFromTheFuture) {
+                var previousMessageId = NO_PREVIOUS_MESSAGE_ID
+                for (i in chatMessageList.indices.reversed()) {
+                    val chatMessage = chatMessageList[i]
+
+                    if (previousMessageId > NO_PREVIOUS_MESSAGE_ID) {
+                        chatMessage.previousMessageId = previousMessageId
+                    } else if (adapter?.isEmpty != true) {
+                        if (adapter!!.items[0].item is ChatMessage) {
+                            chatMessage.previousMessageId = (adapter!!.items[0].item as ChatMessage).jsonMessageId
+                        } else if (adapter!!.items.size > 1 && adapter!!.items[1].item is ChatMessage) {
+                            chatMessage.previousMessageId = (adapter!!.items[1].item as ChatMessage).jsonMessageId
+                        }
+                    }
+
+                    previousMessageId = chatMessage.jsonMessageId
+                }
 
                 for (i in chatMessageList.indices) {
                     if (chatMessageList.size > i + 1) {
-                        if (TextUtils.isEmpty(chatMessageList[i].systemMessage) &&
-                            TextUtils.isEmpty(chatMessageList[i + 1].systemMessage) &&
+                        if (isSameDayNonSystemMessages(chatMessageList[i], chatMessageList[i + 1]) &&
                             chatMessageList[i + 1].actorId == chatMessageList[i].actorId &&
-                            countGroupedMessages < 4 &&
-                            DateFormatter.isSameDay(chatMessageList[i].createdAt, chatMessageList[i + 1].createdAt)
+                            countGroupedMessages < GROUPED_MESSAGES_THRESHOLD
                         ) {
                             chatMessageList[i].isGrouped = true
                             countGroupedMessages++
@@ -2084,6 +2164,23 @@ class ChatController(args: Bundle) :
                 val isThereANewNotice =
                     shouldAddNewMessagesNotice || adapter?.getMessagePositionByIdInReverse("-1") != -1
 
+                var previousMessageId = NO_PREVIOUS_MESSAGE_ID
+                for (i in chatMessageList.indices.reversed()) {
+                    val chatMessageItem = chatMessageList[i]
+
+                    if (previousMessageId > NO_PREVIOUS_MESSAGE_ID) {
+                        chatMessageItem.previousMessageId = previousMessageId
+                    } else if (adapter?.isEmpty != true) {
+                        if (adapter!!.items[0].item is ChatMessage) {
+                            chatMessageItem.previousMessageId = (adapter!!.items[0].item as ChatMessage).jsonMessageId
+                        } else if (adapter!!.items.size > 1 && adapter!!.items[1].item is ChatMessage) {
+                            chatMessageItem.previousMessageId = (adapter!!.items[1].item as ChatMessage).jsonMessageId
+                        }
+                    }
+
+                    previousMessageId = chatMessageItem.jsonMessageId
+                }
+
                 for (i in chatMessageList.indices) {
                     chatMessage = chatMessageList[i]
 
@@ -2112,7 +2209,8 @@ class ChatController(args: Bundle) :
                             adapter!!.isPreviousSameAuthor(
                                 chatMessage.actorId,
                                 -1
-                            ) && adapter!!.getSameAuthorLastMessagesCount(chatMessage.actorId) % 5 > 0
+                            ) && adapter!!.getSameAuthorLastMessagesCount(chatMessage.actorId) %
+                                GROUPED_MESSAGES_SAME_AUTHOR_THRESHOLD > 0
                             )
                         chatMessage.isOneToOneConversation =
                             (currentConversation?.type == Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL)
@@ -2147,7 +2245,7 @@ class ChatController(args: Bundle) :
             if (inConversation) {
                 pullChatMessages(1, 1, xChatLastCommonRead)
             }
-        } else if (response.code() == 304 && !isFromTheFuture) {
+        } else if (response.code() == HTTP_CODE_NOT_MODIFIED && !isFromTheFuture) {
             if (isFirstMessagesProcessing) {
                 cancelNotificationsForCurrentConversation()
 
@@ -2161,6 +2259,12 @@ class ChatController(args: Bundle) :
                 pullChatMessages(1)
             }
         }
+    }
+
+    private fun isSameDayNonSystemMessages(messageLeft: ChatMessage, messageRight: ChatMessage): Boolean {
+        return TextUtils.isEmpty(messageLeft.systemMessage) &&
+            TextUtils.isEmpty(messageRight.systemMessage) &&
+            DateFormatter.isSameDay(messageLeft.createdAt, messageRight.createdAt)
     }
 
     override fun onLoadMore(page: Int, totalItemsCount: Int) {
@@ -2257,10 +2361,14 @@ class ChatController(args: Bundle) :
     }
 
     private fun startACall(isVoiceOnlyCall: Boolean) {
-        ApplicationWideCurrentRoomHolder.getInstance().isDialing = true
-        val callIntent = getIntentForCall(isVoiceOnlyCall)
-        if (callIntent != null) {
-            startActivity(callIntent)
+        if (currentConversation?.canStartCall == false && currentConversation?.hasCall == false) {
+            Toast.makeText(context, R.string.startCallForbidden, Toast.LENGTH_LONG).show()
+        } else {
+            ApplicationWideCurrentRoomHolder.getInstance().isDialing = true
+            val callIntent = getIntentForCall(isVoiceOnlyCall)
+            if (callIntent != null) {
+                startActivity(callIntent)
+            }
         }
     }
 
@@ -2291,188 +2399,214 @@ class ChatController(args: Bundle) :
     }
 
     override fun onMessageViewLongClick(view: View?, message: IMessage?) {
-        PopupMenu(
-            ContextThemeWrapper(view?.context, R.style.appActionBarPopupMenu),
-            view,
-            if (
-                message?.user?.id == currentConversation?.actorType + "/" + currentConversation?.actorId
-            ) Gravity.END else Gravity.START
-        ).apply {
-            setOnMenuItemClickListener { item ->
-                when (item?.itemId) {
-
-                    R.id.action_copy_message -> {
-                        val clipboardManager =
-                            activity?.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                        val clipData = ClipData.newPlainText(
-                            resources?.getString(R.string.nc_app_product_name),
-                            message?.text
-                        )
-                        clipboardManager.setPrimaryClip(clipData)
-                        true
-                    }
-                    R.id.action_forward_message -> {
-                        val bundle = Bundle()
-                        bundle.putBoolean(BundleKeys.KEY_FORWARD_MSG_FLAG, true)
-                        bundle.putString(BundleKeys.KEY_FORWARD_MSG_TEXT, message?.text)
-                        bundle.putString(BundleKeys.KEY_FORWARD_HIDE_SOURCE_ROOM, roomId)
-                        router.pushController(
-                            RouterTransaction.with(ConversationsListController(bundle))
-                                .pushChangeHandler(HorizontalChangeHandler())
-                                .popChangeHandler(HorizontalChangeHandler())
-                        )
-                        true
-                    }
-                    R.id.action_reply_to_message -> {
-                        val chatMessage = message as ChatMessage?
-                        replyToMessage(chatMessage, message?.jsonMessageId)
-                        true
-                    }
-                    R.id.action_reply_privately -> {
-                        val apiVersion =
-                            ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
-                        val retrofitBucket = ApiUtils.getRetrofitBucketForCreateRoom(
-                            apiVersion,
-                            conversationUser?.baseUrl,
-                            "1",
-                            null,
-                            message?.user?.id?.substring(6),
-                            null
-                        )
-                        ncApi!!.createRoom(
-                            credentials,
-                            retrofitBucket.getUrl(), retrofitBucket.getQueryMap()
-                        )
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(object : Observer<RoomOverall> {
-                                override fun onSubscribe(d: Disposable) {
-                                    // unused atm
-                                }
-
-                                override fun onNext(roomOverall: RoomOverall) {
-                                    val bundle = Bundle()
-                                    bundle.putParcelable(KEY_USER_ENTITY, conversationUser)
-                                    bundle.putString(KEY_ROOM_TOKEN, roomOverall.getOcs().getData().getToken())
-                                    bundle.putString(KEY_ROOM_ID, roomOverall.getOcs().getData().getRoomId())
-
-                                    // FIXME once APIv2+ is used only, the createRoom already returns all the data
-                                    ncApi!!.getRoom(
-                                        credentials,
-                                        ApiUtils.getUrlForRoom(
-                                            apiVersion, conversationUser?.baseUrl,
-                                            roomOverall.getOcs().getData().getToken()
-                                        )
-                                    )
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(object : Observer<RoomOverall> {
-                                            override fun onSubscribe(d: Disposable) {
-                                                // unused atm
-                                            }
-
-                                            override fun onNext(roomOverall: RoomOverall) {
-                                                bundle.putParcelable(
-                                                    KEY_ACTIVE_CONVERSATION,
-                                                    Parcels.wrap(roomOverall.getOcs().getData())
-                                                )
-                                                remapChatController(
-                                                    router, conversationUser!!.id,
-                                                    roomOverall.getOcs().getData().getToken(), bundle, true
-                                                )
-                                            }
-
-                                            override fun onError(e: Throwable) {
-                                                Log.e(TAG, e.message, e)
-                                            }
-
-                                            override fun onComplete() {
-                                                // unused atm
-                                            }
-                                        })
-                                }
-
-                                override fun onError(e: Throwable) {
-                                    Log.e(TAG, e.message, e)
-                                }
-
-                                override fun onComplete() {
-                                    // unused atm
-                                }
-                            })
-                        true
-                    }
-                    R.id.action_delete_message -> {
-                        var apiVersion = 1
-                        // FIXME Fix API checking with guests?
-                        if (conversationUser != null) {
-                            apiVersion = ApiUtils.getChatApiVersion(conversationUser, intArrayOf(1))
-                        }
-
-                        ncApi?.deleteChatMessage(
-                            credentials,
-                            ApiUtils.getUrlForChatMessage(
-                                apiVersion,
-                                conversationUser?.baseUrl,
-                                roomToken,
-                                message?.id
-                            )
-                        )?.subscribeOn(Schedulers.io())
-                            ?.observeOn(AndroidSchedulers.mainThread())
-                            ?.subscribe(object : Observer<ChatOverallSingleMessage> {
-                                override fun onSubscribe(d: Disposable) {
-                                    // unused atm
-                                }
-
-                                override fun onNext(t: ChatOverallSingleMessage) {
-                                    if (t.ocs.meta.statusCode == HttpURLConnection.HTTP_ACCEPTED) {
-                                        Toast.makeText(
-                                            context, R.string.nc_delete_message_leaked_to_matterbridge,
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }
-
-                                override fun onError(e: Throwable) {
-                                    Log.e(
-                                        TAG,
-                                        "Something went wrong when trying to delete message with id " +
-                                            message?.id,
-                                        e
-                                    )
-                                    Toast.makeText(context, R.string.nc_common_error_sorry, Toast.LENGTH_LONG).show()
-                                }
-
-                                override fun onComplete() {
-                                    // unused atm
-                                }
-                            })
-                        true
-                    }
-                    else -> false
-                }
-            }
-            inflate(R.menu.chat_message_menu)
-            menu.findItem(R.id.action_copy_message).isVisible = !(message as ChatMessage).isDeleted
-            menu.findItem(R.id.action_reply_to_message).isVisible = message.replyable
-            menu.findItem(R.id.action_reply_privately).isVisible = message.replyable &&
-                conversationUser?.userId?.isNotEmpty() == true && conversationUser.userId != "?" &&
-                message.user.id.startsWith("users/") &&
-                message.user.id.substring(6) != currentConversation?.actorId &&
-                currentConversation?.type != Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL
-            menu.findItem(R.id.action_delete_message).isVisible = isShowMessageDeletionButton(message)
-            menu.findItem(R.id.action_forward_message).isVisible =
-                ChatMessage.MessageType.REGULAR_TEXT_MESSAGE == message.getMessageType()
-            if (menu.hasVisibleItems()) {
-                if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    setForceShowIcon(true)
-                }
-                show()
+        if (hasVisibleItems(message as ChatMessage)) {
+            activity?.let {
+                MessageActionsDialog(
+                    activity!!,
+                    this,
+                    message,
+                    conversationUser?.userId,
+                    currentConversation,
+                    isShowMessageDeletionButton(message)
+                ).show()
             }
         }
     }
 
-    private fun replyToMessage(chatMessage: ChatMessage?, jsonMessageId: Int?) {
+    fun deleteMessage(message: IMessage?) {
+        var apiVersion = 1
+        // FIXME Fix API checking with guests?
+        if (conversationUser != null) {
+            apiVersion = ApiUtils.getChatApiVersion(conversationUser, intArrayOf(1))
+        }
+
+        ncApi?.deleteChatMessage(
+            credentials,
+            ApiUtils.getUrlForChatMessage(
+                apiVersion,
+                conversationUser?.baseUrl,
+                roomToken,
+                message?.id
+            )
+        )?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(object : Observer<ChatOverallSingleMessage> {
+                override fun onSubscribe(d: Disposable) {
+                    // unused atm
+                }
+
+                override fun onNext(t: ChatOverallSingleMessage) {
+                    if (t.ocs.meta.statusCode == HttpURLConnection.HTTP_ACCEPTED) {
+                        Toast.makeText(
+                            context, R.string.nc_delete_message_leaked_to_matterbridge,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.e(
+                        TAG,
+                        "Something went wrong when trying to delete message with id " +
+                            message?.id,
+                        e
+                    )
+                    Toast.makeText(context, R.string.nc_common_error_sorry, Toast.LENGTH_LONG).show()
+                }
+
+                override fun onComplete() {
+                    // unused atm
+                }
+            })
+    }
+
+    fun replyPrivately(message: IMessage?) {
+        val apiVersion =
+            ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
+        val retrofitBucket = ApiUtils.getRetrofitBucketForCreateRoom(
+            apiVersion,
+            conversationUser?.baseUrl,
+            "1",
+            null,
+            message?.user?.id?.substring(INVITE_LENGTH),
+            null
+        )
+        ncApi!!.createRoom(
+            credentials,
+            retrofitBucket.getUrl(), retrofitBucket.getQueryMap()
+        )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<RoomOverall> {
+                override fun onSubscribe(d: Disposable) {
+                    // unused atm
+                }
+
+                override fun onNext(roomOverall: RoomOverall) {
+                    val bundle = Bundle()
+                    bundle.putParcelable(KEY_USER_ENTITY, conversationUser)
+                    bundle.putString(KEY_ROOM_TOKEN, roomOverall.getOcs().getData().getToken())
+                    bundle.putString(KEY_ROOM_ID, roomOverall.getOcs().getData().getRoomId())
+
+                    // FIXME once APIv2+ is used only, the createRoom already returns all the data
+                    ncApi!!.getRoom(
+                        credentials,
+                        ApiUtils.getUrlForRoom(
+                            apiVersion, conversationUser?.baseUrl,
+                            roomOverall.getOcs().getData().getToken()
+                        )
+                    )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object : Observer<RoomOverall> {
+                            override fun onSubscribe(d: Disposable) {
+                                // unused atm
+                            }
+
+                            override fun onNext(roomOverall: RoomOverall) {
+                                bundle.putParcelable(
+                                    KEY_ACTIVE_CONVERSATION,
+                                    Parcels.wrap(roomOverall.getOcs().getData())
+                                )
+                                remapChatController(
+                                    router, conversationUser!!.id,
+                                    roomOverall.getOcs().getData().getToken(), bundle, true
+                                )
+                            }
+
+                            override fun onError(e: Throwable) {
+                                Log.e(TAG, e.message, e)
+                            }
+
+                            override fun onComplete() {
+                                // unused atm
+                            }
+                        })
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.e(TAG, e.message, e)
+                }
+
+                override fun onComplete() {
+                    // unused atm
+                }
+            })
+    }
+
+    fun forwardMessage(message: IMessage?) {
+        val bundle = Bundle()
+        bundle.putBoolean(BundleKeys.KEY_FORWARD_MSG_FLAG, true)
+        bundle.putString(BundleKeys.KEY_FORWARD_MSG_TEXT, message?.text)
+        bundle.putString(BundleKeys.KEY_FORWARD_HIDE_SOURCE_ROOM, roomId)
+        router.pushController(
+            RouterTransaction.with(ConversationsListController(bundle))
+                .pushChangeHandler(HorizontalChangeHandler())
+                .popChangeHandler(HorizontalChangeHandler())
+        )
+    }
+
+    fun markAsUnread(message: IMessage?) {
+        val chatMessage = message as ChatMessage?
+        if (chatMessage!!.previousMessageId > NO_PREVIOUS_MESSAGE_ID) {
+            ncApi!!.setChatReadMarker(
+                credentials,
+                ApiUtils.getUrlForSetChatReadMarker(
+                    ApiUtils.getChatApiVersion(conversationUser, intArrayOf(ApiUtils.APIv1)),
+                    conversationUser?.baseUrl,
+                    roomToken
+                ),
+                chatMessage.previousMessageId
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<GenericOverall> {
+                    override fun onSubscribe(d: Disposable) {
+                        // unused atm
+                    }
+
+                    override fun onNext(t: GenericOverall) {
+                        // unused atm
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Log.e(TAG, e.message, e)
+                    }
+
+                    override fun onComplete() {
+                        // unused atm
+                    }
+                })
+        }
+    }
+
+    fun copyMessage(message: IMessage?) {
+        val clipboardManager =
+            activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText(
+            resources?.getString(R.string.nc_app_product_name),
+            message?.text
+        )
+        clipboardManager.setPrimaryClip(clipData)
+    }
+
+    private fun hasVisibleItems(message: ChatMessage): Boolean {
+        return !message.isDeleted || // copy message
+            message.replyable || // reply to
+            message.replyable && // reply privately
+            conversationUser?.userId?.isNotEmpty() == true && conversationUser?.userId != "?" &&
+            message.user.id.startsWith("users/") &&
+            message.user.id.substring(ACTOR_LENGTH) != currentConversation?.actorId &&
+            currentConversation?.type != Conversation.ConversationType.ROOM_TYPE_ONE_TO_ONE_CALL ||
+            isShowMessageDeletionButton(message) || // delete
+            ChatMessage.MessageType.REGULAR_TEXT_MESSAGE == message.getMessageType() || // forward
+            message.previousMessageId > NO_PREVIOUS_MESSAGE_ID && // mark as unread
+            ChatMessage.MessageType.SYSTEM_MESSAGE != message.getMessageType() &&
+            BuildConfig.DEBUG
+    }
+
+    fun replyToMessage(message: IMessage?) {
+        val chatMessage = message as ChatMessage?
         chatMessage?.let {
             binding.messageInputView.findViewById<ImageButton>(R.id.attachmentButton)?.visibility =
                 View.GONE
@@ -2498,7 +2632,7 @@ class ChatController(args: Bundle) :
 
                     val px = TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
-                        96f,
+                        QUOTED_MESSAGE_IMAGE_MAX_HEIGHT,
                         resources?.displayMetrics
                     )
 
@@ -2520,7 +2654,7 @@ class ChatController(args: Bundle) :
             val quotedChatMessageView = binding
                 .messageInputView
                 .findViewById<RelativeLayout>(R.id.quotedChatMessageView)
-            quotedChatMessageView?.tag = jsonMessageId
+            quotedChatMessageView?.tag = message?.jsonMessageId
             quotedChatMessageView?.visibility = View.VISIBLE
         }
     }
@@ -2715,5 +2849,19 @@ class ChatController(args: Bundle) :
         private const val SEMI_TRANSPARENT_INT: Int = 99
         private const val VOICE_MESSAGE_SEEKBAR_BASE: Int = 1000
         private const val SECOND: Long = 1000
+        private const val NO_PREVIOUS_MESSAGE_ID: Int = -1
+        private const val GROUPED_MESSAGES_THRESHOLD = 4
+        private const val GROUPED_MESSAGES_SAME_AUTHOR_THRESHOLD = 5
+        private const val TOOLBAR_AVATAR_RATIO = 1.5
+        private const val HTTP_CODE_NOT_MODIFIED = 304
+        private const val HTTP_CODE_PRECONDITION_FAILED = 412
+        private const val QUOTED_MESSAGE_IMAGE_MAX_HEIGHT = 96f
+        private const val MENTION_AUTO_COMPLETE_ELEVATION = 6f
+        private const val MESSAGE_PULL_LIMIT = 100
+        private const val INVITE_LENGTH = 6
+        private const val ACTOR_LENGTH = 6
+        private const val ANIMATION_DURATION: Long = 750
+        private const val RETRIES: Long = 3
+        private const val LOOKING_INTO_FUTURE_TIMEOUT = 30
     }
 }

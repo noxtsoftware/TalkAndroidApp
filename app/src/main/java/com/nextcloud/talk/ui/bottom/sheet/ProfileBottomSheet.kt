@@ -20,6 +20,7 @@
  */
 package com.nextcloud.talk.ui.bottom.sheet
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -61,12 +62,17 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
             ApiUtils.getCredentials(userEntity.username, userEntity.token),
             ApiUtils.getUrlForHoverCard(userEntity.baseUrl, user)
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : io.reactivex.Observer<HoverCardOverall> {
+            .subscribe(object : Observer<HoverCardOverall> {
                 override fun onSubscribe(d: Disposable) {
+                    // unused atm
                 }
 
                 override fun onNext(hoverCardOverall: HoverCardOverall) {
-                    bottomSheet(hoverCardOverall.ocs.data.actions, hoverCardOverall.ocs.data.displayName, user, context)
+                    bottomSheet(
+                        hoverCardOverall.ocs!!.data!!.actions!!, hoverCardOverall.ocs!!.data!!.displayName!!,
+                        user,
+                        context
+                    )
                 }
 
                 override fun onError(e: Throwable) {
@@ -74,10 +80,12 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
                 }
 
                 override fun onComplete() {
+                    // unused atm
                 }
             })
     }
 
+    @SuppressLint("CheckResult")
     private fun bottomSheet(actions: List<HoverCardAction>, displayName: String, userId: String, context: Context) {
 
         val filteredActions = actions.filter { allowedAppIds.contains(it.appId) }
@@ -92,8 +100,8 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
                 val action = filteredActions[index]
 
                 when (AllowedAppIds.createFor(action)) {
-                    PROFILE -> openProfile(action.hyperlink, context)
-                    EMAIL -> composeEmail(action.title, context)
+                    PROFILE -> openProfile(action.hyperlink!!, context)
+                    EMAIL -> composeEmail(action.title!!, context)
                     SPREED -> talkTo(userId)
                 }
             }
@@ -110,7 +118,7 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
 
         return BasicListItemWithImage(
             drawable,
-            action.title
+            action.title!!
         )
     }
 
@@ -127,7 +135,7 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
             null
         )
         val credentials = ApiUtils.getCredentials(userEntity.username, userEntity.token)
-        ncApi!!.createRoom(
+        ncApi.createRoom(
             credentials,
             retrofitBucket.getUrl(), retrofitBucket.getQueryMap()
         )
@@ -145,7 +153,7 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
                     bundle.putString(BundleKeys.KEY_ROOM_ID, roomOverall.getOcs().getData().getRoomId())
 
                     // FIXME once APIv2+ is used only, the createRoom already returns all the data
-                    ncApi!!.getRoom(
+                    ncApi.getRoom(
                         credentials,
                         ApiUtils.getUrlForRoom(
                             apiVersion, userEntity.baseUrl,
@@ -211,7 +219,7 @@ class ProfileBottomSheet(val ncApi: NcApi, val userEntity: UserEntity, val route
         EMAIL("email");
 
         companion object {
-            fun createFor(action: HoverCardAction): AllowedAppIds = valueOf(action.appId.uppercase())
+            fun createFor(action: HoverCardAction): AllowedAppIds = valueOf(action.appId!!.uppercase())
         }
     }
 }

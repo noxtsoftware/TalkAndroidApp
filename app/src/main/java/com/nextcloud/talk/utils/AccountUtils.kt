@@ -38,6 +38,7 @@ import java.util.Arrays
 object AccountUtils {
 
     private const val TAG = "AccountUtils"
+    private const val MIN_SUPPORTED_FILES_APP_VERSION = 30060151
 
     fun findAccounts(userEntitiesList: List<UserEntity>): List<Account> {
         val context = NextcloudTalkApplication.sharedApplication!!.applicationContext
@@ -55,10 +56,7 @@ object AccountUtils {
                 internalUserEntity = userEntitiesList[i]
                 importAccount = getInformationFromAccount(account)
                 if (importAccount.token != null) {
-                    if (
-                        importAccount.baseUrl.startsWith("http://") ||
-                        importAccount.baseUrl.startsWith("https://")
-                    ) {
+                    if (UriUtils.hasHttpProtocollPrefixed(importAccount.baseUrl)) {
                         if (
                             internalUserEntity.username == importAccount.username &&
                             internalUserEntity.baseUrl == importAccount.baseUrl
@@ -113,7 +111,7 @@ object AccountUtils {
         val pm = context.packageManager
         try {
             val packageInfo = pm.getPackageInfo(context.getString(R.string.nc_import_accounts_from), 0)
-            if (packageInfo.versionCode >= 30060151) {
+            if (packageInfo.versionCode >= MIN_SUPPORTED_FILES_APP_VERSION) {
                 val ownSignatures = pm.getPackageInfo(context.packageName, PackageManager.GET_SIGNATURES).signatures
                 val filesAppSignatures = pm.getPackageInfo(
                     context.getString(R.string.nc_import_accounts_from),
@@ -139,6 +137,7 @@ object AccountUtils {
         return false
     }
 
+    @Suppress("Detekt.TooGenericExceptionCaught")
     fun getInformationFromAccount(account: Account): ImportAccount {
         val lastAtPos = account.name.lastIndexOf("@")
         var urlString = account.name.substring(lastAtPos + 1)

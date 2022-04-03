@@ -2,7 +2,11 @@
  * Nextcloud Talk application
  *
  * @author Mario Danic
- * Copyright (C) 2017-2018 Mario Danic <mario@lovelyhq.com>
+ * @author Marcel Hibbe
+ * @author Andy Scherzinger
+ * Copyright (C) 2021 Andy Scherzinger <info@andy-scherzinger.de>
+ * Copyright (C) 2022 Marcel Hibbe <dev@mhibbe.de>
+ * Copyright (C) 2017 Mario Danic <mario@lovelyhq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +33,17 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.nextcloud.talk.R;
 import com.nextcloud.talk.application.NextcloudTalkApplication;
 import com.nextcloud.talk.models.database.UserEntity;
+import com.nextcloud.talk.models.json.mention.Mention;
+import com.nextcloud.talk.models.json.status.StatusType;
+import com.nextcloud.talk.ui.StatusDrawable;
 import com.nextcloud.talk.utils.ApiUtils;
 import com.nextcloud.talk.utils.DisplayUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -42,26 +51,33 @@ import eu.davidea.flexibleadapter.items.IFilterable;
 import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.flexibleadapter.utils.FlexibleUtils;
 
-public class MentionAutocompleteItem extends AbstractFlexibleItem<UserItem.UserItemViewHolder>
-        implements IFilterable<String> {
+public class MentionAutocompleteItem extends AbstractFlexibleItem<ParticipantItem.ParticipantItemViewHolder>
+    implements IFilterable<String> {
 
+    private static final float STATUS_SIZE_IN_DP = 9f;
+    private static final String NO_ICON = "";
     public static final String SOURCE_CALLS = "calls";
     public static final String SOURCE_GUESTS = "guests";
-    private String objectId;
-    private String displayName;
+
     private String source;
-    private UserEntity currentUser;
-    private Context context;
+    private final String objectId;
+    private final String displayName;
+    private final String status;
+    private final String statusIcon;
+    private final String statusMessage;
+    private final UserEntity currentUser;
+    private final Context context;
 
     public MentionAutocompleteItem(
-            String objectId,
-            String displayName,
-            String source,
-            UserEntity currentUser,
-            Context activityContext) {
-        this.objectId = objectId;
-        this.displayName = displayName;
-        this.source = source;
+        Mention mention,
+        UserEntity currentUser,
+        Context activityContext) {
+        this.objectId = mention.getId();
+        this.displayName = mention.getLabel();
+        this.source = mention.getSource();
+        this.status = mention.getStatus();
+        this.statusIcon = mention.getStatusIcon();
+        this.statusMessage = mention.getStatusMessage();
         this.currentUser = currentUser;
         this.context = activityContext;
     }
@@ -94,82 +110,135 @@ public class MentionAutocompleteItem extends AbstractFlexibleItem<UserItem.UserI
 
     @Override
     public int getLayoutRes() {
-        return R.layout.rv_item_mention;
+        return R.layout.rv_item_conversation_info_participant;
     }
 
     @Override
-    public UserItem.UserItemViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-        return new UserItem.UserItemViewHolder(view, adapter);
+    public ParticipantItem.ParticipantItemViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
+        return new ParticipantItem.ParticipantItemViewHolder(view, adapter);
     }
-
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void bindViewHolder(
-            FlexibleAdapter<IFlexible> adapter,
-            UserItem.UserItemViewHolder holder,
-            int position,
-            List<Object> payloads) {
+    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter,
+                               ParticipantItem.ParticipantItemViewHolder holder,
+                               int position,
+                               List<Object> payloads) {
 
-        holder.contactDisplayName.setTextColor(ResourcesCompat.getColor(context.getResources(),
-                                                                        R.color.conversation_item_header,
-                                                                        null));
+        holder.binding.nameText.setTextColor(
+            ResourcesCompat.getColor(context.getResources(),
+                                     R.color.conversation_item_header,
+                                     null));
         if (adapter.hasFilter()) {
-            FlexibleUtils.highlightText(holder.contactDisplayName,
+            FlexibleUtils.highlightText(holder.binding.nameText,
                                         displayName,
                                         String.valueOf(adapter.getFilter(String.class)),
-                                        NextcloudTalkApplication.Companion.getSharedApplication()
-                                                .getResources().getColor(R.color.colorPrimary));
-            if (holder.contactMentionId != null) {
-                FlexibleUtils.highlightText(holder.contactMentionId,
+                                        Objects.requireNonNull(NextcloudTalkApplication
+                                                                   .Companion
+                                                                   .getSharedApplication())
+                                            .getResources().getColor(R.color.colorPrimary));
+            if (holder.binding.secondaryText != null) {
+                FlexibleUtils.highlightText(holder.binding.secondaryText,
                                             "@" + objectId,
                                             String.valueOf(adapter.getFilter(String.class)),
                                             NextcloudTalkApplication.Companion.getSharedApplication()
-                                                    .getResources().getColor(R.color.colorPrimary));
+                                                .getResources().getColor(R.color.colorPrimary));
             }
         } else {
-            holder.contactDisplayName.setText(displayName);
-            if (holder.contactMentionId != null) {
-                holder.contactMentionId.setText("@" + objectId);
+            holder.binding.nameText.setText(displayName);
+            if (holder.binding.secondaryText != null) {
+                holder.binding.secondaryText.setText("@" + objectId);
             }
         }
 
         if (SOURCE_CALLS.equals(source)) {
-            holder.simpleDraweeView.setImageResource(R.drawable.ic_circular_group);
+            if (holder.binding.avatarDraweeView != null) {
+                holder.binding.avatarDraweeView.setImageResource(R.drawable.ic_circular_group);
+            }
         } else {
             String avatarId = objectId;
-            String avatarUrl = ApiUtils.getUrlForAvatarWithName(currentUser.getBaseUrl(),
-                                                                avatarId, R.dimen.avatar_size_big);
+            String avatarUrl = ApiUtils.getUrlForAvatar(currentUser.getBaseUrl(),
+                                                        avatarId, true);
 
             if (SOURCE_GUESTS.equals(source)) {
                 avatarId = displayName;
-                avatarUrl = ApiUtils.getUrlForAvatarWithNameForGuests(
-                        currentUser.getBaseUrl(),
-                        avatarId,
-                        R.dimen.avatar_size_big);
+                avatarUrl = ApiUtils.getUrlForGuestAvatar(
+                    currentUser.getBaseUrl(),
+                    avatarId,
+                    false);
             }
 
-            holder.simpleDraweeView.setController(null);
+            if (holder.binding.avatarDraweeView != null) {
+                holder.binding.avatarDraweeView.setController(null);
+            }
+
             DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-                    .setOldController(holder.simpleDraweeView.getController())
-                    .setAutoPlayAnimations(true)
-                    .setImageRequest(DisplayUtils.getImageRequestForUrl(avatarUrl, null))
-                    .build();
-            holder.simpleDraweeView.setController(draweeController);
+                .setOldController(holder.binding.avatarDraweeView.getController())
+                .setAutoPlayAnimations(true)
+                .setImageRequest(DisplayUtils.getImageRequestForUrl(avatarUrl, null))
+                .build();
+            holder.binding.avatarDraweeView.setController(draweeController);
         }
+
+        drawStatus(holder);
+    }
+
+    private void drawStatus(ParticipantItem.ParticipantItemViewHolder holder) {
+        if (holder.binding.conversationInfoStatusMessage != null &&
+            holder.binding.participantStatusEmoji != null &&
+            holder.binding.userStatusImage != null) {
+            float size = DisplayUtils.convertDpToPixel(STATUS_SIZE_IN_DP, context);
+            holder.binding.userStatusImage.setImageDrawable(new StatusDrawable(
+                status,
+                NO_ICON,
+                size,
+                context.getResources().getColor(R.color.bg_default),
+                context));
+
+            if (statusMessage != null) {
+                holder.binding.conversationInfoStatusMessage.setText(statusMessage);
+                alignUsernameVertical(holder, 0);
+            } else {
+                holder.binding.conversationInfoStatusMessage.setText("");
+                alignUsernameVertical(holder, 10);
+            }
+
+            if (statusIcon != null && !statusIcon.isEmpty()) {
+                holder.binding.participantStatusEmoji.setText(statusIcon);
+            } else {
+                holder.binding.participantStatusEmoji.setVisibility(View.GONE);
+            }
+
+            if (status != null && status.equals(StatusType.DND.getString())) {
+                if (statusMessage == null || statusMessage.isEmpty()) {
+                    holder.binding.conversationInfoStatusMessage.setText(R.string.dnd);
+                }
+            } else if (status != null && status.equals(StatusType.AWAY.getString())) {
+                if (statusMessage == null || statusMessage.isEmpty()) {
+                    holder.binding.conversationInfoStatusMessage.setText(R.string.away);
+                }
+            }
+        }
+    }
+
+    private void alignUsernameVertical(ParticipantItem.ParticipantItemViewHolder holder, float densityPixelsFromTop) {
+        ConstraintLayout.LayoutParams layoutParams =
+            (ConstraintLayout.LayoutParams) holder.binding.nameText.getLayoutParams();
+        layoutParams.topMargin = (int) DisplayUtils.convertDpToPixel(densityPixelsFromTop, context);
+        holder.binding.nameText.setLayoutParams(layoutParams);
     }
 
     @Override
     public boolean filter(String constraint) {
         return objectId != null &&
+            Pattern
+                .compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
+                .matcher(objectId)
+                .find() ||
+            displayName != null &&
                 Pattern
-                        .compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
-                        .matcher(objectId)
-                        .find() ||
-                displayName != null &&
-                        Pattern
-                                .compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
-                                .matcher(displayName)
-                                .find();
+                    .compile(constraint, Pattern.CASE_INSENSITIVE | Pattern.LITERAL)
+                    .matcher(displayName)
+                    .find();
     }
 }

@@ -4,6 +4,8 @@
  * @author Mario Danic
  * @author Andy Scherzinger
  * @author Tim Krüger
+ * @author Marcel Hibbe
+ * Copyright (C) 2022 Marcel Hibbe (dev@mhibbe.de)
  * Copyright (C) 2021 Tim Krüger <t@timkrueger.me>
  * Copyright (C) 2021 Andy Scherzinger (info@andy-scherzinger.de)
  * Copyright (C) 2017-2018 Mario Danic <mario@lovelyhq.com>
@@ -47,7 +49,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.nextcloud.talk.R
-import com.nextcloud.talk.adapters.items.UserItem
+import com.nextcloud.talk.adapters.items.ParticipantItem
 import com.nextcloud.talk.api.NcApi
 import com.nextcloud.talk.application.NextcloudTalkApplication
 import com.nextcloud.talk.controllers.base.NewBaseController
@@ -70,6 +72,7 @@ import com.nextcloud.talk.models.json.participants.Participant.ActorType.GROUPS
 import com.nextcloud.talk.models.json.participants.Participant.ActorType.USERS
 import com.nextcloud.talk.models.json.participants.ParticipantsOverall
 import com.nextcloud.talk.utils.ApiUtils
+import com.nextcloud.talk.utils.DateConstants
 import com.nextcloud.talk.utils.DateUtils
 import com.nextcloud.talk.utils.DisplayUtils
 import com.nextcloud.talk.utils.bundle.BundleKeys
@@ -85,9 +88,11 @@ import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.ArrayList
 import java.util.Calendar
 import java.util.Collections
 import java.util.Comparator
+import java.util.HashMap
 import java.util.Locale
 import javax.inject.Inject
 
@@ -119,8 +124,8 @@ class ConversationInfoController(args: Bundle) :
     private var databaseStorageModule: DatabaseStorageModule? = null
     private var conversation: Conversation? = null
 
-    private var adapter: FlexibleAdapter<UserItem>? = null
-    private var recyclerViewItems: MutableList<UserItem> = ArrayList()
+    private var adapter: FlexibleAdapter<ParticipantItem>? = null
+    private var userItems: MutableList<ParticipantItem> = ArrayList()
 
     private var saveStateHandler: LovelySaveStateHandler? = null
 
@@ -202,7 +207,7 @@ class ConversationInfoController(args: Bundle) :
                 MaterialDialog(activity!!, BottomSheet(WRAP_CONTENT)).show {
                     val currentTimeCalendar = Calendar.getInstance()
                     if (conversation!!.lobbyTimer != null && conversation!!.lobbyTimer != 0L) {
-                        currentTimeCalendar.timeInMillis = conversation!!.lobbyTimer * 1000
+                        currentTimeCalendar.timeInMillis = conversation!!.lobbyTimer * DateConstants.SECOND_DIVIDER
                     }
 
                     dateTimePicker(
@@ -234,13 +239,15 @@ class ConversationInfoController(args: Bundle) :
             conversation.type == Conversation.ConversationType.ROOM_PUBLIC_CALL
     }
 
-    fun reconfigureLobbyTimerView(dateTime: Calendar? = null) {
+    private fun reconfigureLobbyTimerView(dateTime: Calendar? = null) {
         val isChecked =
             (binding.webinarInfoView.conversationInfoLobby.findViewById<View>(R.id.mp_checkable) as SwitchCompat)
                 .isChecked
 
         if (dateTime != null && isChecked) {
-            conversation!!.lobbyTimer = (dateTime.timeInMillis - (dateTime.time.seconds * 1000)) / 1000
+            conversation!!.lobbyTimer = (
+                dateTime.timeInMillis - (dateTime.time.seconds * DateConstants.SECOND_DIVIDER)
+                ) / DateConstants.SECOND_DIVIDER
         } else if (!isChecked) {
             conversation!!.lobbyTimer = 0
         }
@@ -287,15 +294,19 @@ class ConversationInfoController(args: Bundle) :
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(object : Observer<GenericOverall> {
                 override fun onComplete() {
+                    // unused atm
                 }
 
                 override fun onSubscribe(d: Disposable) {
+                    // unused atm
                 }
 
                 override fun onNext(t: GenericOverall) {
+                    // unused atm
                 }
 
                 override fun onError(e: Throwable) {
+                    // unused atm
                 }
             })
     }
@@ -305,6 +316,7 @@ class ConversationInfoController(args: Bundle) :
             ID_DELETE_CONVERSATION_DIALOG -> showDeleteConversationDialog(savedInstanceState)
             ID_CLEAR_CHAT_DIALOG -> showClearHistoryDialog(savedInstanceState)
             else -> {
+                // unused atm
             }
         }
     }
@@ -357,7 +369,7 @@ class ConversationInfoController(args: Bundle) :
     private fun setupAdapter() {
         if (activity != null) {
             if (adapter == null) {
-                adapter = FlexibleAdapter(recyclerViewItems, activity, true)
+                adapter = FlexibleAdapter(userItems, activity, true)
             }
 
             val layoutManager = SmoothScrollLinearLayoutManager(activity)
@@ -370,15 +382,15 @@ class ConversationInfoController(args: Bundle) :
     }
 
     private fun handleParticipants(participants: List<Participant>) {
-        var userItem: UserItem
+        var userItem: ParticipantItem
         var participant: Participant
 
-        recyclerViewItems = ArrayList()
-        var ownUserItem: UserItem? = null
+        userItems = ArrayList()
+        var ownUserItem: ParticipantItem? = null
 
         for (i in participants.indices) {
             participant = participants[i]
-            userItem = UserItem(participant, conversationUser, null)
+            userItem = ParticipantItem(router.activity, participant, conversationUser)
             if (participant.sessionId != null) {
                 userItem.isOnline = !participant.sessionId.equals("0")
             } else {
@@ -390,20 +402,20 @@ class ConversationInfoController(args: Bundle) :
                 ownUserItem.model.sessionId = "-1"
                 ownUserItem.isOnline = true
             } else {
-                recyclerViewItems.add(userItem)
+                userItems.add(userItem)
             }
         }
 
-        Collections.sort(recyclerViewItems, UserItemComparator())
+        Collections.sort(userItems, ParticipantItemComparator())
 
         if (ownUserItem != null) {
-            recyclerViewItems.add(0, ownUserItem)
+            userItems.add(0, ownUserItem)
         }
 
         setupAdapter()
 
         binding.participantsListCategory.visibility = View.VISIBLE
-        adapter!!.updateDataSet(recyclerViewItems)
+        adapter!!.updateDataSet(userItems)
     }
 
     override val title: String
@@ -421,9 +433,17 @@ class ConversationInfoController(args: Bundle) :
             apiVersion = ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
         }
 
+        val fieldMap = HashMap<String, Boolean>()
+        fieldMap["includeStatus"] = true
+
         ncApi?.getPeersForCall(
             credentials,
-            ApiUtils.getUrlForParticipants(apiVersion, conversationUser!!.baseUrl, conversationToken)
+            ApiUtils.getUrlForParticipants(
+                apiVersion,
+                conversationUser!!.baseUrl,
+                conversationToken
+            ),
+            fieldMap
         )
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -444,6 +464,7 @@ class ConversationInfoController(args: Bundle) :
                 }
 
                 override fun onError(e: Throwable) {
+                    // unused atm
                 }
 
                 override fun onComplete() {
@@ -456,7 +477,7 @@ class ConversationInfoController(args: Bundle) :
         val bundle = Bundle()
         val existingParticipantsId = arrayListOf<String>()
 
-        for (userItem in recyclerViewItems) {
+        for (userItem in userItems) {
             if (userItem.model.getActorType() == USERS) {
                 existingParticipantsId.add(userItem.model.getActorId())
             }
@@ -525,6 +546,7 @@ class ConversationInfoController(args: Bundle) :
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(object : Observer<GenericOverall> {
                 override fun onSubscribe(d: Disposable) {
+                    // unused atm
                 }
 
                 override fun onNext(genericOverall: GenericOverall) {
@@ -538,6 +560,7 @@ class ConversationInfoController(args: Bundle) :
                 }
 
                 override fun onComplete() {
+                    // unused atm
                 }
             })
     }
@@ -647,6 +670,7 @@ class ConversationInfoController(args: Bundle) :
                 }
 
                 override fun onError(e: Throwable) {
+                    Log.e(TAG, "failed to fetch room info", e)
                 }
 
                 override fun onComplete() {
@@ -667,9 +691,9 @@ class ConversationInfoController(args: Bundle) :
                 if (conversation!!.notificationLevel != Conversation.NotificationLevel.DEFAULT) {
                     val stringValue: String =
                         when (EnumNotificationLevelConverter().convertToInt(conversation!!.notificationLevel)) {
-                            1 -> "always"
-                            2 -> "mention"
-                            3 -> "never"
+                            NOTIFICATION_LEVEL_ALWAYS -> "always"
+                            NOTIFICATION_LEVEL_MENTION -> "mention"
+                            NOTIFICATION_LEVEL_NEVER -> "never"
                             else -> "mention"
                         }
 
@@ -706,9 +730,9 @@ class ConversationInfoController(args: Bundle) :
                     .setAutoPlayAnimations(true)
                     .setImageRequest(
                         DisplayUtils.getImageRequestForUrl(
-                            ApiUtils.getUrlForAvatarWithName(
+                            ApiUtils.getUrlForAvatar(
                                 conversationUser!!.baseUrl,
-                                conversation!!.name, R.dimen.avatar_size_big
+                                conversation!!.name, true
                             ),
                             conversationUser
                         )
@@ -731,6 +755,7 @@ class ConversationInfoController(args: Bundle) :
             }
 
             else -> {
+                // unused atm
             }
         }
     }
@@ -738,6 +763,7 @@ class ConversationInfoController(args: Bundle) :
     private fun toggleModeratorStatus(apiVersion: Int, participant: Participant) {
         val subscriber = object : Observer<GenericOverall> {
             override fun onSubscribe(d: Disposable) {
+                // unused atm
             }
 
             override fun onNext(genericOverall: GenericOverall) {
@@ -750,6 +776,7 @@ class ConversationInfoController(args: Bundle) :
             }
 
             override fun onComplete() {
+                // unused atm
             }
         }
 
@@ -789,6 +816,7 @@ class ConversationInfoController(args: Bundle) :
     private fun toggleModeratorStatusLegacy(apiVersion: Int, participant: Participant) {
         val subscriber = object : Observer<GenericOverall> {
             override fun onSubscribe(d: Disposable) {
+                // unused atm
             }
 
             override fun onNext(genericOverall: GenericOverall) {
@@ -801,6 +829,7 @@ class ConversationInfoController(args: Bundle) :
             }
 
             override fun onComplete() {
+                // unused atm
             }
         }
 
@@ -848,6 +877,7 @@ class ConversationInfoController(args: Bundle) :
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe(object : Observer<GenericOverall> {
                     override fun onSubscribe(d: Disposable) {
+                        // unused atm
                     }
 
                     override fun onNext(genericOverall: GenericOverall) {
@@ -860,6 +890,7 @@ class ConversationInfoController(args: Bundle) :
                     }
 
                     override fun onComplete() {
+                        // unused atm
                     }
                 })
         } else {
@@ -879,6 +910,7 @@ class ConversationInfoController(args: Bundle) :
                     ?.observeOn(AndroidSchedulers.mainThread())
                     ?.subscribe(object : Observer<GenericOverall> {
                         override fun onSubscribe(d: Disposable) {
+                            // unused atm
                         }
 
                         override fun onNext(genericOverall: GenericOverall) {
@@ -891,6 +923,7 @@ class ConversationInfoController(args: Bundle) :
                         }
 
                         override fun onComplete() {
+                            // unused atm
                         }
                     })
             } else {
@@ -907,6 +940,7 @@ class ConversationInfoController(args: Bundle) :
                     ?.observeOn(AndroidSchedulers.mainThread())
                     ?.subscribe(object : Observer<GenericOverall> {
                         override fun onSubscribe(d: Disposable) {
+                            // unused atm
                         }
 
                         override fun onNext(genericOverall: GenericOverall) {
@@ -919,6 +953,7 @@ class ConversationInfoController(args: Bundle) :
                         }
 
                         override fun onComplete() {
+                            // unused atm
                         }
                     })
             }
@@ -930,7 +965,7 @@ class ConversationInfoController(args: Bundle) :
             return true
         }
 
-        val userItem = adapter?.getItem(position) as UserItem
+        val userItem = adapter?.getItem(position) as ParticipantItem
         val participant = userItem.model
 
         val apiVersion = ApiUtils.getConversationApiVersion(conversationUser, intArrayOf(ApiUtils.APIv4, 1))
@@ -1073,7 +1108,10 @@ class ConversationInfoController(args: Bundle) :
     }
 
     companion object {
-        private const val TAG = "ConversationInfControll"
+        private const val TAG = "ConversationInfo"
+        private const val NOTIFICATION_LEVEL_ALWAYS: Int = 1
+        private const val NOTIFICATION_LEVEL_MENTION: Int = 2
+        private const val NOTIFICATION_LEVEL_NEVER: Int = 3
         private const val ID_DELETE_CONVERSATION_DIALOG = 0
         private const val ID_CLEAR_CHAT_DIALOG = 1
         private val LOW_EMPHASIS_OPACITY: Float = 0.38f
@@ -1082,8 +1120,8 @@ class ConversationInfoController(args: Bundle) :
     /**
      * Comparator for participants, sorts by online-status, moderator-status and display name.
      */
-    class UserItemComparator : Comparator<UserItem> {
-        override fun compare(left: UserItem, right: UserItem): Int {
+    class ParticipantItemComparator : Comparator<ParticipantItem> {
+        override fun compare(left: ParticipantItem, right: ParticipantItem): Int {
             val leftIsGroup = left.model.actorType == GROUPS || left.model.actorType == CIRCLES
             val rightIsGroup = right.model.actorType == GROUPS || right.model.actorType == CIRCLES
             if (leftIsGroup != rightIsGroup) {
