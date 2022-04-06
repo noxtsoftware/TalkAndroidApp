@@ -224,56 +224,59 @@ public class PushUtils {
 
     public void pushRegistrationToServer() {
 
-       FirebaseMessaging.getInstance().getToken()
-            .addOnCompleteListener(new OnCompleteListener<String>() {
-                @Override
-                public void onComplete(@NonNull Task<String> task) {
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                        return;
-                    }
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
 
-                    // Get new FCM registration token
-                    String token = task.getResult();
+                        // Get new FCM registration token
+                        String token = task.getResult();
 
-                    // Log and toast
-                    String msg = "FCM token: "+token;
-                    Log.d(TAG, msg);
+                        // Log and toast
+                        String msg = "FCM token: " + token;
+                        Log.d(TAG, msg);
 
-                    if (!TextUtils.isEmpty(token)) {
-                        String pushTokenHash = generateSHA512Hash(token).toLowerCase();
-                        PublicKey devicePublicKey = (PublicKey) readKeyFromFile(true);
-                        if (devicePublicKey != null) {
-                            byte[] devicePublicKeyBytes = Base64.encode(devicePublicKey.getEncoded(), Base64.NO_WRAP);
-                            String devicePublicKeyBase64 = new String(devicePublicKeyBytes);
-                            devicePublicKeyBase64 = devicePublicKeyBase64.replaceAll("(.{64})", "$1\n");
+                        if (!TextUtils.isEmpty(token)) {
+                            String pushTokenHash = generateSHA512Hash(token).toLowerCase();
+                            PublicKey devicePublicKey = (PublicKey) readKeyFromFile(true);
+                            if (devicePublicKey != null) {
+                                byte[] devicePublicKeyBytes = Base64.encode(devicePublicKey.getEncoded(),
+                                        Base64.NO_WRAP);
+                                String devicePublicKeyBase64 = new String(devicePublicKeyBytes);
+                                devicePublicKeyBase64 = devicePublicKeyBase64.replaceAll("(.{64})", "$1\n");
 
-                            devicePublicKeyBase64 = "-----BEGIN PUBLIC KEY-----\n" + devicePublicKeyBase64
-                                + "\n-----END PUBLIC KEY-----\n";
+                                devicePublicKeyBase64 = "-----BEGIN PUBLIC KEY-----\n" + devicePublicKeyBase64
+                                        + "\n-----END PUBLIC KEY-----\n";
 
+                                if (userUtils.anyUserExists()) {
+                                    for (Object userEntityObject : userUtils.getUsers()) {
+                                        UserEntity userEntity = (UserEntity) userEntityObject;
 
+                                        Log.e(TAG, "pushTokenHash: "+ pushTokenHash);
+                                        Log.e(TAG, "devicePublicKEy: "+devicePublicKeyBase64);
+                                        Log.e(TAG, "token: "+token);
 
-                            if (userUtils.anyUserExists()) {
-                                for (Object userEntityObject : userUtils.getUsers()) {
-                                    UserEntity userEntity = (UserEntity) userEntityObject;
+                                        if (!userEntity.getScheduledForDeletion()) {
+                                            Map<String, String> nextcloudRegisterPushMap = new HashMap<>();
+                                            nextcloudRegisterPushMap.put("format", "json");
+                                            nextcloudRegisterPushMap.put("pushTokenHash", pushTokenHash);
+                                            nextcloudRegisterPushMap.put("devicePublicKey", devicePublicKeyBase64);
+                                            nextcloudRegisterPushMap.put("proxyServer", token);
 
-                                    if (!userEntity.getScheduledForDeletion()) {
-                                        Map<String, String> nextcloudRegisterPushMap = new HashMap<>();
-                                        nextcloudRegisterPushMap.put("format", "json");
-                                        nextcloudRegisterPushMap.put("pushTokenHash", pushTokenHash);
-                                        nextcloudRegisterPushMap.put("devicePublicKey", devicePublicKeyBase64);
-                                        nextcloudRegisterPushMap.put("proxyServer", token);
-
-                                        registerDeviceWithNextcloud(nextcloudRegisterPushMap, token, userEntity);
+                                            registerDeviceWithNextcloud(nextcloudRegisterPushMap, token, userEntity);
+                                        }
                                     }
                                 }
                             }
+                        } else {
+                            Log.e(TAG, "push token was empty when trying to register at nextcloud server");
                         }
-                    } else {
-                        Log.e(TAG, "push token was empty when trying to register at nextcloud server");
                     }
-                }
-            });
+                });
     }
 
     private void registerDeviceWithNextcloud(Map<String, String> nextcloudRegisterPushMap, String token,
@@ -284,39 +287,39 @@ public class PushUtils {
                 credentials,
                 ApiUtils.getUrlNextcloudPush(userEntity.getBaseUrl()),
                 nextcloudRegisterPushMap)
-                .subscribe(new Observer<PushRegistrationOverall>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        // unused atm
-                    }
+            .subscribe(new Observer<PushRegistrationOverall>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+                    // unused atm
+                }
 
-                    @Override
-                    public void onNext(@NonNull PushRegistrationOverall pushRegistrationOverall) {
-                        Log.d(TAG, "pushTokenHash successfully registered at nextcloud server.");
+                @Override
+                public void onNext(@NonNull PushRegistrationOverall pushRegistrationOverall) {
+                    Log.d(TAG, "pushTokenHash successfully registered at nextcloud server.");
 
-                        Map<String, String> proxyMap = new HashMap<>();
-                        proxyMap.put("pushToken", token);
-                        proxyMap.put("deviceIdentifier",
-                                pushRegistrationOverall.getOcs().getData().getDeviceIdentifier());
-                        proxyMap.put("deviceIdentifierSignature", pushRegistrationOverall.getOcs()
-                                .getData().getSignature());
-                        proxyMap.put("userPublicKey", pushRegistrationOverall.getOcs()
-                                .getData().getPublicKey());
+                    Map<String, String> proxyMap = new HashMap<>();
+                    proxyMap.put("pushToken", token);
+                    proxyMap.put("deviceIdentifier",
+                                 pushRegistrationOverall.getOcs().getData().getDeviceIdentifier());
+                    proxyMap.put("deviceIdentifierSignature", pushRegistrationOverall.getOcs()
+                        .getData().getSignature());
+                    proxyMap.put("userPublicKey", pushRegistrationOverall.getOcs()
+                        .getData().getPublicKey());
 
-                        registerDeviceWithPushProxy(proxyMap, userEntity);
-                    }
+                    registerDeviceWithPushProxy(proxyMap, userEntity);
+                }
 
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        eventBus.post(new EventStatus(userEntity.getId(),
-                                EventStatus.EventType.PUSH_REGISTRATION, false));
-                    }
+                @Override
+                public void onError(@NonNull Throwable e) {
+                    eventBus.post(new EventStatus(userEntity.getId(),
+                                                  EventStatus.EventType.PUSH_REGISTRATION, false));
+                }
 
-                    @Override
-                    public void onComplete() {
-                        // unused atm
-                    }
-                });
+                @Override
+                public void onComplete() {
+                    // unused atm
+                }
+            });
     }
 
     private void registerDeviceWithPushProxy(Map<String, String> proxyMap, UserEntity userEntity) {

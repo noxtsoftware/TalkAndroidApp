@@ -27,9 +27,9 @@
     <string name="nc_talk_login_scheme" translatable="false">nc</string>
     <bool name="nc_is_debug">false</bool>
 
-    <string name="nc_app_name">Talk</string>
-    <string name="nc_app_product_name">Nextcloud Talk</string>
-    <string name="nc_server_product_name">Nextcloud</string>
+    <string name="nc_app_name">moyn!</string>
+    <string name="nc_app_product_name">moyn! Talk</string>
+    <string name="nc_server_product_name">moyn!</string>
 
     <string name="nc_push_server_url" translatable="false">https://push-notifications.nextcloud.com</string>
 
@@ -40,10 +40,10 @@
     <string name="weblogin_url" translatable="false"></string>
 
     <!-- Will not be shown if empty -->
-    <string name="nc_privacy_url" translatable="false">https://nextcloud.com/privacy/</string>
+    <string name="nc_privacy_url" translatable="false">https://www.moyn.io/datenschutz</string>
     <string name="nc_gpl3_url" translatable="false">https://www.gnu.org/licenses/gpl-3.0.en.html</string>
-    <string name="nc_source_code_url" translatable="false">https://github.com/nextcloud/talk-android</string>
-    <string name="nc_providers_url" translatable="false">https://nextcloud.com/providers</string>
+    <string name="nc_source_code_url" translatable="false">https://github.com/noxtsoftware/TalkAndroidApp</string>
+    <string name="nc_providers_url" translatable="false">https://www.moyn.io/preise</string>
 
     <!-- Package name from which to import accounts - if empty, won't ever be shown -->
     <string name="nc_import_accounts_from" translatable="false">com.nextcloud.client</string>
