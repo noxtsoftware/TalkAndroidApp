@@ -80,7 +80,7 @@ import javax.inject.Inject
 
 @SuppressLint("LongLogTag")
 @AutoInjector(NextcloudTalkApplication::class)
-class MagicFirebaseMessagingService : FirebaseMessagingService() {
+class MyFirebaseMessagingService : FirebaseMessagingService() {
     @JvmField
     @Inject
     var appPreferences: AppPreferences? = null
@@ -214,7 +214,7 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
 
                 fullScreenIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 val fullScreenPendingIntent = PendingIntent.getActivity(
-                    this@MagicFirebaseMessagingService,
+                    this@MyFirebaseMessagingService,
                     0,
                     fullScreenIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
@@ -226,7 +226,7 @@ class MagicFirebaseMessagingService : FirebaseMessagingService() {
                 val baseUrl = uri.host
 
                 val notification =
-                    NotificationCompat.Builder(this@MagicFirebaseMessagingService, notificationChannelId)
+                    NotificationCompat.Builder(this@MyFirebaseMessagingService, notificationChannelId)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setSmallIcon(R.drawable.ic_call_black_24dp)
