@@ -26,8 +26,12 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.moyn.talk.R;
 import com.moyn.talk.api.NcApi;
 import com.moyn.talk.application.NextcloudTalkApplication;
@@ -219,38 +223,57 @@ public class PushUtils {
     }
 
     public void pushRegistrationToServer() {
-        String token = appPreferences.getPushToken();
 
-        if (!TextUtils.isEmpty(token)) {
-            String pushTokenHash = generateSHA512Hash(token).toLowerCase();
-            PublicKey devicePublicKey = (PublicKey) readKeyFromFile(true);
-            if (devicePublicKey != null) {
-                byte[] devicePublicKeyBytes = Base64.encode(devicePublicKey.getEncoded(), Base64.NO_WRAP);
-                String devicePublicKeyBase64 = new String(devicePublicKeyBytes);
-                devicePublicKeyBase64 = devicePublicKeyBase64.replaceAll("(.{64})", "$1\n");
+       FirebaseMessaging.getInstance().getToken()
+            .addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
 
-                devicePublicKeyBase64 = "-----BEGIN PUBLIC KEY-----\n" + devicePublicKeyBase64
-                        + "\n-----END PUBLIC KEY-----\n";
+                    // Get new FCM registration token
+                    String token = task.getResult();
 
-                if (userUtils.anyUserExists()) {
-                    for (Object userEntityObject : userUtils.getUsers()) {
-                        UserEntity userEntity = (UserEntity) userEntityObject;
+                    // Log and toast
+                    String msg = "FCM token: "+token;
+                    Log.d(TAG, msg);
 
-                        if (!userEntity.getScheduledForDeletion()) {
-                            Map<String, String> nextcloudRegisterPushMap = new HashMap<>();
-                            nextcloudRegisterPushMap.put("format", "json");
-                            nextcloudRegisterPushMap.put("pushTokenHash", pushTokenHash);
-                            nextcloudRegisterPushMap.put("devicePublicKey", devicePublicKeyBase64);
-                            nextcloudRegisterPushMap.put("proxyServer", proxyServer);
+                    if (!TextUtils.isEmpty(token)) {
+                        String pushTokenHash = generateSHA512Hash(token).toLowerCase();
+                        PublicKey devicePublicKey = (PublicKey) readKeyFromFile(true);
+                        if (devicePublicKey != null) {
+                            byte[] devicePublicKeyBytes = Base64.encode(devicePublicKey.getEncoded(), Base64.NO_WRAP);
+                            String devicePublicKeyBase64 = new String(devicePublicKeyBytes);
+                            devicePublicKeyBase64 = devicePublicKeyBase64.replaceAll("(.{64})", "$1\n");
 
-                            registerDeviceWithNextcloud(nextcloudRegisterPushMap, token, userEntity);
+                            devicePublicKeyBase64 = "-----BEGIN PUBLIC KEY-----\n" + devicePublicKeyBase64
+                                + "\n-----END PUBLIC KEY-----\n";
+
+
+
+                            if (userUtils.anyUserExists()) {
+                                for (Object userEntityObject : userUtils.getUsers()) {
+                                    UserEntity userEntity = (UserEntity) userEntityObject;
+
+                                    if (!userEntity.getScheduledForDeletion()) {
+                                        Map<String, String> nextcloudRegisterPushMap = new HashMap<>();
+                                        nextcloudRegisterPushMap.put("format", "json");
+                                        nextcloudRegisterPushMap.put("pushTokenHash", pushTokenHash);
+                                        nextcloudRegisterPushMap.put("devicePublicKey", devicePublicKeyBase64);
+                                        nextcloudRegisterPushMap.put("proxyServer", token);
+
+                                        registerDeviceWithNextcloud(nextcloudRegisterPushMap, token, userEntity);
+                                    }
+                                }
+                            }
                         }
+                    } else {
+                        Log.e(TAG, "push token was empty when trying to register at nextcloud server");
                     }
                 }
-            }
-        } else {
-            Log.e(TAG, "push token was empty when trying to register at nextcloud server");
-        }
+            });
     }
 
     private void registerDeviceWithNextcloud(Map<String, String> nextcloudRegisterPushMap, String token,
