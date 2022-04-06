@@ -1,4 +1,4 @@
-package com.nextcloud.talk.utils
+package com.moyn.talk.utils
 
 import at.bitfire.dav4jvm.HttpUtils
 import org.apache.commons.lang3.time.DateUtils

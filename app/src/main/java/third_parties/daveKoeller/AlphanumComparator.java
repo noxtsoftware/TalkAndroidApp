@@ -24,9 +24,8 @@
 
 package third_parties.daveKoeller;
 
-import com.nextcloud.talk.components.filebrowser.adapters.items.BrowserFileItem;
+import com.moyn.talk.components.filebrowser.adapters.items.BrowserFileItem;
 
-import java.io.File;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.text.Collator;
@@ -58,7 +57,8 @@ public class AlphanumComparator<T> implements Comparator<T>, Serializable {
     }
 
     /**
-     * Length of string is passed in for improved efficiency (only need to calculate it once)
+     * Length of string is passed in for improved efficiency (only need to calculate
+     * it once)
      **/
     private String getChunk(String string, int stringLength, int marker) {
         StringBuilder chunk = new StringBuilder();
@@ -128,7 +128,6 @@ public class AlphanumComparator<T> implements Comparator<T>, Serializable {
                     }
                     countThis++;
                 }
-
 
                 int thatChunkZeroCount = 0;
                 int countThat = 0;

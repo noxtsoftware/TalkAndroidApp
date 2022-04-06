@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.nextcloud.talk.utils
+package com.moyn.talk.utils
 
 import android.content.Context
 import android.content.res.Resources
 import android.text.TextUtils
 import at.bitfire.dav4jvm.HttpUtils.parseDate
-import com.nextcloud.talk.R
-import com.nextcloud.talk.models.database.UserEntity
-import com.nextcloud.talk.models.json.conversations.Conversation
-import com.nextcloud.talk.utils.database.user.UserUtils
+import com.moyn.talk.R
+import com.moyn.talk.models.database.UserEntity
+import com.moyn.talk.models.json.conversations.Conversation
+import com.moyn.talk.utils.database.user.UserUtils
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before

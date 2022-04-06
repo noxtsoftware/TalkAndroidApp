@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.nextcloud.talk.utils
+package com.moyn.talk.utils
 
 import android.content.Intent
 import androidx.work.Data
@@ -33,10 +33,10 @@ import autodagger.AutoInjector
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.security.ProviderInstaller
-import com.nextcloud.talk.application.NextcloudTalkApplication
-import com.nextcloud.talk.interfaces.ClosedInterface
-import com.nextcloud.talk.jobs.GetFirebasePushTokenWorker
-import com.nextcloud.talk.jobs.PushRegistrationWorker
+import com.moyn.talk.application.NextcloudTalkApplication
+import com.moyn.talk.interfaces.ClosedInterface
+import com.moyn.talk.jobs.GetFirebasePushTokenWorker
+import com.moyn.talk.jobs.PushRegistrationWorker
 import java.util.concurrent.TimeUnit
 
 @AutoInjector(NextcloudTalkApplication::class)

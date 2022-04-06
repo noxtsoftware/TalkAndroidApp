@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextcloud.talk.utils;
+package com.moyn.talk.utils;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -26,7 +26,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Vibrator;
 
-import com.nextcloud.talk.application.NextcloudTalkApplication;
+import com.moyn.talk.application.NextcloudTalkApplication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,7 +70,7 @@ public class DoNotDisturbUtilsTest {
         MockitoAnnotations.openMocks(this);
         mockStatic(NextcloudTalkApplication.Companion.class);
         NextcloudTalkApplication.Companion companionMock = PowerMockito.mock(NextcloudTalkApplication.Companion.class);
-        Whitebox.setInternalState(NextcloudTalkApplication.class,"Companion",companionMock);
+        Whitebox.setInternalState(NextcloudTalkApplication.class, "Companion", companionMock);
         PowerMockito.when(NextcloudTalkApplication.Companion.getSharedApplication()).thenReturn(application);
         when(application.getApplicationContext()).thenReturn(context);
         when(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager);
@@ -88,13 +88,13 @@ public class DoNotDisturbUtilsTest {
         field.set(null, newValue);
     }
 
-
     @Test
     public void shouldPlaySound_givenAndroidMAndInterruptionFilterNone_assertReturnsFalse()
             throws Exception {
         setFinalStatic(Build.VERSION.class.getField("SDK_INT"), Build.VERSION_CODES.M);
 
-        when(notificationManager.getCurrentInterruptionFilter()).thenReturn(NotificationManager.INTERRUPTION_FILTER_NONE);
+        when(notificationManager.getCurrentInterruptionFilter())
+                .thenReturn(NotificationManager.INTERRUPTION_FILTER_NONE);
         when(audioManager.getRingerMode()).thenReturn(AudioManager.RINGER_MODE_NORMAL);
 
         assertFalse("shouldPlaySound incorrectly returned true",

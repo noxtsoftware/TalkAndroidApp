@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextcloud.talk;
+package com.moyn.talk;
 
 import android.content.Context;
 
@@ -44,6 +44,7 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertNotNull(appContext.getPackageName());
-        assertTrue("The package name must start with 'com.nextcloud.talk2'", appContext.getPackageName().startsWith("com.nextcloud.talk2"));
+        assertTrue("The package name must start with 'com.moyn.talk'",
+                appContext.getPackageName().startsWith("com.moyn.talk"));
     }
 }

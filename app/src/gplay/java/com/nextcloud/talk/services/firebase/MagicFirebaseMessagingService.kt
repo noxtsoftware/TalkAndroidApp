@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.nextcloud.talk.services.firebase
+package com.moyn.talk.services.firebase
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -37,28 +37,28 @@ import autodagger.AutoInjector
 import com.bluelinelabs.logansquare.LoganSquare
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.nextcloud.talk.R
-import com.nextcloud.talk.activities.CallNotificationActivity
-import com.nextcloud.talk.api.NcApi
-import com.nextcloud.talk.application.NextcloudTalkApplication
-import com.nextcloud.talk.application.NextcloudTalkApplication.Companion.sharedApplication
-import com.nextcloud.talk.events.CallNotificationClick
-import com.nextcloud.talk.jobs.NotificationWorker
-import com.nextcloud.talk.jobs.PushRegistrationWorker
-import com.nextcloud.talk.models.SignatureVerification
-import com.nextcloud.talk.models.json.participants.Participant
-import com.nextcloud.talk.models.json.participants.ParticipantsOverall
-import com.nextcloud.talk.models.json.push.DecryptedPushMessage
-import com.nextcloud.talk.utils.ApiUtils
-import com.nextcloud.talk.utils.NotificationUtils
-import com.nextcloud.talk.utils.NotificationUtils.cancelAllNotificationsForAccount
-import com.nextcloud.talk.utils.NotificationUtils.cancelExistingNotificationWithId
-import com.nextcloud.talk.utils.NotificationUtils.getCallRingtoneUri
-import com.nextcloud.talk.utils.PushUtils
-import com.nextcloud.talk.utils.bundle.BundleKeys
-import com.nextcloud.talk.utils.bundle.BundleKeys.KEY_FROM_NOTIFICATION_START_CALL
-import com.nextcloud.talk.utils.bundle.BundleKeys.KEY_USER_ENTITY
-import com.nextcloud.talk.utils.preferences.AppPreferences
+import com.moyn.talk.R
+import com.moyn.talk.activities.CallNotificationActivity
+import com.moyn.talk.api.NcApi
+import com.moyn.talk.application.NextcloudTalkApplication
+import com.moyn.talk.application.NextcloudTalkApplication.Companion.sharedApplication
+import com.moyn.talk.events.CallNotificationClick
+import com.moyn.talk.jobs.NotificationWorker
+import com.moyn.talk.jobs.PushRegistrationWorker
+import com.moyn.talk.models.SignatureVerification
+import com.moyn.talk.models.json.participants.Participant
+import com.moyn.talk.models.json.participants.ParticipantsOverall
+import com.moyn.talk.models.json.push.DecryptedPushMessage
+import com.moyn.talk.utils.ApiUtils
+import com.moyn.talk.utils.NotificationUtils
+import com.moyn.talk.utils.NotificationUtils.cancelAllNotificationsForAccount
+import com.moyn.talk.utils.NotificationUtils.cancelExistingNotificationWithId
+import com.moyn.talk.utils.NotificationUtils.getCallRingtoneUri
+import com.moyn.talk.utils.PushUtils
+import com.moyn.talk.utils.bundle.BundleKeys
+import com.moyn.talk.utils.bundle.BundleKeys.KEY_FROM_NOTIFICATION_START_CALL
+import com.moyn.talk.utils.bundle.BundleKeys.KEY_USER_ENTITY
+import com.moyn.talk.utils.preferences.AppPreferences
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable

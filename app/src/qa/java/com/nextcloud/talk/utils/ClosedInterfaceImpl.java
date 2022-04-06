@@ -20,10 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextcloud.talk.utils;
+package com.moyn.talk.utils;
 
-
-import com.nextcloud.talk.interfaces.ClosedInterface;
+import com.moyn.talk.interfaces.ClosedInterface;
 
 public class ClosedInterfaceImpl implements ClosedInterface {
     @Override

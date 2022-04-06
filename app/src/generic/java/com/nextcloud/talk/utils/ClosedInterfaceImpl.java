@@ -20,10 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextcloud.talk.utils;
+package com.moyn.talk.utils;
 
-
-import com.nextcloud.talk.interfaces.ClosedInterface;
+import com.moyn.talk.interfaces.ClosedInterface;
 
 public class ClosedInterfaceImpl implements ClosedInterface {
     @Override
@@ -39,8 +38,10 @@ public class ClosedInterfaceImpl implements ClosedInterface {
     @Override
     public void setUpPushTokenRegistration() {
         // no push notifications for generic build flavour :(
-        // If you want to develop push notifications without google play services, here is a good place to start...
-        // Also have a look at app/src/gplay/AndroidManifest.xml to see how to include a service that handles push
+        // If you want to develop push notifications without google play services, here
+        // is a good place to start...
+        // Also have a look at app/src/gplay/AndroidManifest.xml to see how to include a
+        // service that handles push
         // notifications.
     }
 }

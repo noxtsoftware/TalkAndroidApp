@@ -22,7 +22,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.nextcloud.talk">
+    package="com.moyn.talk">
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -106,6 +106,15 @@
         <!-- [END fcm_default_icon] -->
         <!-- [START fcm_default_channel] -->
 
+        <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
+
+
+        <meta-data
+            android:name="google_analytics_ssaid_collection_enabled"
+            android:value="false" />
+
         <meta-data
             android:name="android.max_aspect"
             android:value="10" />
@@ -134,7 +143,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.com.nextcloud.talk2.chat" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.com.moyn.talk.chat" />
             </intent-filter>
         </activity>
 
@@ -200,14 +209,6 @@
             <meta-data
                 android:name="android.provider.CONTACTS_STRUCTURE"
                 android:resource="@xml/contacts" />
-        </service>
-
-        <service
-            android:name="com.nextcloud.talk.MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
         </service>
 
         <service android:name=".utils.AuthenticatorService">

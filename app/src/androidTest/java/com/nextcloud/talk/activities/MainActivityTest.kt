@@ -1,8 +1,8 @@
-package com.nextcloud.talk.activities
+package com.moyn.talk.activities
 
 import android.util.Log
 import androidx.test.espresso.intent.rule.IntentsTestRule
-import com.nextcloud.talk.models.database.UserEntity
+import com.moyn.talk.models.database.UserEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertTrue

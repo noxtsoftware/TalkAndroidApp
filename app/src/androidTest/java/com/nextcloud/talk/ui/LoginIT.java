@@ -21,13 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-package com.nextcloud.talk.ui;
+package com.moyn.talk.ui;
 
 import android.os.Bundle;
 
-import com.nextcloud.talk.R;
-import com.nextcloud.talk.activities.MainActivity;
+import com.moyn.talk.R;
+import com.moyn.talk.activities.MainActivity;
 
 import junit.framework.AssertionFailedError;
 
@@ -54,7 +53,6 @@ import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-
 
 @LargeTest
 public class LoginIT {
@@ -112,30 +110,30 @@ public class LoginIT {
 
         // click on login
         onWebView()
-            .withElement(findElement(Locator.XPATH, "//p[@id='redirect-link']/a"))
-            .perform(webClick());
+                .withElement(findElement(Locator.XPATH, "//p[@id='redirect-link']/a"))
+                .perform(webClick());
 
         // username
         onWebView()
-            .withElement(findElement(Locator.XPATH, "//input[@id='user']"))
-            .perform(DriverAtoms.webKeys(loginName));
+                .withElement(findElement(Locator.XPATH, "//input[@id='user']"))
+                .perform(DriverAtoms.webKeys(loginName));
 
         // password
         onWebView()
-            .withElement(findElement(Locator.XPATH, "//input[@id='password']"))
-            .perform(DriverAtoms.webKeys(password));
+                .withElement(findElement(Locator.XPATH, "//input[@id='password']"))
+                .perform(DriverAtoms.webKeys(password));
 
         // click login
         onWebView()
-            .withElement(findElement(Locator.XPATH, "//input[@id='submit-form']"))
-            .perform(webClick());
+                .withElement(findElement(Locator.XPATH, "//input[@id='submit-form']"))
+                .perform(webClick());
 
         Thread.sleep(2000);
 
         // grant access
         onWebView()
-            .withElement(findElement(Locator.XPATH, "//input[@type='submit']"))
-            .perform(webClick());
+                .withElement(findElement(Locator.XPATH, "//input[@type='submit']"))
+                .perform(webClick());
 
         Thread.sleep(5 * 1000);
 
@@ -147,6 +145,5 @@ public class LoginIT {
         });
 
     }
-
 
 }

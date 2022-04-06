@@ -21,7 +21,7 @@
 
 <ContactsAccountType xmlns:android="http://schemas.android.com/apk/res/android">
     <ContactsDataKind
-        android:mimeType="vnd.android.cursor.item/vnd.com.nextcloud.talk2.chat"
+        android:mimeType="vnd.android.cursor.item/vnd.com.moyn.talk.chat"
         android:icon="@mipmap/ic_launcher"
         android:detailColumn="data2"/>
 </ContactsAccountType>

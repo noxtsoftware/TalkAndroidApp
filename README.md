@@ -4,10 +4,10 @@
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
       alt="Download from Google Play" 
-      height="80">](https://play.google.com/store/apps/details?id=com.nextcloud.talk2)
+      height="80">](https://play.google.com/store/apps/details?id=com.moyn.talk)
 [<img src="https://f-droid.org/badge/get-it-on.png"
       alt="Get it on F-Droid"
-      height="80">](https://f-droid.org/packages/com.nextcloud.talk2/)
+      height="80">](https://f-droid.org/packages/com.moyn.talk/)
 
 Please note that Notifications won't work with the F-Droid version due to missing Google Play Services.
 
@@ -73,7 +73,7 @@ To report a bug for the alpha or beta version, just create an issue on github li
 
 ##### via Google Play
 
-Sign up at [Google Play Beta channel](https://play.google.com/apps/testing/com.nextcloud.talk2) to get Release Candidates via Google Play.
+Sign up at [Google Play Beta channel](https://play.google.com/apps/testing/com.moyn.talk) to get Release Candidates via Google Play.
 
 ##### via github
 
@@ -83,7 +83,7 @@ You can also get the Release Candidates at [github releases](https://github.com/
 
 ##### via Google Play
 
-To become an alpha tester you have to be signed up for the [Google Play Beta channel](https://play.google.com/apps/testing/com.nextcloud.talk2) 
+To become an alpha tester you have to be signed up for the [Google Play Beta channel](https://play.google.com/apps/testing/com.moyn.talk) 
 and additionally you have to join the [Alpha testing Google Group](https://groups.google.com/g/nextcloud-android-talk-alpha-testing). 
 After that you will receive the alpha versions via the Play Store (initially, this might take some minutes after
  signing up). However, in the Play Store the app will still be named "Nextcloud Talk (Beta)" even if you are an alpha tester, but you will receive the alpha versions.

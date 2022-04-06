@@ -9,7 +9,7 @@ not be complete. Please contribute to this list as you gain new knowledge. Just 
   
   [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
   alt="Download from Google Play"
-  height="80">](https://play.google.com/store/apps/details?id=com.nextcloud.talk2)
+  height="80">](https://play.google.com/store/apps/details?id=com.moyn.talk)
 - Only talk notifications will be delivered by the Talk app, for all other notifications install the Nextcloud Files 
   app from Google PlayStore.
   

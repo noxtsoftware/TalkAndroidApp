@@ -56,7 +56,7 @@
         app:boxStrokeColor="@color/colorPrimary"
         app:hintTextColor="@color/colorPrimary">
 
-        <com.nextcloud.talk.utils.EmojiTextInputEditText
+        <com.moyn.talk.utils.EmojiTextInputEditText
             android:id="@+id/text_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

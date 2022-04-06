@@ -309,8 +309,8 @@ and thereof we'd ask contributors to be mindful of their code testability:
 
 At the moment we are releasing the app in two app stores:
 
-* [Google Play Store](https://play.google.com/store/apps/details?id=com.nextcloud.talk2)
-* [F-Droid](https://f-droid.org/en/packages/com.nextcloud.talk2/)
+* [Google Play Store](https://play.google.com/store/apps/details?id=com.moyn.talk)
+* [F-Droid](https://f-droid.org/en/packages/com.moyn.talk/)
 
 ## Types
 
